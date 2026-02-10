@@ -1,0 +1,188 @@
+{
+    "themes": [
+        {
+            "id": "independent-thinking",
+            "title": "独立思考",
+            "image": "../assets/images/wave/themes/independent-thinking.webp",
+            "summary": "劳里始终保持质疑和思考，成为唯一清醒的人。独立思考是抵抗群体疯狂的最后防线。",
+            "points": [
+                "劳里从一开始就感到不安",
+                "她敢于质疑看似美好的表象",
+                "即使被孤立也坚持己见",
+                "最终帮助揭露真相"
+            ],
+            "caseStudy": {
+                "character": "劳里",
+                "situation": "当所有同学都沉浸在浪潮带来的团结感中时，劳里选择倾听内心的不安",
+                "outcome": "她的坚持最终帮助大家认清真相"
+            },
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "劳里在哪些具体场景中表现出独立思考？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "是什么让劳里能够抵抗群体压力？是性格、家庭还是其他因素？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "你会如何培养学生/孩子的独立思考能力？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "设计一个课堂活动，让学生体验\"逆众而行\"的困难与价值"
+                }
+            ],
+            "keywords": [
+                "劳里",
+                "质疑",
+                "独立",
+                "思考",
+                "坚持"
+            ]
+        },
+        {
+            "id": "group-pressure",
+            "title": "群体压力",
+            "image": "../assets/images/wave/themes/group-pressure.webp",
+            "summary": "大多数学生在群体压力下放弃了自我判断，盲目追随\"浪潮\"，展示了从众心理的可怕力量。",
+            "points": [
+                "从众是人类的本能",
+                "害怕被排斥驱动顺从",
+                "群体中个人责任感降低",
+                "\"沉默的螺旋\"让异见者更加沉默"
+            ],
+            "caseStudy": {
+                "character": "大多数学生",
+                "situation": "看到身边的人都加入浪潮，未加入者面临巨大的社交压力",
+                "outcome": "越来越多人加入，形成更大的压力"
+            },
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "书中哪些场景展示了群体压力的作用？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "群体压力是如何一步步升级的？临界点在哪里？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "你在生活中是否经历过类似的群体压力？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何帮助学生/孩子识别并抵抗不健康的群体压力？"
+                }
+            ],
+            "keywords": [
+                "压力",
+                "从众",
+                "盲从",
+                "排斥",
+                "沉默"
+            ]
+        },
+        {
+            "id": "authority-obedience",
+            "title": "权威服从",
+            "image": "../assets/images/wave/themes/authority-obedience.webp",
+            "summary": "学生们对罗斯老师无条件服从，正如当年德国人对纳粹的服从。权威可以轻易压倒理性。",
+            "points": [
+                "老师天然具有权威地位",
+                "服从权威是社会化的结果",
+                "\"执行命令\"成为免责借口",
+                "权威崇拜削弱批判性思维"
+            ],
+            "caseStudy": {
+                "character": "罗斯老师",
+                "situation": "作为受人尊敬的老师，他的每一个\"建议\"都被学生当作命令执行",
+                "outcome": "连他本人都被这种权力感所吸引"
+            },
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "学生们对罗斯老师的服从有哪些具体表现？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "为什么教师/家长的权威如此容易被无条件接受？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "作为教育者，你如何看待自己的权威？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何建立被信任但不被盲从的师生/亲子关系？"
+                }
+            ],
+            "keywords": [
+                "权威",
+                "服从",
+                "老师",
+                "命令",
+                "领导"
+            ]
+        },
+        {
+            "id": "historical-warning",
+            "title": "历史警示",
+            "image": "../assets/images/wave/themes/historical-warning.webp",
+            "summary": "法西斯距离我们只有五天。在特定条件下，任何人都可能成为暴政的帮凶。",
+            "points": [
+                "历史可能重演",
+                "\"与我无关\"是最危险的想法",
+                "每个人都有成为加害者的可能",
+                "警惕是防止悲剧的唯一方法"
+            ],
+            "caseStudy": {
+                "character": "全体学生",
+                "situation": "在短短五天内，一群普通美国高中生就重现了纳粹德国的氛围",
+                "outcome": "证明法西斯主义并非德国特有，而是人性的弱点"
+            },
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "浪潮实验与纳粹德国有哪些相似之处？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "为什么这种事能在民主国家、和平年代发生？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "在当今社会，你能看到类似的苗头吗？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何将这个故事融入历史教育，让学生真正理解并警醒？"
+                }
+            ],
+            "keywords": [
+                "历史",
+                "纳粹",
+                "法西斯",
+                "警示",
+                "重演"
+            ]
+        }
+    ]
+}

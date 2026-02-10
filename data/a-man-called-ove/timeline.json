@@ -1,0 +1,189 @@
+{
+    "timelines": {
+        "past": {
+            "name": "过去时间线",
+            "color": "#D97706",
+            "description": "欧维的回忆 - 从童年到索雅去世"
+        },
+        "present": {
+            "name": "现在时间线",
+            "color": "#64748B",
+            "description": "欧维的日常 - 退休后的生活"
+        }
+    },
+    "events": [
+        {
+            "id": "birth",
+            "timeline": "past",
+            "year": 1967,
+            "age": 0,
+            "title": "欧维出生",
+            "description": "出生于瑞典工人阶级家庭",
+            "chapter": null
+        },
+        {
+            "id": "mother-death",
+            "timeline": "past",
+            "year": 1973,
+            "age": 6,
+            "title": "母亲去世",
+            "description": "母亲因病去世，欧维开始跟随父亲工作",
+            "chapter": 8
+        },
+        {
+            "id": "father-death",
+            "timeline": "past",
+            "year": 1983,
+            "age": 16,
+            "title": "父亲去世",
+            "description": "父亲在铁路工作时被火车撞死",
+            "chapter": 12,
+            "triggerMemory": true
+        },
+        {
+            "id": "meet-sonja",
+            "timeline": "past",
+            "year": 1988,
+            "age": 21,
+            "title": "遇见索雅",
+            "description": "在火车上遇见穿红裙子的索雅",
+            "chapter": 14,
+            "image": "train-meeting.webp",
+            "highlight": true
+        },
+        {
+            "id": "marry-sonja",
+            "timeline": "past",
+            "year": 1990,
+            "age": 23,
+            "title": "与索雅结婚",
+            "description": "两人结婚，搬入排屋",
+            "chapter": 18
+        },
+        {
+            "id": "build-house",
+            "timeline": "past",
+            "year": 1992,
+            "age": 25,
+            "title": "建造房子",
+            "description": "欧维亲手建造他们的家",
+            "chapter": 20,
+            "image": "house-section.webp"
+        },
+        {
+            "id": "sonja-accident",
+            "timeline": "past",
+            "year": 2010,
+            "age": 43,
+            "title": "索雅车祸",
+            "description": "旅行途中车祸，索雅瘫痪，失去孩子",
+            "chapter": 24,
+            "triggerMemory": true
+        },
+        {
+            "id": "sonja-wheelchair",
+            "timeline": "past",
+            "year": 2011,
+            "age": 44,
+            "title": "索雅坐轮椅",
+            "description": "索雅成为教师，坐轮椅继续工作",
+            "chapter": 26,
+            "image": "sonja-teacher.webp"
+        },
+        {
+            "id": "sonja-death",
+            "timeline": "past",
+            "year": 2025,
+            "age": 58,
+            "title": "索雅去世",
+            "description": "索雅因癌症去世",
+            "chapter": 4,
+            "image": "ove-cemetery.webp",
+            "highlight": true
+        },
+        {
+            "id": "forced-retirement",
+            "timeline": "present",
+            "year": 2026,
+            "age": 59,
+            "title": "被迫退休",
+            "description": "被公司强制提前退休",
+            "chapter": 1
+        },
+        {
+            "id": "suicide-1",
+            "timeline": "present",
+            "year": 2026,
+            "month": 1,
+            "title": "第一次尝试",
+            "method": "上吊",
+            "interrupted": "帕尔瓦娜送蛋糕",
+            "chapter": 7,
+            "suicideAttempt": true
+        },
+        {
+            "id": "suicide-2",
+            "timeline": "present",
+            "year": 2026,
+            "month": 1,
+            "title": "第二次尝试",
+            "method": "一氧化碳中毒",
+            "interrupted": "帕特里克借梯子",
+            "chapter": 9,
+            "suicideAttempt": true,
+            "image": "ove-saab.webp"
+        },
+        {
+            "id": "suicide-3",
+            "timeline": "present",
+            "year": 2026,
+            "month": 1,
+            "title": "第三次尝试",
+            "method": "卧轨",
+            "interrupted": "救了铁轨上的人",
+            "chapter": 17,
+            "suicideAttempt": true
+        },
+        {
+            "id": "adopt-cat",
+            "timeline": "present",
+            "year": 2026,
+            "month": 2,
+            "title": "收养猫",
+            "description": "收养了一只倔强的流浪猫",
+            "chapter": 21,
+            "image": "ove-cat-chair.webp"
+        },
+        {
+            "id": "community",
+            "timeline": "present",
+            "year": 2026,
+            "month": 3,
+            "title": "融入社区",
+            "description": "被邻居们逐渐融化，重新找到生活意义",
+            "chapter": 35,
+            "image": "community-street.webp",
+            "highlight": true
+        }
+    ],
+    "connections": [
+        {
+            "from": "sonja-death",
+            "to": "suicide-1",
+            "type": "trigger",
+            "description": "索雅的去世触发了欧维的第一次自杀尝试"
+        },
+        {
+            "from": "meet-sonja",
+            "to": "suicide-2",
+            "type": "memory",
+            "description": "第二次尝试时回忆起火车上的相遇"
+        },
+        {
+            "from": "father-death",
+            "to": "suicide-3",
+            "type": "memory",
+            "description": "卧轨时想起父亲在铁轨上的死"
+        }
+    ]
+}

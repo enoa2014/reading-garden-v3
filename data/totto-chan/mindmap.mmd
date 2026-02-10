@@ -1,0 +1,48 @@
+flowchart TD
+    root["窗边的小豆豆"]
+    
+    subgraph Characters ["主要人物"]
+      Totto["小豆豆"]
+      Kobayashi["小林宗作"]
+      Yasuaki["泰明"]
+      Takahashi["高桥君"]
+      Rocky["洛基"]
+      Mama["妈妈"]
+      Papa["爸爸"]
+    end
+
+    subgraph Tomoe ["巴学园"]
+      TrainClass["电车教室"]
+      Assembly["礼堂"]
+      Library["图书馆"]
+      Pool["游泳池"]
+      Field["种植田"]
+    end
+
+    subgraph Events ["关键事件"]
+      Expelled["被退学"]
+      Meeting["初见校长"]
+      Climb["爬树"]
+      Test["试胆量"]
+      YasuakiDeath["泰明之死"]
+      RockyLost["洛基失踪"]
+      Bombing["学校被炸"]
+    end
+
+    root --> Characters
+    root --> Tomoe
+    root --> Events
+
+    Totto --> Kobayashi
+    Totto --> Yasuaki
+    Totto --> Rocky
+    Totto --> Mama
+    
+    Kobayashi --> Tomoe
+    
+    Expelled --> Meeting
+    Meeting --> Tomoe
+    Totto --> Climb
+    Climb -.-> Yasuaki
+    Totto --> YasuakiDeath
+    Bombing --> Tomoe

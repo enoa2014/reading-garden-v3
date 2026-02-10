@@ -1,0 +1,57 @@
+{
+  "version": "2.0-draft",
+  "book": {
+    "id": "a-man-called-ove",
+    "title": "一个叫欧维的男人决定去死",
+    "subtitle": "悲伤、社区与重新活下去",
+    "author": "弗雷德里克·巴克曼",
+    "logo": "🏠",
+    "themeClass": "ove-theme",
+    "capabilities": {
+      "themeToggle": true,
+      "globalModal": "storyModal",
+      "errorBoundary": true
+    }
+  },
+  "modules": [
+    {
+      "id": "reading",
+      "title": "阅读",
+      "icon": "📖",
+      "entry": "../../js/modules/reading-module.js",
+      "data": "chapters.json",
+      "active": true
+    },
+    {
+      "id": "themes",
+      "title": "主题",
+      "icon": "💬",
+      "entry": "../../js/modules/themes-module.js",
+      "data": "themes.json"
+    },
+    {
+      "id": "timeline",
+      "title": "时间线",
+      "icon": "📅",
+      "entry": "../../js/modules/timeline-module.js",
+      "data": "timeline.json"
+    },
+    {
+      "id": "suicide",
+      "title": "未遂告别",
+      "icon": "☁️",
+      "entry": "../../js/modules/suicide-module.js",
+      "data": "suicide_attempts.json"
+    },
+    {
+      "id": "characters",
+      "title": "人物",
+      "icon": "👥",
+      "entry": "../../js/modules/characters-module.js",
+      "data": "characters.json",
+      "assets": {
+        "graphLib": "cytoscape"
+      }
+    }
+  ]
+}

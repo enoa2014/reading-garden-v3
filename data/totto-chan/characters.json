@@ -1,0 +1,116 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "totto",
+                "name": "小豆豆",
+                "role": "student",
+                "color": "#FFD93D",
+                "avatar": "../assets/images/totto-chan/characters/avatar_totto.webp"
+            }
+        },
+        {
+            "data": {
+                "id": "kobayashi",
+                "name": "小林校长",
+                "role": "principal",
+                "color": "#87CEEB",
+                "avatar": "../assets/images/totto-chan/characters/avatar_kobayashi.webp"
+            }
+        },
+        {
+            "data": {
+                "id": "mama",
+                "name": "妈妈",
+                "role": "parent",
+                "color": "#90EE90",
+                "avatar": "../assets/images/totto-chan/characters/avatar_mama.webp"
+            }
+        },
+        {
+            "data": {
+                "id": "yasuaki",
+                "name": "泰明",
+                "role": "student",
+                "color": "#F8BBD9",
+                "avatar": "../assets/images/totto-chan/characters/avatar_yasuaki.webp"
+            }
+        },
+        {
+            "data": {
+                "id": "takahashi",
+                "name": "高桥君",
+                "role": "student",
+                "color": "#FFCC80",
+                "avatar": "../assets/images/totto-chan/characters/avatar_takahashi.webp"
+            }
+        },
+        {
+            "data": {
+                "id": "train",
+                "name": "火车教室",
+                "role": "location",
+                "color": "#FFF8E8",
+                "avatar": "../assets/images/totto-chan/characters/avatar_train.webp"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "source": "kobayashi",
+                "target": "totto",
+                "label": "倾听/肯定"
+            }
+        },
+        {
+            "data": {
+                "source": "mama",
+                "target": "totto",
+                "label": "支持"
+            }
+        },
+        {
+            "data": {
+                "source": "mama",
+                "target": "kobayashi",
+                "label": "送入学"
+            }
+        },
+        {
+            "data": {
+                "source": "totto",
+                "target": "yasuaki",
+                "label": "友谊"
+            }
+        },
+        {
+            "data": {
+                "source": "totto",
+                "target": "takahashi",
+                "label": "运动会"
+            }
+        },
+        {
+            "data": {
+                "source": "kobayashi",
+                "target": "yasuaki",
+                "label": "平等"
+            }
+        },
+        {
+            "data": {
+                "source": "kobayashi",
+                "target": "takahashi",
+                "label": "鼓励"
+            }
+        },
+        {
+            "data": {
+                "source": "totto",
+                "target": "train",
+                "label": "上学"
+            }
+        }
+    ]
+}

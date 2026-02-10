@@ -1,0 +1,83 @@
+[
+    {
+        "id": "arrival_1",
+        "type": "arrival",
+        "title": "飞船抵达 / Arrival",
+        "date": "Day 1",
+        "description": "十二艘外星飞船降落在地球不同地点。路易丝被韦伯上校征召，前往蒙大拿州的降落点。",
+        "linearPosition": 0,
+        "circularPosition": 0.0
+    },
+    {
+        "id": "daughter_1",
+        "type": "daughter",
+        "title": "回忆：童年",
+        "date": "Age 3",
+        "description": "你指着绘本上的图画问我那是谁。我告诉你那是'爸爸'。你笑了，世界在那一刻如此简单。",
+        "linearPosition": null,
+        "circularPosition": 0.125
+    },
+    {
+        "id": "arrival_2",
+        "type": "arrival",
+        "title": "初次接触 / First Contact",
+        "date": "Day 3",
+        "description": "路易丝和伊恩进入飞船，第一次见到七肢桶。它们被称为'阿伯特'和'科斯特洛'。",
+        "linearPosition": 10,
+        "circularPosition": 0.25
+    },
+    {
+        "id": "daughter_2",
+        "type": "daughter",
+        "title": "回忆：青春期",
+        "date": "Age 13",
+        "description": "你第一次对我吼叫，说恨我。我知道这一天会来，也知道你会后悔。但我只是沉默。",
+        "linearPosition": null,
+        "circularPosition": 0.375
+    },
+    {
+        "id": "arrival_3",
+        "type": "arrival",
+        "title": "书写突破 / Logograms",
+        "date": "Day 15",
+        "description": "路易丝发现七肢桶的书写系统（七肢桶语B）是非线性的，与口语（七肢桶语A）完全分离。",
+        "linearPosition": 30,
+        "circularPosition": 0.5
+    },
+    {
+        "id": "daughter_3",
+        "type": "daughter",
+        "title": "预知：离别",
+        "date": "Age 25",
+        "description": "登山事故的消息传来。我知道这一刻回响在我的整个生命中，就像那永远画不完圆的墨迹。",
+        "linearPosition": null,
+        "circularPosition": 0.625
+    },
+    {
+        "id": "arrival_4",
+        "type": "arrival",
+        "title": "物理学原理",
+        "date": "Day 25",
+        "description": "伊恩发现七肢桶的物理学基于变分原理（费马原理），而非人类的因果律。",
+        "linearPosition": 50,
+        "circularPosition": 0.75
+    },
+    {
+        "id": "daughter_4",
+        "type": "daughter",
+        "title": "回忆：出生",
+        "date": "Day 0",
+        "description": "你的父亲看着刚出生的你，说你要像我一样聪明。我看着你，看到了你的一生。",
+        "linearPosition": null,
+        "circularPosition": 0.875
+    },
+    {
+        "id": "arrival_5",
+        "type": "arrival",
+        "title": "非零和博弈",
+        "date": "Day 35",
+        "description": "路易丝开始用七肢桶语思考。她明白了它们来此的目的不是交换，而是为了让'书写'发生。",
+        "linearPosition": 80,
+        "circularPosition": 1.0
+    }
+]

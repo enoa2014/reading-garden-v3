@@ -1,0 +1,60 @@
+{
+  "version": "2.0-draft",
+  "book": {
+    "id": "story-of-your-life",
+    "title": "你一生的故事",
+    "subtitle": "语言、时间与选择",
+    "author": "特德·姜 (Ted Chiang)",
+    "logo": "🔮",
+    "themeClass": "story-theme",
+    "capabilities": {
+      "themeToggle": true,
+      "globalModal": "storyModal",
+      "errorBoundary": true
+    }
+  },
+  "modules": [
+    {
+      "id": "reading",
+      "title": "阅读",
+      "icon": "📖",
+      "entry": "../../js/modules/reading-module.js",
+      "data": "content.json",
+      "active": true
+    },
+    {
+      "id": "timeline",
+      "title": "时间观",
+      "icon": "🔄",
+      "entry": "../../js/modules/timeline-module.js",
+      "data": "timeline.json"
+    },
+    {
+      "id": "linguistics",
+      "title": "语言学",
+      "icon": "🔤",
+      "entry": "../../js/modules/linguistics-module.js",
+      "data": "logograms.json",
+      "extraData": [
+        "comparisons.json"
+      ]
+    },
+    {
+      "id": "themes",
+      "title": "主题",
+      "icon": "💡",
+      "entry": "../../js/modules/themes-module.js",
+      "data": "themes.json"
+    },
+    {
+      "id": "characters",
+      "title": "人物",
+      "icon": "👥",
+      "entry": "../../js/modules/characters-module.js",
+      "data": "characters.json",
+      "assets": {
+        "graphLib": "cytoscape"
+      }
+    }
+  ]
+}

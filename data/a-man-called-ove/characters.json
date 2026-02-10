@@ -1,0 +1,175 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "ove",
+                "name": "欧维",
+                "nameEn": "Ove",
+                "role": "主角",
+                "age": 59,
+                "description": "59岁退休工人，瑞典式固执，对细节执着，深藏温柔",
+                "avatar": "../assets/images/a-man-called-ove/ove-fullbody.webp",
+                "color": "#64748B"
+            }
+        },
+        {
+            "data": {
+                "id": "sonja",
+                "name": "索雅",
+                "nameEn": "Sonja",
+                "role": "欧维的妻子（已故）",
+                "description": "欧维生命中的色彩，教师，6个月前去世",
+                "avatar": "../assets/images/a-man-called-ove/sonja-train.webp",
+                "color": "#DC2626",
+                "deceased": true
+            }
+        },
+        {
+            "data": {
+                "id": "parvaneh",
+                "name": "帕尔瓦娜",
+                "nameEn": "Parvaneh",
+                "role": "伊朗裔邻居",
+                "description": "怀孕的伊朗裔邻居，热情坚定，欧维的救赎者",
+                "avatar": "../assets/images/a-man-called-ove/parvaneh-meet.webp",
+                "color": "#F97316"
+            }
+        },
+        {
+            "data": {
+                "id": "patrick",
+                "name": "帕特里克",
+                "nameEn": "Patrick",
+                "role": "帕尔瓦娜的丈夫",
+                "description": "IT顾问，被欧维称为'盲流'，完全不懂工具",
+                "avatar": "../assets/images/a-man-called-ove/patrick-drill.webp",
+                "color": "#3B82F6"
+            }
+        },
+        {
+            "data": {
+                "id": "rune",
+                "name": "鲁尼",
+                "nameEn": "Rune",
+                "role": "欧维的老对手",
+                "description": "曾经的好友和竞争对手，现患老年痴呆",
+                "avatar": "../assets/images/a-man-called-ove/rune-anita.webp",
+                "color": "#1E40AF"
+            }
+        },
+        {
+            "data": {
+                "id": "anita",
+                "name": "安妮塔",
+                "nameEn": "Anita",
+                "role": "鲁尼的妻子",
+                "description": "照顾患病丈夫的坚强女性",
+                "avatar": "../assets/images/a-man-called-ove/anita-portrait.webp",
+                "color": "#8B5CF6"
+            }
+        },
+        {
+            "data": {
+                "id": "jimmy",
+                "name": "吉米",
+                "nameEn": "Jimmy",
+                "role": "同性恋邻居",
+                "description": "代表接纳与多元",
+                "avatar": "../assets/images/a-man-called-ove/jimmy-portrait.webp",
+                "color": "#EC4899"
+            }
+        },
+        {
+            "data": {
+                "id": "cat",
+                "name": "猫",
+                "nameEn": "Cat",
+                "role": "流浪猫",
+                "description": "与欧维性格相似的倔强流浪猫，成为他的陪伴",
+                "avatar": "../assets/images/a-man-called-ove/cat.webp",
+                "color": "#D97706"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "id": "ove-sonja",
+                "source": "ove",
+                "target": "sonja",
+                "relationship": "夫妻",
+                "style": "dashed",
+                "color": "#DC2626",
+                "weight": 10
+            }
+        },
+        {
+            "data": {
+                "id": "ove-parvaneh",
+                "source": "ove",
+                "target": "parvaneh",
+                "relationship": "邻居→朋友",
+                "evolutionStart": "冷漠",
+                "evolutionEnd": "亲密",
+                "color": "#F97316",
+                "weight": 8
+            }
+        },
+        {
+            "data": {
+                "id": "ove-patrick",
+                "source": "ove",
+                "target": "patrick",
+                "relationship": "邻居",
+                "evolutionStart": "厌烦",
+                "evolutionEnd": "接受",
+                "color": "#3B82F6",
+                "weight": 5
+            }
+        },
+        {
+            "data": {
+                "id": "ove-rune",
+                "source": "ove",
+                "target": "rune",
+                "relationship": "对手→老友",
+                "evolutionStart": "竞争",
+                "evolutionEnd": "和解",
+                "color": "#1E40AF",
+                "weight": 7
+            }
+        },
+        {
+            "data": {
+                "id": "ove-cat",
+                "source": "ove",
+                "target": "cat",
+                "relationship": "主人",
+                "evolutionStart": "排斥",
+                "evolutionEnd": "陪伴",
+                "color": "#D97706",
+                "weight": 6
+            }
+        },
+        {
+            "data": {
+                "id": "parvaneh-patrick",
+                "source": "parvaneh",
+                "target": "patrick",
+                "relationship": "夫妻",
+                "color": "#10B981",
+                "weight": 9
+            }
+        },
+        {
+            "data": {
+                "id": "rune-anita",
+                "source": "rune",
+                "target": "anita",
+                "relationship": "夫妻",
+                "color": "#8B5CF6",
+                "weight": 9
+            }
+        }
+    ]
+}

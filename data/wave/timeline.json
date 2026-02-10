@@ -1,0 +1,54 @@
+{
+    "title": "浪潮时间线",
+    "subtitle": "从一堂历史课到危险运动的6天",
+    "events": [
+        {
+            "day": 1,
+            "title": "纳粹纪录片",
+            "subtitle": "一切的起点",
+            "image": "../assets/images/wave/timeline/day1.webp",
+            "description": "罗斯先生播放纳粹集中营纪录片。学生们震惊但不理解：为什么德国人没有阻止？",
+            "mood": "curious"
+        },
+        {
+            "day": 2,
+            "title": "纪律实验",
+            "subtitle": "力量来自纪律",
+            "image": "../assets/images/wave/timeline/day2.webp",
+            "description": "罗斯开始坐姿训练和口令练习。学生们第一次感受到纪律带来的力量感和秩序感。",
+            "mood": "neutral"
+        },
+        {
+            "day": 3,
+            "title": "浪潮诞生",
+            "subtitle": "力量来自团结",
+            "image": "../assets/images/wave/timeline/day3.webp",
+            "description": "\"浪潮\"组织正式成立。设立口号、行礼手势、会员卡。学生们群情激昂，罗伯特焕然一新。",
+            "mood": "excited"
+        },
+        {
+            "day": 4,
+            "title": "快速扩张",
+            "subtitle": "力量来自行动",
+            "image": "../assets/images/wave/timeline/day4.webp",
+            "description": "\"浪潮\"蔓延全校。成员互相监视、招募新人。反对者开始受到排挤。劳里感到不安。",
+            "mood": "warning"
+        },
+        {
+            "day": 5,
+            "title": "失控边缘",
+            "subtitle": "暴力阴影",
+            "image": "../assets/images/wave/timeline/day5.webp",
+            "description": "暴力事件发生。一名学生因不加入浪潮而被殴打。大卫与劳里发生冲突，差点动手。",
+            "mood": "danger"
+        },
+        {
+            "day": 6,
+            "title": "真相揭露",
+            "subtitle": "浪潮终结",
+            "image": "../assets/images/wave/timeline/day6.webp",
+            "description": "罗斯召开最后集会，播放希特勒演讲。学生们终于意识到自己正在重蹈法西斯覆辙。",
+            "mood": "revelation"
+        }
+    ]
+}

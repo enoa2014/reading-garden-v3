@@ -1,0 +1,110 @@
+:root {
+  color-scheme: light;
+
+  /* Backgrounds */
+  --bg-primary: #fffbf5;
+  --bg-secondary: #fff8e8;
+
+  /* Text */
+  --text-primary: #4a3728;
+  --text-secondary: #7d6b5d;
+
+  /* Accents */
+  --accent-warm: #ffd93d;
+  --accent-sky: #87ceeb;
+  --accent-sage: #8fbc8f;
+  --accent-coral: #f08080;
+
+  /* Cards */
+  --card-bg: #ffffff;
+  --card-shadow: rgba(74, 55, 40, 0.1);
+  --card-border: #f0e6d8;
+
+  /* Typography */
+  --font-display: "Cormorant Garamond", "Libre Baskerville", "Noto Serif SC", serif;
+  --font-heading: "Libre Baskerville", "Cormorant Garamond", "Noto Serif SC", serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+
+  /* Sizing */
+  --container: 1120px;
+
+  /* Spacing */
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+
+  /* Shadows */
+  --shadow-1: 0 10px 30px rgba(74, 55, 40, 0.08);
+  --shadow-2: 0 18px 60px rgba(74, 55, 40, 0.12);
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-med: 240ms;
+  --duration-slow: 320ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Book theme defaults */
+  --book-primary: var(--accent-warm);
+  --book-secondary: #8b4513;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-primary: #2d2a26;
+  --bg-secondary: #3d3830;
+  --text-primary: #f5ede6;
+  --text-secondary: #bdb0a3;
+  --card-bg: #3d3830;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --card-border: rgba(245, 237, 230, 0.12);
+
+  --shadow-1: 0 14px 40px rgba(0, 0, 0, 0.22);
+  --shadow-2: 0 22px 80px rgba(0, 0, 0, 0.32);
+}
+
+/* Per-book theme colors (tokens only; components use --book-primary/secondary) */
+body[data-book="totto-chan"],
+[data-book="totto-chan"] {
+  --book-primary: #ffd93d;
+  --book-secondary: #8b4513;
+}
+
+body[data-book="wave"],
+[data-book="wave"] {
+  --book-primary: #2e86ab;
+  --book-secondary: #a82c41;
+}
+
+body[data-book="story-of-your-life"],
+[data-book="story-of-your-life"] {
+  --book-primary: #4a2c6e;
+  --book-secondary: #b8860b;
+}
+
+body[data-book="wonder"],
+[data-book="wonder"] {
+  --book-primary: #5dade2;
+  --book-secondary: #f4d03f;
+}
+
+body[data-book="a-man-called-ove"],
+[data-book="a-man-called-ove"] {
+  --book-primary: #607b5c;
+  --book-secondary: #c75b39;
+}
+
+body[data-book="lord-of-the-flies"],
+[data-book="lord-of-the-flies"] {
+  --book-primary: #2d5016;
+  --book-secondary: #d4880f;
+}

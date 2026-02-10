@@ -1,0 +1,213 @@
+[
+    {
+        "id": "grief",
+        "title": "悲伤与失去",
+        "titleEn": "Grief & Loss",
+        "icon": "brokenHeart",
+        "color": "#64748B",
+        "tags": [
+            "情感",
+            "心理",
+            "人物"
+        ],
+        "description": "探讨欧维如何应对失去索雅的痛苦，以及悲伤如何塑造了他的行为。",
+        "steps": [
+            {
+                "type": "intro",
+                "label": "悲伤的定义",
+                "content": "对于欧维来说，索雅不仅仅是妻子，她是他的色彩。失去她之后，欧维的世界变成了黑白。",
+                "tip": "引导学生思考：欧维的'愤怒'是否是悲伤的一种表现形式？"
+            },
+            {
+                "type": "analysis",
+                "label": "关键场景",
+                "content": "欧维每天去墓地探望索雅，与她说话。这不仅是习惯，更是他维持与世界联系的唯一方式。",
+                "quote": "人们说时间能治愈一切，但欧维不这么认为。"
+            },
+            {
+                "type": "discussion",
+                "label": "深度思考",
+                "content": "欧维试图通过自杀来'加入'索雅，这反映了他怎样的心理状态？",
+                "tip": "讨论'生存意愿'与'情感寄托'的关系。"
+            }
+        ],
+        "discussion": {
+            "question": "欧维的悲伤表达方式健康吗？",
+            "poll": {
+                "question": "你怎么看欧维的悲伤？",
+                "options": [
+                    "非常不健康，完全封闭自我",
+                    "这是他独特的应对机制",
+                    "随着帕尔瓦娜的出现逐渐好转",
+                    "可以理解，但需要干预"
+                ]
+            }
+        },
+        "relatedCharacters": [
+            "ove",
+            "sonja"
+        ],
+        "relatedImages": [
+            "ove-cemetery.webp",
+            "sonja-coat.webp"
+        ]
+    },
+    {
+        "id": "community",
+        "title": "社区的力量",
+        "titleEn": "Power of Community",
+        "icon": "home",
+        "color": "#F97316",
+        "tags": [
+            "社会",
+            "关系",
+            "成长"
+        ],
+        "description": "邻居们（尤其是帕尔瓦娜一家）如何逐渐融化欧维的心，重建他与世界的联系。",
+        "steps": [
+            {
+                "type": "intro",
+                "label": "入侵者还是救星？",
+                "content": "帕尔瓦娜一家的到来最初被欧维视为'入侵'（比如撞坏信箱），但实际上打破了他封闭的壳。",
+                "tip": "分析'撞坏信箱'这一事件的象征意义。"
+            },
+            {
+                "type": "analysis",
+                "label": "责任的力量",
+                "content": "当欧维被迫照顾这一家人（教开车、修暖气、带孩子）时，'被需要'的感觉重新点燃了他的生命力。",
+                "quote": "也许被需要比被爱更重要。"
+            },
+            {
+                "type": "symbolism",
+                "label": "流浪猫",
+                "content": "这只'掉毛的半死不活的'猫，成为了欧维学会重新关爱弱小生命的起点。",
+                "tip": "讨论猫在故事中作为'情感中介'的作用。"
+            }
+        ],
+        "discussion": {
+            "question": "现代社会中，邻里关系还重要吗？",
+            "poll": {
+                "question": "什么改变了欧维？",
+                "options": [
+                    "帕尔瓦娜的坚持",
+                    "欧维内心的善良",
+                    "那是意外，他只是没死成",
+                    "社区共同体的力量"
+                ]
+            }
+        },
+        "relatedCharacters": [
+            "parvaneh",
+            "patrick",
+            "jimmy"
+        ],
+        "relatedImages": [
+            "community-street.webp",
+            "community-garage.webp"
+        ]
+    },
+    {
+        "id": "principles",
+        "title": "原则与固执",
+        "titleEn": "Principles & Stubbornness",
+        "icon": "shield",
+        "color": "#1E40AF",
+        "tags": [
+            "性格",
+            "价值观",
+            "冲突"
+        ],
+        "description": "欧维的'原则问题'清单反映了他对秩序的渴望，以及在这个变幻莫测的世界中寻找安全感的方式。",
+        "steps": [
+            {
+                "type": "intro",
+                "label": "秩序的卫士",
+                "content": "欧维每天早上巡视小区，检查垃圾房、停车场。他对规则的执着近乎病态。",
+                "tip": "思考：秩序给欧维带来了安全感，还是束缚？"
+            },
+            {
+                "type": "conflict",
+                "label": "车就是人",
+                "content": "欧维通过车来判断人品。萨博是原则，沃尔沃是背叛（因为它是瑞典车但后来变了）。",
+                "quote": "萨博是车。沃尔沃是玩具。"
+            },
+            {
+                "type": "evolution",
+                "label": "原则的松动",
+                "content": "最终，欧维为了帮助路德（开沃尔沃的宿敌）对抗白衬衫，放下了几十年的恩怨。原则让位于了更重要的人性。",
+                "tip": "讨论欧维心中'规则'与'正义'的优先级变化。"
+            }
+        ],
+        "discussion": {
+            "question": "你同意欧维的哪些原则？",
+            "poll": {
+                "question": "欧维的原则过时了吗？",
+                "options": [
+                    "完全过时，不知变通",
+                    "核心价值观（诚实、勤劳）永不过时",
+                    "虽然形式刻板，但初衷是好的",
+                    "我们需要更多像欧维这样原本的人"
+                ]
+            }
+        },
+        "relatedCharacters": [
+            "ove",
+            "rune"
+        ],
+        "relatedImages": [
+            "saab-icon.webp",
+            "volvo-icon.webp"
+        ]
+    },
+    {
+        "id": "loneliness",
+        "title": "瑞典式孤独",
+        "titleEn": "Swedish Loneliness",
+        "icon": "snowflake",
+        "color": "#312E81",
+        "tags": [
+            "文化",
+            "社会",
+            "心理"
+        ],
+        "description": "探讨瑞典社会的高福利、个人主义与人际疏离，以及这种文化背景如何加剧了欧维的孤独。",
+        "steps": [
+            {
+                "type": "context",
+                "label": "不打扰的温柔",
+                "content": "瑞典文化强调'不给别人添麻烦'。这种独立性在老年时往往演变成深刻的孤立。",
+                "tip": "对比中国文化中的'人情味'与瑞典的'个人主义'。"
+            },
+            {
+                "type": "contrast",
+                "label": "制度 vs 人情",
+                "content": "书中的'白衬衫'代表了冷冰冰的官僚制度，它虽然高效但缺乏人性。欧维对抗的正是这种非人化的制度。",
+                "quote": "孤独不是没有人，而是没有人理解你。"
+            },
+            {
+                "type": "reflection",
+                "label": "孤独的解药",
+                "content": "故事告诉我们，打破孤独唯有'介入'——哪怕这种介入在开始时显得冒犯（如帕尔瓦娜）。",
+                "tip": "讨论：我们要如何帮助身边的'欧维'？"
+            }
+        ],
+        "discussion": {
+            "question": "独处和孤独有什么区别？",
+            "poll": {
+                "question": "你认为欧维享受孤独吗？",
+                "options": [
+                    "是的，他讨厌人类",
+                    "不，他渴望连接但不懂表达",
+                    "即使有索雅，他也是孤独的",
+                    "他只是习惯了独自一人"
+                ]
+            }
+        },
+        "relatedCharacters": [
+            "ove"
+        ],
+        "relatedImages": [
+            "ove-alone.webp"
+        ]
+    }
+]

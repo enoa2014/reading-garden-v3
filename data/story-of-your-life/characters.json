@@ -1,0 +1,98 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "louise",
+                "name": "露易丝·班克斯",
+                "role": "语言学家",
+                "description": "故事的叙述者，被征召与外星人沟通的语言学教授。在学习七肢桶语言的过程中，她的时间感知发生了根本改变。",
+                "avatar": "../assets/images/story-of-your-life/characters/avatar_louise.webp",
+                "color": "#3498DB"
+            }
+        },
+        {
+            "data": {
+                "id": "gary",
+                "name": "盖雷·唐纳利",
+                "role": "物理学家",
+                "description": "与露易丝共同工作的理论物理学家，负责解读七肢桶的科学知识。后来成为露易丝的丈夫，汉娜的父亲。",
+                "avatar": "../assets/images/story-of-your-life/characters/avatar_gary.webp",
+                "color": "#27AE60"
+            }
+        },
+        {
+            "data": {
+                "id": "hannah",
+                "name": "汉娜",
+                "role": "露易丝的女儿",
+                "description": "露易丝和盖雷的女儿。虽然露易丝知道她的命运，依然选择生下她并深爱她。她的一生是故事中'女儿时间线'的核心。",
+                "avatar": "../assets/images/story-of-your-life/characters/avatar_hannah.webp",
+                "color": "#C0392B"
+            }
+        },
+        {
+            "data": {
+                "id": "weber",
+                "name": "韦伯上校",
+                "role": "军方联络人",
+                "description": "负责协调与外星人沟通项目的军方代表，关注军事安全和外交影响。",
+                "avatar": "../assets/images/story-of-your-life/characters/avatar_weber.webp",
+                "color": "#7F8C8D"
+            }
+        },
+        {
+            "data": {
+                "id": "heptapod",
+                "name": "七肢桶 (拉斯伯里/弗拉珀)",
+                "role": "外星访客",
+                "description": "来自未知星球的外星生命体，拥有七条放射对称的肢体。他们的语言和思维方式完全不同于人类，能够同时感知过去和未来。",
+                "avatar": "../assets/images/story-of-your-life/characters/avatar_heptapod.webp",
+                "color": "#2C3E50"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "source": "louise",
+                "target": "gary",
+                "label": "同事/夫妻"
+            }
+        },
+        {
+            "data": {
+                "source": "louise",
+                "target": "hannah",
+                "label": "母女"
+            }
+        },
+        {
+            "data": {
+                "source": "gary",
+                "target": "hannah",
+                "label": "父女"
+            }
+        },
+        {
+            "data": {
+                "source": "louise",
+                "target": "weber",
+                "label": "工作关系"
+            }
+        },
+        {
+            "data": {
+                "source": "louise",
+                "target": "heptapod",
+                "label": "语言交流"
+            }
+        },
+        {
+            "data": {
+                "source": "gary",
+                "target": "heptapod",
+                "label": "科学交流"
+            }
+        }
+    ]
+}

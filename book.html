@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>阅读花园</title>
+    <meta name="description" content="阅读花园：沉浸式互动阅读平台" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/book.css" />
+    <link rel="stylesheet" href="css/modules.css" />
+  </head>
+
+  <body data-page="book">
+    <div class="rg-app" id="rgAppRoot">
+      <header class="rg-topbar">
+        <a class="rg-back" href="index.html" aria-label="返回书架">
+          <span class="rg-icon" aria-hidden="true" id="backIcon"></span>
+        </a>
+
+        <div class="rg-bookmeta" aria-live="polite">
+          <div class="rg-bookmeta__logo" id="runtimeLogo" aria-hidden="true"></div>
+          <div class="rg-bookmeta__text">
+            <h1 class="rg-bookmeta__title" id="runtimeTitle">阅读花园</h1>
+            <p class="rg-bookmeta__subtitle" id="runtimeSubtitle"></p>
+          </div>
+        </div>
+
+        <div class="rg-topbar__actions">
+          <button id="teacherToggle" class="rg-iconbtn" type="button" aria-label="切换教师模式">
+            <span class="rg-icon" aria-hidden="true" id="teacherIcon"></span>
+          </button>
+          <button id="themeToggle" class="rg-iconbtn" type="button" aria-label="切换日夜模式">
+            <span class="rg-icon" aria-hidden="true" id="themeIcon"></span>
+          </button>
+        </div>
+      </header>
+
+      <nav class="rg-tabs" id="runtimeTabBar" aria-label="模块导航"></nav>
+
+      <main class="rg-runtime" id="runtimeMain">
+        <section class="rg-panel rg-panel--active">
+          <div class="rg-loading">初始化中...</div>
+        </section>
+      </main>
+
+      <div class="rg-modal" id="rgModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="rg-modal__backdrop" data-modal-close="true"></div>
+        <div class="rg-modal__panel" role="document" aria-labelledby="rgModalTitle">
+          <div class="rg-modal__head">
+            <h2 class="rg-modal__title" id="rgModalTitle">内容</h2>
+            <button class="rg-iconbtn" type="button" data-modal-close="true" aria-label="关闭弹窗">
+              <span class="rg-icon" aria-hidden="true" id="closeIcon"></span>
+            </button>
+          </div>
+          <div class="rg-modal__body" id="rgModalBody"></div>
+          <div class="rg-modal__foot" id="rgModalFoot"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/app/book.js"></script>
+  </body>
+</html>

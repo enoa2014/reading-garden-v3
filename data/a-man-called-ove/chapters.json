@@ -1,0 +1,246 @@
+{
+    "title": "一个叫欧维的男人决定去死",
+    "titleEn": "A Man Called Ove",
+    "author": "弗雷德里克·巴克曼",
+    "authorEn": "Fredrik Backman",
+    "totalChapters": 40,
+    "chapters": [
+        {
+            "number": 1,
+            "title": "一个叫欧维的男人买了电脑",
+            "timeline": "present",
+            "keyEvent": "forced-retirement"
+        },
+        {
+            "number": 2,
+            "title": "一个叫欧维的男人在小区里巡视",
+            "timeline": "present"
+        },
+        {
+            "number": 3,
+            "title": "一个叫欧维的男人遇见了新邻居",
+            "timeline": "present",
+            "keyCharacter": "parvaneh"
+        },
+        {
+            "number": 4,
+            "title": "一个叫欧维的男人给妻子扫墓",
+            "timeline": "present",
+            "keyEvent": "sonja-death"
+        },
+        {
+            "number": 5,
+            "title": "一个叫欧维的男人去了商店",
+            "timeline": "present"
+        },
+        {
+            "number": 6,
+            "title": "一个叫欧维的男人踢了小丑",
+            "timeline": "present"
+        },
+        {
+            "number": 7,
+            "title": "一个叫欧维的男人准备好赴死",
+            "timeline": "present",
+            "suicideAttempt": 1
+        },
+        {
+            "number": 8,
+            "title": "欧维和铁路工人",
+            "timeline": "past",
+            "keyEvent": "mother-death",
+            "memory": true
+        },
+        {
+            "number": 9,
+            "title": "一个叫欧维的男人把车子发动了",
+            "timeline": "present",
+            "suicideAttempt": 2
+        },
+        {
+            "number": 10,
+            "title": "欧维和他的父亲",
+            "timeline": "past",
+            "memory": true
+        },
+        {
+            "number": 11,
+            "title": "一个叫欧维的男人遇到了麻烦",
+            "timeline": "present"
+        },
+        {
+            "number": 12,
+            "title": "欧维和父亲的死",
+            "timeline": "past",
+            "keyEvent": "father-death",
+            "memory": true
+        },
+        {
+            "number": 13,
+            "title": "一个叫欧维的男人帮了倒忙",
+            "timeline": "present"
+        },
+        {
+            "number": 14,
+            "title": "欧维和索雅相遇",
+            "timeline": "past",
+            "keyEvent": "meet-sonja",
+            "memory": true
+        },
+        {
+            "number": 15,
+            "title": "一个叫欧维的男人修了暖气",
+            "timeline": "present"
+        },
+        {
+            "number": 16,
+            "title": "欧维和索雅的第一次约会",
+            "timeline": "past",
+            "memory": true
+        },
+        {
+            "number": 17,
+            "title": "一个叫欧维的男人去了火车站",
+            "timeline": "present",
+            "suicideAttempt": 3
+        },
+        {
+            "number": 18,
+            "title": "欧维和索雅结婚了",
+            "timeline": "past",
+            "keyEvent": "marry-sonja",
+            "memory": true
+        },
+        {
+            "number": 19,
+            "title": "一个叫欧维的男人救了人",
+            "timeline": "present"
+        },
+        {
+            "number": 20,
+            "title": "欧维建造房子",
+            "timeline": "past",
+            "keyEvent": "build-house",
+            "memory": true
+        },
+        {
+            "number": 21,
+            "title": "一个叫欧维的男人收养了猫",
+            "timeline": "present",
+            "keyEvent": "adopt-cat",
+            "keyCharacter": "cat"
+        },
+        {
+            "number": 22,
+            "title": "欧维和鲁尼的竞争",
+            "timeline": "past",
+            "keyCharacter": "rune",
+            "memory": true
+        },
+        {
+            "number": 23,
+            "title": "一个叫欧维的男人找出了猎枪",
+            "timeline": "present",
+            "suicideAttempt": 4
+        },
+        {
+            "number": 24,
+            "title": "欧维和索雅的事故",
+            "timeline": "past",
+            "keyEvent": "sonja-accident",
+            "memory": true
+        },
+        {
+            "number": 25,
+            "title": "一个叫欧维的男人喂了猫",
+            "timeline": "present"
+        },
+        {
+            "number": 26,
+            "title": "索雅成为教师",
+            "timeline": "past",
+            "keyEvent": "sonja-wheelchair",
+            "memory": true
+        },
+        {
+            "number": 27,
+            "title": "一个叫欧维的男人修了自行车",
+            "timeline": "present"
+        },
+        {
+            "number": 28,
+            "title": "欧维和邻居的往事",
+            "timeline": "past",
+            "memory": true
+        },
+        {
+            "number": 29,
+            "title": "一个叫欧维的男人帮了吉米",
+            "timeline": "present",
+            "keyCharacter": "jimmy"
+        },
+        {
+            "number": 30,
+            "title": "欧维和公司的斗争",
+            "timeline": "past",
+            "memory": true
+        },
+        {
+            "number": 31,
+            "title": "一个叫欧维的男人再次准备赴死",
+            "timeline": "present",
+            "suicideAttempt": 5
+        },
+        {
+            "number": 32,
+            "title": "欧维帮助安妮塔",
+            "timeline": "present",
+            "keyCharacter": "anita"
+        },
+        {
+            "number": 33,
+            "title": "一个叫欧维的男人教帕特里克用工具",
+            "timeline": "present",
+            "keyCharacter": "patrick"
+        },
+        {
+            "number": 34,
+            "title": "欧维和索雅的最后时光",
+            "timeline": "past",
+            "memory": true
+        },
+        {
+            "number": 35,
+            "title": "一个叫欧维的男人融入了社区",
+            "timeline": "present",
+            "keyEvent": "community"
+        },
+        {
+            "number": 36,
+            "title": "欧维和鲁尼和解",
+            "timeline": "present",
+            "keyCharacter": "rune"
+        },
+        {
+            "number": 37,
+            "title": "一个叫欧维的男人收到了信",
+            "timeline": "present"
+        },
+        {
+            "number": 38,
+            "title": "欧维的遗产",
+            "timeline": "present"
+        },
+        {
+            "number": 39,
+            "title": "一个叫欧维的男人离开了这个世界",
+            "timeline": "present"
+        },
+        {
+            "number": 40,
+            "title": "尾声",
+            "timeline": "present",
+            "epilogue": true
+        }
+    ]
+}

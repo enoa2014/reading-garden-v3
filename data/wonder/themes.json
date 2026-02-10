@@ -1,0 +1,26 @@
+[
+    {
+        "id": "kindness",
+        "title": "选择善良",
+        "description": "善良是我们每天做出的选择。它不仅仅是待人友善，而是即使在困难的时候，也主动选择同情和包容。",
+        "image": "assets/images/wonder/themes/choose_kind.webp"
+    },
+    {
+        "id": "acceptance",
+        "title": "接纳差异",
+        "description": "接纳他人的本真，透过外表看到内心的品质。没有人是普通的，每个人都值得被看见。",
+        "image": "assets/images/wonder/themes/acceptance.webp"
+    },
+    {
+        "id": "friendship",
+        "title": "真正的友谊",
+        "description": "友谊无关受欢迎程度。真正的友谊建立在忠诚、相互支持和看到对方闪光点的基础上。",
+        "image": "assets/images/wonder/themes/friendship.webp"
+    },
+    {
+        "id": "bystander",
+        "title": "旁观者的责任",
+        "description": "当我们目睹不公或霸凌时，保持沉默也是一种选择。我们有责任站出来，支持被伤害的人。",
+        "image": "assets/images/wonder/themes/bystander.webp"
+    }
+]

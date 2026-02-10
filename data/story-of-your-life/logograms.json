@@ -1,0 +1,45 @@
+[
+    {
+        "id": "human",
+        "meaning": "人类 / Human",
+        "description": "一个简单的符号，代表我们。",
+        "image": "assets/images/story-of-your-life/logograms/logogram_human.webp",
+        "strokes": [
+            "M100,50 C100,50 150,150 150,150",
+            "M100,50 C100,50 50,150 50,150",
+            "M50,100 L150,100"
+        ]
+    },
+    {
+        "id": "heptapod",
+        "meaning": "七肢桶 / Heptapod",
+        "description": "代表外星访客的符号，具有旋转对称性。",
+        "image": "assets/images/story-of-your-life/logograms/logogram_communicate.webp",
+        "strokes": [
+            "M100,100 m-50,0 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0",
+            "M100,100 m-20,0 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0"
+        ]
+    },
+    {
+        "id": "weapon_tool",
+        "meaning": "武器/工具 / Weapon/Tool",
+        "description": "这个符号引发了误解。是用于破坏的武器，还是用于建设的工具？",
+        "image": "assets/images/story-of-your-life/logograms/logogram_purpose.webp",
+        "strokes": [
+            "M50,100 L150,100",
+            "M100,50 L100,150",
+            "M60,60 L140,140",
+            "M140,60 L60,140"
+        ]
+    },
+    {
+        "id": "time",
+        "meaning": "时间 / Time",
+        "description": "非线性的时间概念。过去、现在和未来交织在一起。",
+        "image": "assets/images/story-of-your-life/logograms/logogram_time.webp",
+        "strokes": [
+            "M100,100 m-80,0 a80,80 0 1,0 160,0 a80,80 0 1,0 -160,0",
+            "M100,100 L100,20"
+        ]
+    }
+]

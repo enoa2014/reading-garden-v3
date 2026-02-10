@@ -1,0 +1,72 @@
+[
+    {
+        "month": "九月",
+        "title": "选择善良",
+        "content": "当面临正确与善良的选择时，选择善良。",
+        "attribution": "韦恩·戴尔博士",
+        "image": "assets/images/wonder/precepts/sep.webp"
+    },
+    {
+        "month": "十月",
+        "title": "纪念碑",
+        "content": "你的行为是你真正的纪念碑。",
+        "attribution": "埃及古墓铭文",
+        "image": "assets/images/wonder/precepts/oct.webp"
+    },
+    {
+        "month": "十一月",
+        "title": "必要",
+        "content": "没有必要的时候不用做任何事情，但当有必要的时候要付出一切。",
+        "attribution": "孔子 (Confucius)",
+        "image": "assets/images/wonder/precepts/nov.webp"
+    },
+    {
+        "month": "十二月",
+        "title": "运气",
+        "content": "天佑勇者 (Audentes fortuna iuvat)。",
+        "attribution": "维吉尔",
+        "image": "assets/images/wonder/precepts/dec.webp"
+    },
+    {
+        "month": "一月",
+        "title": "非凡",
+        "content": "没有人是普通的。",
+        "attribution": "约翰·多恩",
+        "image": "assets/images/wonder/precepts/jan.webp"
+    },
+    {
+        "month": "二月",
+        "title": "友谊",
+        "content": "知道部分问题比知道所有答案要好。",
+        "attribution": "詹姆斯·瑟伯",
+        "image": "assets/images/wonder/precepts/feb.webp"
+    },
+    {
+        "month": "三月",
+        "title": "勇气",
+        "content": "良言一句三冬暖。",
+        "attribution": "布莱斯·帕斯卡",
+        "image": "assets/images/wonder/precepts/mar.webp"
+    },
+    {
+        "month": "四月",
+        "title": "美好",
+        "content": "美即是善，善即是美。",
+        "attribution": "萨福",
+        "image": "assets/images/wonder/precepts/apr.webp"
+    },
+    {
+        "month": "五月",
+        "title": "善良",
+        "content": "尽可能行善，尽所能去爱，不论何时，不论何地，不论对谁，能做多久就做多久。",
+        "attribution": "约翰·卫斯理",
+        "image": "assets/images/wonder/precepts/may.webp"
+    },
+    {
+        "month": "六月",
+        "title": "战斗",
+        "content": "追随白昼，奔向太阳！",
+        "attribution": "The Polyphonic Spree",
+        "image": "assets/images/wonder/precepts/jun.webp"
+    }
+]

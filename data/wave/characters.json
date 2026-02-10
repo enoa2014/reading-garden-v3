@@ -1,0 +1,95 @@
+{
+    "nodes": [
+        {
+            "id": "ben-ross",
+            "name": "本·罗斯",
+            "nameEn": "Ben Ross",
+            "role": "历史教师",
+            "description": "戈登中学历史教师，\"浪潮\"实验的发起者。他本想通过实验让学生理解纳粹德国，却差点失控。最终以智慧结束了实验。",
+            "avatar": "../assets/images/wave/characters/ben-ross.webp",
+            "stance": "实验者"
+        },
+        {
+            "id": "laurie-saunders",
+            "name": "劳里·桑德斯",
+            "nameEn": "Laurie Saunders",
+            "role": "校报主编",
+            "description": "《戈登葡萄报》主编，独立思考的代表。她是第一个察觉\"浪潮\"危险的人，勇敢地站出来揭露真相，即使面对威胁也不退缩。",
+            "avatar": "../assets/images/wave/characters/laurie-saunders.webp",
+            "stance": "反对者"
+        },
+        {
+            "id": "david-collins",
+            "name": "大卫·柯林斯",
+            "nameEn": "David Collins",
+            "role": "橄榄球队员",
+            "description": "劳里的男朋友，橄榄球队成员。起初热衷于\"浪潮\"运动，认为它能让球队团结。后在劳里的影响下醒悟。",
+            "avatar": "../assets/images/wave/characters/david-collins.webp",
+            "stance": "支持→觉醒"
+        },
+        {
+            "id": "robert-billings",
+            "name": "罗伯特·比林斯",
+            "nameEn": "Robert Billings",
+            "role": "边缘学生",
+            "description": "学校的边缘人，活在优秀哥哥杰夫的阴影下。\"浪潮\"给了他归属感和自信，成为最狂热的支持者，甚至自愿做罗斯的保镖。",
+            "avatar": "../assets/images/wave/characters/robert-billings.webp",
+            "stance": "狂热支持"
+        },
+        {
+            "id": "amy-smith",
+            "name": "艾米·史密斯",
+            "nameEn": "Amy Smith",
+            "role": "劳里好友",
+            "description": "劳里的好朋友，一直活在劳里的光环之下。\"浪潮\"的平等理念让她感到解放，不再需要与劳里比较。",
+            "avatar": "../assets/images/wave/characters/amy-smith.webp",
+            "stance": "被改变者"
+        },
+        {
+            "id": "christy-ross",
+            "name": "克里斯蒂·罗斯",
+            "nameEn": "Christy Ross",
+            "role": "本的妻子",
+            "description": "本·罗斯的妻子，同校音乐教师。她最早对\"浪潮\"表示担忧，多次提醒丈夫实验可能失控。",
+            "avatar": "../assets/images/wave/characters/christy-ross.webp",
+            "stance": "警醒者"
+        }
+    ],
+    "edges": [
+        {
+            "source": "ben-ross",
+            "target": "laurie-saunders",
+            "relation": "师生→对立"
+        },
+        {
+            "source": "ben-ross",
+            "target": "robert-billings",
+            "relation": "师生→追随"
+        },
+        {
+            "source": "ben-ross",
+            "target": "christy-ross",
+            "relation": "夫妻"
+        },
+        {
+            "source": "laurie-saunders",
+            "target": "david-collins",
+            "relation": "恋人"
+        },
+        {
+            "source": "laurie-saunders",
+            "target": "amy-smith",
+            "relation": "好友→疏远"
+        },
+        {
+            "source": "david-collins",
+            "target": "robert-billings",
+            "relation": "队友"
+        },
+        {
+            "source": "amy-smith",
+            "target": "robert-billings",
+            "relation": "同学"
+        }
+    ]
+}

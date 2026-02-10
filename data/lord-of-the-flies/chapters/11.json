@@ -1,0 +1,1434 @@
+{
+  "id": 11,
+  "title": "城堡岩",
+  "titleEn": "Castle Rock",
+  "summary": "",
+  "keySymbols": [],
+  "keyCharacters": [],
+  "readingTime": 23,
+  "paragraphs": [
+    {
+      "id": "p1",
+      "text": "在黎明一阵短暂的寒冷中，四个孩子围聚在曾经是火堆，而现在已是黑色余烬的四周，拉尔夫跪在地上吹着。灰色的、轻微的烟尘被他吹得四处纷扬，可其中并没有火花闪现出来。双胞胎焦急地注视着，猪崽子则木然地坐着，他的眼睛近视，就像在他面前竖着一道发光的墙。拉尔夫还在使劲吹，吹得耳朵嗡嗡直响，然而，黎明的第一股微风一下子夺走了他手中的活儿，烟灰迷糊了他的眼睛。他往后蹲了蹲，边骂边擦去眼里流出的泪水。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p2",
+      "text": "“没用呀。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p3",
+      "text": "埃里克脸上血迹干了，活像个假面具，他好像透过假面具俯看着拉尔夫。猪崽子朝大概是拉尔夫的方向凝视着。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p4",
+      "text": "“当然没用，拉尔夫。这下咱们可没火了。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p5",
+      "text": "拉尔夫把脸挪到离猪崽子的脸约两英尺的距离。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p6",
+      "text": "“你看得见我吗？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p7",
+      "text": "“看得见一点。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p8",
+      "text": "拉尔夫把肿起的脸颊凑近猪崽子的眼睛。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p9",
+      "text": "“他们夺走了咱们的火种。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p10",
+      "text": "由于愤怒，他的声音尖起来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p11",
+      "text": "“是他们偷走的！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p12",
+      "text": "“是他们，”猪崽子说。“他们把我弄得像个瞎子。看见没有？那就是杰克·梅瑞狄。拉尔夫，你召开个大会，咱们必须决定怎么办。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p13",
+      "text": "“就咱们这些人开大会吗？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p14",
+      "text": "“咱们都来参加。萨姆——让我搭着你。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p15",
+      "text": "他们朝平台走去。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p16",
+      "text": "“吹海螺，”猪崽子说。“吹得尽量响点。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p17",
+      "text": "森林里回响着号音；成群的鸟儿从树梢上惊飞起来，叽喳地鸣叫着，就像很久以前的那一个早晨。海滩两头都毫无动静。一些小家伙从窝棚里走了出来。拉尔夫坐在光光的树干上，其余三个站在他面前。他点点头，萨姆埃里克就坐到他右边。拉尔夫把海螺塞到猪崽子手中。猪崽子小心翼翼地捧着闪闪发光的海螺，朝拉尔夫眨着眼睛。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p18",
+      "text": "“那就说吧。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p19",
+      "text": "“我拿了海螺，我要说，我啥也看不清楚，我得把眼镜找回来。这个岛上有人干了坏透的事情。我选你当头头。只有他[1]还算替大家干了点事情。拉尔夫，这下你说吧，告诉我们怎么办——，不然——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p20",
+      "text": "猪崽子突然停止讲话，啜泣起来。他坐下去的时候，拉尔夫拿回了海螺。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p21",
+      "text": "“就只是一个普普通通的火堆。你们该认为咱们做得成这件事，是不是？只要有烟作为信号，咱们就能得救。咱们是野蛮人吗？还是什么别的东西？只是眼下没信号烟升到空中去了。也许有船正在过去。你们还记得那件事吗？他怎么跑去打猎，火堆怎么灭了，船怎么过去的吗？而他们却都认为他是当头领最好的料。接着又是，又是……那也全是他的过错。要不是因为他，那件事决不会发生。这下猪崽子看不见东西了，他们跑来，偷走——”拉尔夫提高了嗓门。“——在夜里，在黑暗中，偷走了咱们的火种。他们偷走了火种。要是他们讨的话咱们本也会给的。但是他们却偷，这下信号没了，咱们也无法得救了。你们明白我的意思吗？咱们会给他们火种的，可他们就是来偷。我——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p22",
+      "text": "拉尔夫话未讲完就停下来，这时他脑中晃过了一道帘幕。猪崽子伸出双手来拿海螺。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p23",
+      "text": "“拉尔夫，你打算怎么办？咱们光在这儿说，也不做决定。我要讨还眼镜哪。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p24",
+      "text": "“我正在考虑。假定咱们去，就像咱们往常那样，洗洗干净，把头发理理——说真的，咱们毕竟不是野蛮人，而得救也不是闹着玩的——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p25",
+      "text": "他鼓起脸颊看着双胞胎。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p26",
+      "text": "“咱们稍稍打扮一下，然后就走——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p27",
+      "text": "“咱们该带着长矛，”萨姆说。“连猪崽子也要带。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p28",
+      "text": "“——因为咱们或许用得着。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p29",
+      "text": "“你没拿到海螺！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p30",
+      "text": "猪崽子举起了海螺。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p31",
+      "text": "“你们要带长矛就带吧，我可不带。有什么用处？横竖我还得像条狗似的要有人牵着。是呀，好笑。笑吧，笑吧。这个岛上他们那伙对什么东西都好笑。可结果怎么样呢？大人们会怎么想呢？小西蒙被谋害了。还有一个脸上带胎记的小孩儿。除了咱们刚到这儿那一阵子，以后还有谁看见过他呢？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p32",
+      "text": "“猪崽子！停一停！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p33",
+      "text": "“我拿着海螺。我要去找那个杰克·梅瑞狄，去告诉他，我现在就去。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p34",
+      "text": "“他们会伤害你的。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p35",
+      "text": "“他做得够损了，他还能把我怎么样？我要跟他讲个明白。拉尔夫，你们让我拿着海螺。我要给他瞧瞧，有一样东西是他所没有的。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p36",
+      "text": "猪崽子停了片刻，注视着周围暗淡的人影。野草被踩得乱糟糟的，还像过去开大会的样子，还像有那么些人在听他演讲。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p37",
+      "text": "“我要双手捧着这只海螺去找他。我要把海螺往前一伸。我要说，瞧，你身体比我壮，你没生气喘病。我要说，你看得见东西，两只眼睛都好。可我不是来乞求眼镜的，不是来乞求开恩的。我要说，我不是来求你讲公道[2]的，不要因为你强就可以为所欲为，有理才能走遍天下。把眼镜还我，我要说——你一定得还！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p38",
+      "text": "猪崽子说完这话，脸涨得通红，身体直哆嗦。他把海螺匆匆地塞到拉尔夫手中，仿佛急着要摆脱它似的，边揩擦着夺眶而出的泪水。他们四周的绿光是柔和的。易碎的、白色的海螺放在拉尔夫脚下。从猪崽子手指缝里漏出的一粒泪珠，就像一颗星星在色泽柔和的海螺曲面上一闪一亮。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p39",
+      "text": "最后拉尔夫坐直了身子，把头发往后一捋。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p40",
+      "text": "“好吧。我说——你要这样就试试吧。我们跟你一起去。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p41",
+      "text": "“他会涂成个大花脸，”萨姆胆怯地说。“你知道他会——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p42",
+      "text": "“——他才不会看重咱们呢——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p43",
+      "text": "“——要是他发了火咱们可就——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p44",
+      "text": "拉尔夫怒视着萨姆。他模模糊糊想起，西蒙曾经在岩石旁跟他讲过什么话来[3]。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p45",
+      "text": "“别傻乎乎的，”他说。随后又很快地补了一句，“咱们就走。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p46",
+      "text": "他把海螺递给猪崽子，后者脸又红了，这次洋溢着自豪的神色。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p47",
+      "text": "“你一定得拿着。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p48",
+      "text": "“准备好了我就拿着——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p49",
+      "text": "猪崽子想找些话来表达自己的热情，表示他非常乐意拿着海螺来对抗一切可能发生的事情。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p50",
+      "text": "“——我随便。我很高兴，拉尔夫，只是我要有人牵着。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p51",
+      "text": "拉尔夫把海螺放回到闪光的圆木上。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p52",
+      "text": "“咱们最好吃点什么，再准备准备。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p53",
+      "text": "他们走向被弄得乱七八糟的野果树林。猪崽子有时靠别人帮忙，有时靠自己东摸西摸找点吃的。他们吃着野果，拉尔夫想起了下午。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p54",
+      "text": "“咱们该像原先一样，先洗洗——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p55",
+      "text": "萨姆咽下满口野果，表示异议。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p56",
+      "text": "“可咱们每天都洗澡哪！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p57",
+      "text": "拉尔夫看着面前两个肮脏的人，叹了口气。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p58",
+      "text": "“咱们该梳梳头发，就是头发太长。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p59",
+      "text": "“我把两只袜子都留在窝棚里了，”埃里克说，“咱们可以把袜子套在头上，就当作是一种帽子。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p60",
+      "text": "“咱们可以找样东西，”猪崽子说，“你们把头发往后扎起来。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p61",
+      "text": "“像个小姑娘！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p62",
+      "text": "“不像，当然不像。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p63",
+      "text": "“咱们就这样去，”拉尔夫说，“他们的样子也好不了多少。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p64",
+      "text": "埃里克做了个手势，表示慢一慢。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p65",
+      "text": "“可他们涂得五颜六色的！你们晓得这是什么意思——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p66",
+      "text": "其他的人连连点头。他们太清楚不过了，使人隐藏起真相的涂脸带来的是野性的大发作。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p67",
+      "text": "“哼，咱们可不乱涂，”拉尔夫说，“因为咱们不是野蛮人。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p68",
+      "text": "萨姆埃里克兄弟俩面面相觑。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p69",
+      "text": "“反正都一样——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p70",
+      "text": "拉尔夫喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p71",
+      "text": "“不许涂！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p72",
+      "text": "他竭力回想起。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p73",
+      "text": "“烟，”他说，“咱们需要烟。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p74",
+      "text": "他很凶地转向双胞胎。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p75",
+      "text": "“我说‘烟’！咱们一定得有烟。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p76",
+      "text": "除了大群蜜蜂的嗡嗡声响外，此刻一片安静。最后猪崽子和颜悦色地说了起来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p77",
+      "text": "“当然咱们得生烟。因为烟是信号，要是没烟咱们就无法得救。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p78",
+      "text": "“我知道这话！”拉尔夫叫喊道。他把手膀从猪崽子身上挪开。“你是在提醒——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p79",
+      "text": "“我只是在说你常说的话，”猪崽子赶紧说。“我也会想一想——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p80",
+      "text": "“我可不用想，”拉尔夫大声吼道。“我一直知道这话，我可没忘。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p81",
+      "text": "猪崽子讨好地直点着脑袋瓜。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p82",
+      "text": "“拉尔夫，你是头头，你什么都记得。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p83",
+      "text": "“我没忘。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p84",
+      "text": "“当然没忘。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p85",
+      "text": "双胞胎好奇地打量着拉尔夫，似乎他们俩是初次看见他。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p86",
+      "text": "他们排好队沿着海滩出发了。拉尔夫走在头里，脚有点儿跛，肩上扛着根长矛。他透过闪光的沙滩上颤抖着的暑热烟雾和他自己披散的长发，越过手臂上的伤痕，不完全地看着前面的东西。走在拉尔夫后面的是双胞胎，眼下有一点儿担忧，但充满了不可扑灭的活力。他们往前走着，很少说话，只是把木头长矛的柄拖在地上；猪崽子发现，低头看着地上，使自己已经疲劳的眼睛避开阳光，他可以看得见长矛柄沿着沙滩往前移动。他在拖动着的长矛柄之间走着，双手小心地抱着海螺。由这些孩子们组成的这个精干的小队伍行进在海滩上，四个盘子似的人影在他们脚下跳舞、交叠在一起。暴风雨没有留下丝毫痕迹，海滩被冲刷得干干净净，就像被擦得锃亮的刀片。天空和山岭离得远远的，在暑热中闪着微光；礁石被蜃景抬高了，好像是漂浮在半空中一汪银光闪闪的水潭中。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p87",
+      "text": "他们经过那一伙人跳过舞的地方。被大雨所扑灭的烧焦的枝条仍然搁在岩石上，只是海水边的沙滩又成了平滑的一片。他们默默地走过这里，毫不怀疑会在城堡岩找到那一伙人。他们一看到城堡岩就不约而同地停下了脚步。他们的左面是岛上丛林最密的部分，黑色的、绿色的，遍地都是弯曲盘缠的根茎，简直无法穿越；他们面前摇曳着的是高高的野草。这会儿拉尔夫独自往前走着。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p88",
+      "text": "这儿的野草被压得乱糟糟的，那一次拉尔夫前去探查时，他们全都在这儿躺过。那儿是陆地的隘口，围绕着岩石的是侧石——突出的架状岩石，上面是一个个红色的尖石块。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p89",
+      "text": "萨姆触触拉尔夫的手臂说：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p90",
+      "text": "“烟。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p91",
+      "text": "在岩石的另一侧有一团小小的烟在冉冉上升。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p92",
+      "text": "“有点儿火光——我想不是烟。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p93",
+      "text": "拉尔夫转过身来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p94",
+      "text": "“咱们躲着干什么？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p95",
+      "text": "他穿过像屏幕似的野草，走到了通向狭窄隘口的小空地上。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p96",
+      "text": "“你们俩跟在最后面。我先上，猪崽子在我背后慢一步。拿好你们的长矛。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p97",
+      "text": "猪崽子提心吊胆地向前看着，在他面前有一道发光的帷幕，把他和世界隔开。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p98",
+      "text": "“安全吗？有没有峭壁？我听得见大海的涛声了。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p99",
+      "text": "“你靠紧点儿。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p100",
+      "text": "拉尔夫朝隘口移动。他踢着一块石头，石头连蹦带跳地滚入海中。那时海水在退落下去，在拉尔夫左面的下边四十英尺光景，露出了一块长满海藻的红色的方礁石。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p101",
+      "text": "“我这样安全吗？”猪崽子声音颤抖地说。“我怕得要命——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p102",
+      "text": "在他们头上，从高高的尖顶的岩石上，突然传来一声叫喊，随后是一种模仿战争呐喊的叫声，紧接着在岩石背后十几个人跟着喊起来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p103",
+      "text": "“把海螺给我，呆着别动。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p104",
+      "text": "“站住！是谁在那儿？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p105",
+      "text": "拉尔夫仰起头，瞥见岩石顶上罗杰黑黑的面孔。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p106",
+      "text": "“你认得出我是谁！”他喊道。“别装傻了。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p107",
+      "text": "他把海螺凑到嘴边，呜呜地吹起来。野蛮人一个个冒了出来，脸上涂得辨认不出谁是谁，全围挤在朝隘口方向的侧石边上。他们擎着长矛，摆好阵势守在入口处。拉尔夫继续猛吹，也不管猪崽子给吓得魂飞魄散。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p108",
+      "text": "罗杰大声叫道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p109",
+      "text": "“你当心点——明白吗？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p110",
+      "text": "拉尔夫终于挪开了嘴唇，停下来喘一口气。他气吁吁地开口说着，可还算听得出。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p111",
+      "text": "“——开大会。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p112",
+      "text": "守卫着隘口的野蛮人交头接耳地低声说着，可谁也没动。拉尔夫又朝前走了几步。他身后一个轻轻的声音急切地说道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p113",
+      "text": "“别离开我，拉尔夫。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p114",
+      "text": "“你跪下，”拉尔夫侧身说道，“在这儿等我回来。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p115",
+      "text": "拉尔夫站在沿着隘口上去的半路当中，全神贯注地盯着野蛮人看。他们涂得五颜六色，神态自若，头发朝后扎着，显得比他自在。拉尔夫决定以后把自己的头发也朝后扎起来。他感到很想叫他们等着，马上就扎好自己的头发；但那是不可能的。野蛮人吃吃地笑起来，有一个用长矛作着瞄准拉尔夫的架势。在岩石高处，罗杰双手松开了杠杆，朝外倾着身子想看看情况怎么样。隘口处的几个孩子站在自己的阴影里面，看上去只是几个蓬头散发的脑袋。猪崽子蜷缩成一团，背弓得像个麻袋，失去了原来的形状。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p116",
+      "text": "“我要召开大会。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p117",
+      "text": "一片沉默。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p118",
+      "text": "罗杰拿起一小块石头，往双胞胎中间扔过去，可没投中。他们都开始扔石头了，而萨姆还站在那儿。罗杰感到，他的身体里跳动着什么力量。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p119",
+      "text": "拉尔夫又大声地喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p120",
+      "text": "“我要召开大会。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p121",
+      "text": "他扫视着野蛮人。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p122",
+      "text": "“杰克在哪儿？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p123",
+      "text": "这一群孩子骚动起来，他们商量了一下。一个涂着颜色的脸开了口，听上去是罗伯特的口音。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p124",
+      "text": "“他去打猎了。他吩咐我们别让你进来。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p125",
+      "text": "“我来找你们看看火堆怎么样，”拉尔夫说，“还问问猪崽子的眼镜。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p126",
+      "text": "拉尔夫前面的人群晃动起来，他们当中迸发出格格的笑声，高高的山岩上回荡着轻快而兴奋的笑声。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p127",
+      "text": "拉尔夫背后响起了一个人的话音。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p128",
+      "text": "“你们要干什么？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p129",
+      "text": "双胞胎俩一个箭步冲过了拉尔夫，站到拉尔夫和入口处中间。拉尔夫很快地回过身去。杰克——从那个人的神态和红头发可以辨认出那是杰克——正从森林里走向前来。两边各蹲伏着一个猎手。三个人的脸全涂上了黑色和绿色。在他们身后的草地上，扔着一个剖开了肚子并砍去了头的野母猪。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p130",
+      "text": "猪崽子哭着喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p131",
+      "text": "“拉尔夫！别离开我！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p132",
+      "text": "他紧紧地抱住岩石，下面是一起一落的大海，那提心吊胆的样子很可笑。野蛮人的痴笑声变成了大叫大嚷的嘲笑声。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p133",
+      "text": "杰克叫喊得比嘲笑声还要响。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p134",
+      "text": "“你们滚开，拉尔夫。你们守着你们那一头，这儿是我的一头，我的一伙人。你们别来管我。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p135",
+      "text": "嘲笑声静了下去。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p136",
+      "text": "“你抢走了猪崽子的眼镜，”拉尔夫说道，上气不接下气。“你一定得还给他。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p137",
+      "text": "“一定得？谁说的？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p138",
+      "text": "拉尔夫冒火了。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p139",
+      "text": "“喂！是你们选我当头头的。你们没听见海螺声吗？你玩的是肮脏的把戏——你要火种我们本来是会给你们的——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p140",
+      "text": "热血涌上他的面颊，肿胀的眼睛眨动着。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p141",
+      "text": "“随便什么时候你要火种都可以。可你不是来要。你像个贼似的偷偷地跑来，还偷走了猪崽子的眼镜！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p142",
+      "text": "“你再说一遍！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p143",
+      "text": "“贼！贼！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p144",
+      "text": "猪崽子尖声叫道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p145",
+      "text": "“拉尔夫！帮帮我！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p146",
+      "text": "杰克往前一冲，拿长矛直刺拉尔夫的胸膛。拉尔夫因为瞥见了杰克的手臂，察觉到他的武器的位置，用自己的矛柄把刺过来的矛尖挡开。接着拉尔夫转过长矛朝杰克一刺，矛尖擦过了对方的耳朵。他们俩现在胸对着胸，大口喘着粗气，推推搡搡，怒目相视。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p147",
+      "text": "“谁是贼？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p148",
+      "text": "“就是你！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p149",
+      "text": "杰克挣脱开来，朝拉尔夫挥舞着长矛。这会儿两人心照不宣地拿长矛当军刀砍来砍去，而不敢再用会致命的矛尖。杰克的长矛打到拉尔夫的长矛上，往下一滑，把他的手指打得生疼。随即他们又一次分开，互换了位置，杰克背朝着城堡岩，而拉尔夫则站在外围，背向海岛。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p150",
+      "text": "两个孩子都呼哧呼哧地喘着粗气。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p151",
+      "text": "“再来呀——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p152",
+      "text": "“来呀——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p153",
+      "text": "他们双方都摆出一副恶狠狠的进攻架势，但却保持着距离，刚好两人都打不到对方。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p154",
+      "text": "“来呀，够你受的！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p155",
+      "text": "“你来呀——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p156",
+      "text": "猪崽子抓牢地面，正想设法吸引拉尔夫的注意。拉尔夫挪动身子，弯着腰，眼睛警觉地盯着杰克。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p157",
+      "text": "“拉尔夫——记住咱们到这儿来的目的。火堆，还有我的眼镜。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p158",
+      "text": "拉尔夫点点头。他放松了刚才格斗时的紧张的肌肉，随便地站着，用长矛柄拄着地面。杰克似乎透过涂在脸上的涂料莫名其妙地看着他。拉尔夫昂首瞥了瞥尖顶岩石，随后看着面前的这群野蛮人。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p159",
+      "text": "“听着，我们来是要说，首先你们必须把眼镜还给猪崽子。他没眼镜就看不见东西。你们这样太不光明正大了——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p160",
+      "text": "涂得五颜六色的一伙野蛮人都格格地笑着，拉尔夫心里也犹豫起来。他把头发往后一掠，凝视着面前绿色和黑色的假面具似的脸，竭力想回忆起杰克原来的模样。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p161",
+      "text": "猪崽子低声说道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p162",
+      "text": "“还有火堆。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p163",
+      "text": "“噢，对了，还有火堆的事。我又要说火堆了。自从咱们落到这岛上以来我一直在说这件事。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p164",
+      "text": "他伸出长矛指着野蛮人。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p165",
+      "text": "“你们唯一的希望就在于：只要有亮光可以看得见，就该生一堆信号火。或许会有船注意到烟，驶过来救咱们，把咱们带回家。要是没有烟咱们就得等到有船碰巧来这儿。说不定咱们要等好多年；等到人都老了——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p166",
+      "text": "野蛮人爆发出一阵颤抖的、清脆的、虚假的哄笑，这哄笑声又回荡开来。拉尔夫怒不可遏，他嗓门嘶哑地说：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p167",
+      "text": "“你们这群花脸呆子，难道你们不懂？萨姆、埃里克、猪崽子和我——我们人手不够。我们想要生好火堆，可是生不好。而你们呢，却打猎寻开心……”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p168",
+      "text": "他指着他们身后，澄澈的天空中一缕烟飘散开去。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p169",
+      "text": "“瞧瞧那个！那能叫信号火堆吗？那只是个烧食的火堆。眼下你们吃东西，烟就没了。你们不明白吗？也许有艘船正从那儿经过呢——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p170",
+      "text": "拉尔夫停住了，这一群涂成花脸的、不知名的人守卫在入口处，他们一言不发，使他占不了上风。头领张开粉红色的嘴巴，对着在他和他那一伙人之间的萨姆埃里克叫喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p171",
+      "text": "“你们俩[4]回去。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p172",
+      "text": "没有人答应他。双胞胎迷惑不解，互相看着对方；猪崽子看到一时不至于发生冲突，便小心翼翼地站起来。杰克回首看看拉尔夫，随后又看看双胞胎。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p173",
+      "text": "“抓住他们。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p174",
+      "text": "没人动弹。杰克怒气冲冲地喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p175",
+      "text": "“我说，抓住他们！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p176",
+      "text": "涂着脸的人群七手八脚地紧张地围住了萨姆埃里克。又响起了一阵清脆的哄笑声。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p177",
+      "text": "萨姆埃里克以有教养的口吻抗议道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p178",
+      "text": "“唉呀，喂喂！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p179",
+      "text": "“——正当一点！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p180",
+      "text": "双胞胎的长矛被夺走了。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p181",
+      "text": "“把他们绑起来！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p182",
+      "text": "拉尔夫朝着脸涂成黑色和绿色的人绝望地喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p183",
+      "text": "“杰克！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p184",
+      "text": "“别停手。绑住他们。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p185",
+      "text": "现在涂脸的人群觉得已经征服了萨姆埃里克，也感觉到了自己手中的力量。他们笨拙而兴奋地把双胞胎打翻在地。杰克颇受鼓舞，他知道拉尔夫会试图营救他们，返身用长矛嗡嗡地挥舞了一圈，拉尔夫刚来得及避开打击。在他们上面，那一伙人和双胞胎大叫大嚷，滚作一团。猪崽子又蹲伏下去。双胞胎很受惊地躺在地上，那一伙人站着围在他们俩周围。杰克转向拉尔夫，咬牙切齿地说道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p186",
+      "text": "“看见吗？他们听我的吩咐。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p187",
+      "text": "又是一阵沉默。双胞胎俩躺在地上，被乱七八糟地绑着，那一伙人注视着拉尔夫，看他究竟怎么办。拉尔夫透过额前的长发点着他们的人数，又瞥见了无效的烟。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p188",
+      "text": "拉尔夫熬不住了，他朝着杰克尖声叫嚷：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p189",
+      "text": "“你是野兽，是猪猡，是个道道地地的贼！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p190",
+      "text": "他冲了上去。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p191",
+      "text": "杰克晓得这是紧要关头了，也向前冲去。他们俩猛然相撞，又跳了开来。杰克挥拳朝拉尔夫就是一下，打中了他的耳朵。拉尔夫一拳正中杰克的肚子，打得他发出哼哼声。接着他们俩又正面相对，气喘吁吁，怒不可遏，然而双方都没被对方的凶狠所吓倒。他们俩觉察到自己在打架时身后的叫嚷声，那一伙人持续不断的、快活的尖叫声。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p192",
+      "text": "在一片喧闹声中，猪崽子的声音传到拉尔夫耳中。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p193",
+      "text": "“让我说话。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p194",
+      "text": "他站在因他们相打而扬起的尘土中，当那一伙人看到猪崽子想讲话时，刺耳的喝彩声变成了轻蔑的哄笑声。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p195",
+      "text": "猪崽子拿起海螺，哄笑声稍稍低落了一点，接着又响起来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p196",
+      "text": "“我拿着海螺！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p197",
+      "text": "猪崽子喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p198",
+      "text": "“告诉你们，我拿着海螺！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p199",
+      "text": "令人吃惊的是，这会儿倒又静了下来；那一伙人好奇地想听听，他究竟有什么有趣的事情要讲。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p200",
+      "text": "一阵沉默和停顿；但是在寂静之中，贴着拉尔夫的脑袋旁却响起了一种奇怪的声音。他略加注意地听了听——那种声音又响了起来；一声轻轻的“嗖！”有人在扔石头：罗杰在扔，他一手仍按在杠杆上。在罗杰下面，他只看到拉尔夫的蓬头散发和猪崽子缩成一团的胖胖的身躯。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p201",
+      "text": "“我要说，你们这样做就像一群小孩儿。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p202",
+      "text": "哄笑声又响起来，而随着猪崽子举起白色的，有魔力的海螺，哄笑声又平息了下去。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p203",
+      "text": "“哪一个好一些？——是像你们那样做一帮涂脸的黑鬼好呢？还是像拉尔夫那样做一个明白事理的人好呢？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p204",
+      "text": "野蛮人当中冒出响亮的喧哗声。猪崽子又叫道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p205",
+      "text": "“是照规则、讲一致好呢？还是打猎和乱杀好呢？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p206",
+      "text": "又响起了喧哗声，又响起了——“嗖！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p207",
+      "text": "拉尔夫不顾喧哗声，叫喊道：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p208",
+      "text": "“哪一个好一些？——是法律和得救好呢？还是打猎和破坏好呢？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p209",
+      "text": "这时候杰克也叫嚷起来，拉尔夫已无法再使别人听得出他说的话。杰克背靠着他那一伙人，长矛林立，连成一气，充满了威胁之意。他们当中正酝酿着发起一次冲击，他们在准备着，隘口将被一扫而清。拉尔夫面对他们站着，稍偏向一侧，把长矛准备好。在他身边站着的是猪崽子，仍伸着那只护身符——易碎的、闪亮而美丽的贝壳。暴风雨般的骂声朝他们俩袭来，这是一种仇恨的诅咒。在他们俩头上高高的地方，罗杰极度兴奋地、恣意地把全身的重量压在杠杆上。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p210",
+      "text": "拉尔夫早在看到巨石以前就听到了它的声音。他觉察到大地震动了一下，这震动通过他的脚底传来，他还听到悬崖高处有石头破碎的声响。接着一块红色的巨石直朝隘口蹦跳而下，那一伙人尖声叫喊，拉尔夫忙扑倒在地。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p211",
+      "text": "巨石在猪崽子的下巴到膝盖之间这一大片面积上擦过；海螺被砸成无数白色的碎片，不复存在了。猪崽子一言未发，连咕哝一声都来不及，就从岩石侧面翻落下去。巨石又弹跳了两次，最后消失在森林之中。猪崽子往下掉了四十英尺，仰面摔倒在海中那块红色的方礁石上。脑壳迸裂，脑浆直流，头部变成了红色。猪崽子的手臂和腿部微微抽搐，就像刚被宰杀的猪的腿一样。随后大海又开始起落，发出了缓慢而长长的叹息，白色的海浪翻腾着冲上礁石，又夹上了缕缕粉红色的血丝；而随着海浪再退落下去，猪崽子的尸体也被卷走了。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p212",
+      "text": "这下子孩子们都鸦雀无声。拉尔夫嘴唇在翕动，但没有声音出来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p213",
+      "text": "杰克猛地从他那一伙人中跳了出来，发狂地尖叫起来：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p214",
+      "text": "“看见没有？你们看见没有？那就是你们的结果！我说，再也没有我们这一群了！海螺完了——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p215",
+      "text": "他俯下身子，跑上前来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p216",
+      "text": "“我是头领！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p217",
+      "text": "杰克杀气腾腾地把自己的长矛对准拉尔夫飞投过去。矛尖戳破了拉尔夫肋骨上的皮肉，随即又滑开掉进了水里。拉尔夫踉跄了一下，并不觉得疼痛，只是感到惊恐，那一伙人这会儿都像头领那样尖叫着上前来。又一根长矛——一根弯的长矛，没有沿着直线飞过来——从拉尔夫面前掠过，这根长矛是从罗杰站的高处投下来的。双胞胎被捆着躺在那一伙人的背后，一张张说不清是谁的恶魔似的面孔一窝蜂地拥下了隘口。拉尔夫转身就逃。他身后响起了像成群海鸥惊叫所发出的巨大噪声。拉尔夫服从一种他并不知道自己所具有的本能，他躲闪着跑过了开阔地，因而投来的长矛距离拉得更开了。他一眼看到了一头被砍掉脑袋的野母猪，及时地一跃而过。随后他噼里啪啦地穿过簇叶和小树枝，隐没到森林之中。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p218",
+      "text": "头领在死猪旁边收住脚，转过身去，举起手来。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p219",
+      "text": "“回去！回到堡垒去！”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p220",
+      "text": "不一会儿那一伙人吵吵嚷嚷地回到了隘口，罗杰也在那儿加入到大伙当中。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p221",
+      "text": "头领气冲冲地对他说：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p222",
+      "text": "“为什么你不在上面守着？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p223",
+      "text": "罗杰阴沉沉地看着他回答：",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p224",
+      "text": "“我刚下来——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p225",
+      "text": "紧贴罗杰的周围，散布着一种刽子手般的令人恐怖的感觉。头领没再对他说什么，只是俯首直盯着萨姆埃里克。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p226",
+      "text": "“你们必须加入我们这一派。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p227",
+      "text": "“放我走——”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p228",
+      "text": "“——还有我。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p229",
+      "text": "头领从还留下的几根长矛中抽出了一根，戳戳萨姆的肋骨。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p230",
+      "text": "“你这是什么意思，嗯？”头领狂怒地说。“你们带着长矛是来干什么的？不加入我们这一派你们准备干什么？”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p231",
+      "text": "矛尖一戳一戳变得很有节奏。萨姆痛得大叫。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p232",
+      "text": "“别这样。”",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p233",
+      "text": "罗杰在头领的身旁慢慢地挨过去，只是留心不让自己的肩膀碰着他。叫嚷声停了下来，萨姆埃里克躺在地上仰脸看着，不声不响、惊恐万状。罗杰朝他们走去，就像是在行使不可名状的权威。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p234",
+      "text": "[1]指拉尔夫。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p235",
+      "text": "[2]此处原文为sport，在口语中意谓有体育道德精神的人。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p236",
+      "text": "[3]参见第七章开始部分。",
+      "highlight": false,
+      "annotations": []
+    },
+    {
+      "id": "p237",
+      "text": "[4]此处原文为You two，也可听作You too（你们也），可能因此双胞胎感到迷惑不解。",
+      "highlight": false,
+      "annotations": []
+    }
+  ],
+  "discussionPoints": []
+}

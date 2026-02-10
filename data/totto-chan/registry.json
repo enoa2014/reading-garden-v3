@@ -1,0 +1,50 @@
+{
+  "book": {
+    "id": "totto-chan",
+    "title": "窗边的小豆豆",
+    "subtitle": "探索巴学园的教育智慧",
+    "logo": "🚃",
+    "themeMode": "data-theme",
+    "themeAttribute": "data-theme",
+    "themeStorageKey": "totto-theme",
+    "defaultTheme": "light"
+  },
+  "modules": [
+    {
+      "id": "reading",
+      "title": "阅读",
+      "icon": "📖",
+      "entry": "../../js/modules/reading-module.js",
+      "data": "chapters.json",
+      "active": true
+    },
+    {
+      "id": "map",
+      "title": "地图",
+      "icon": "🗺️",
+      "entry": "../../js/modules/map-module.js",
+      "data": "map-hotspots.json"
+    },
+    {
+      "id": "philosophy",
+      "title": "理念",
+      "icon": "💡",
+      "entry": "../../js/modules/philosophy-module.js",
+      "data": "philosophies.json"
+    },
+    {
+      "id": "quiz",
+      "title": "情境",
+      "icon": "🎯",
+      "entry": "../../js/modules/interactive-module.js",
+      "data": "scenarios.json"
+    },
+    {
+      "id": "characters",
+      "title": "人物",
+      "icon": "👥",
+      "entry": "../../js/modules/characters-module.js",
+      "data": "characters.json"
+    }
+  ]
+}

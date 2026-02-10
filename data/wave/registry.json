@@ -1,0 +1,47 @@
+{
+  "book": {
+    "id": "wave",
+    "title": "浪潮",
+    "subtitle": "探索独立思考的力量",
+    "themeClass": "wave-theme",
+    "logo": "🌊"
+  },
+  "modules": [
+    {
+      "id": "reading",
+      "title": "阅读",
+      "icon": "📖",
+      "entry": "../../js/modules/reading-module.js",
+      "data": "chapters.json",
+      "active": true
+    },
+    {
+      "id": "timeline",
+      "title": "时间线",
+      "icon": "📅",
+      "entry": "../../js/modules/timeline-module.js",
+      "data": "timeline.json"
+    },
+    {
+      "id": "scenes",
+      "title": "场景",
+      "icon": "🏫",
+      "entry": "../../js/modules/scenes-module.js",
+      "data": "scenes.json"
+    },
+    {
+      "id": "themes",
+      "title": "主题",
+      "icon": "💭",
+      "entry": "../../js/modules/themes-module.js",
+      "data": "themes.json"
+    },
+    {
+      "id": "characters",
+      "title": "人物",
+      "icon": "👥",
+      "entry": "../../js/modules/characters-module.js",
+      "data": "characters.json"
+    }
+  ]
+}

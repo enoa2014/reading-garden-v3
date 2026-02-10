@@ -1,0 +1,289 @@
+{
+    "characters": [
+        {
+            "id": "ralph",
+            "name": "拉尔夫",
+            "nameEn": "Ralph",
+            "faction": "civilization",
+            "archetype": "民主领袖 (The Leader)",
+            "avatar": "assets/images/lord-of-the-flies/characters/ralph.webp",
+            "description": "12岁的金发少年，被众人推举为首领。他代表着文明、秩序和理性的希望，但他其实并不具备真正的决断力，依赖猪崽子的智慧。",
+            "traits": [
+                "理性",
+                "责任感",
+                "软弱",
+                "英俊"
+            ],
+            "quote": "咱们不是野蛮人。咱们是英国人；英国人干哪样都干得最棒。",
+            "arc": [
+                {
+                    "chapter": 1,
+                    "state": "乐观的领导者",
+                    "desc": "由于外貌俊美和手持海螺，被选为首领，相信父亲会来救援。"
+                },
+                {
+                    "chapter": 5,
+                    "state": "焦虑的维持者",
+                    "desc": "发现大家不遵守规则，海螺的权威开始动摇，开始理解猪崽子的智慧。"
+                },
+                {
+                    "chapter": 10,
+                    "state": "绝望的幸存者",
+                    "desc": "西蒙死后，陷入深深的内疚和恐惧，秩序彻底崩溃。"
+                },
+                {
+                    "chapter": 12,
+                    "state": "被追猎的猎物",
+                    "desc": "孤身一人面对杰克的追杀，最终被海军军官救下，痛哭失声。"
+                }
+            ],
+            "relationships": [
+                {
+                    "target": "piggy",
+                    "type": "ally",
+                    "label": "智囊伙伴"
+                },
+                {
+                    "target": "jack",
+                    "type": "rival",
+                    "label": "权力死敌"
+                },
+                {
+                    "target": "simon",
+                    "type": "friend",
+                    "label": "尊重的对象"
+                }
+            ]
+        },
+        {
+            "id": "jack",
+            "name": "杰克",
+            "nameEn": "Jack Merridew",
+            "faction": "savagery",
+            "archetype": "独裁者 (The Dictator)",
+            "avatar": "assets/images/lord-of-the-flies/characters/jack.webp",
+            "description": "唱诗班领唱，红头发，性格暴躁且渴望权力。他代表着人类原始的狩猎本能、暴力欲望和极权主义。",
+            "traits": [
+                "暴力",
+                "权力欲",
+                "狩猎本能",
+                "操控"
+            ],
+            "quote": "去他的规矩！我们可是强者——我们去打猎！",
+            "arc": [
+                {
+                    "chapter": 1,
+                    "state": "受挫的领唱",
+                    "desc": "竞选首领失败，但被任命为狩猎队队长，保留了部分权力。"
+                },
+                {
+                    "chapter": 4,
+                    "state": "嗜血的猎人",
+                    "desc": "涂上花脸，通过杀猪体验到了释放本能的快感，开始忽视信号火。"
+                },
+                {
+                    "chapter": 9,
+                    "state": "部落的暴君",
+                    "desc": "建立自己的部落，通过恐惧和肉食控制他人，主导了西蒙之死的狂欢。"
+                }
+            ],
+            "relationships": [
+                {
+                    "target": "ralph",
+                    "type": "rival",
+                    "label": "挑战对象"
+                },
+                {
+                    "target": "piggy",
+                    "type": "enemy",
+                    "label": "欺凌对象"
+                },
+                {
+                    "target": "roger",
+                    "type": "subordinate",
+                    "label": "得力打手"
+                }
+            ]
+        },
+        {
+            "id": "piggy",
+            "name": "猪崽子",
+            "nameEn": "Piggy",
+            "faction": "civilization",
+            "archetype": "知识分子 (The Intellectual)",
+            "avatar": "assets/images/lord-of-the-flies/characters/piggy.webp",
+            "description": "一个肥胖、患有哮喘、戴高度近视眼镜的男孩。他是岛上最聪明的人，代表着科学、逻辑和成人的理性世界，但身体孱弱，受人排挤。",
+            "traits": [
+                "智慧",
+                "逻辑",
+                "不合群",
+                "坚持原则"
+            ],
+            "quote": "哪样更好？是照规矩办事，有事大伙儿商量，还是打猎杀猪？",
+            "arc": [
+                {
+                    "chapter": 1,
+                    "state": "被嘲笑的智者",
+                    "desc": "提出使用海螺和建立名单，但被大家嘲笑，眼镜成为生火工具。"
+                },
+                {
+                    "chapter": 8,
+                    "state": "拉尔夫的支柱",
+                    "desc": "在杰克离开后，鼓励拉尔夫重建秩序，提议在海滩生火。"
+                },
+                {
+                    "chapter": 11,
+                    "state": "殉道者",
+                    "desc": "为了要回眼镜，手持海螺前往城堡岩讲理，被罗杰推下的巨石砸死。"
+                }
+            ],
+            "relationships": [
+                {
+                    "target": "ralph",
+                    "type": "ally",
+                    "label": "忠诚追随"
+                },
+                {
+                    "target": "jack",
+                    "type": "enemy",
+                    "label": "恐惧对象"
+                }
+            ]
+        },
+        {
+            "id": "simon",
+            "name": "西蒙",
+            "nameEn": "Simon",
+            "faction": "neutral",
+            "archetype": "先知/圣人 (The Mystic)",
+            "avatar": "assets/images/lord-of-the-flies/characters/simon.webp",
+            "description": "一个敏感、内向且带有癫痫症状的男孩。他具有超越常人的洞察力，是唯一认识到野兽源于内心的角色，也是唯一表现出自然善意的人。",
+            "traits": [
+                "善良",
+                "洞察力",
+                "孤独",
+                "灵性"
+            ],
+            "quote": "大概野兽就是咱们自己。",
+            "arc": [
+                {
+                    "chapter": 3,
+                    "state": "孤独的观察者",
+                    "desc": "经常独自前往密林深处，观察自然，帮助弱小。"
+                },
+                {
+                    "chapter": 8,
+                    "state": "真相的发现者",
+                    "desc": "与“蝇王”对话，意识到恶的本质，随后发现“野兽”只是飞行员尸体。"
+                },
+                {
+                    "chapter": 9,
+                    "state": "牺牲的信使",
+                    "desc": "试图将真相告诉众人，却在雷雨夜被恐惧的人群误杀。"
+                }
+            ],
+            "relationships": [
+                {
+                    "target": "ralph",
+                    "type": "friend",
+                    "label": "默默支持"
+                },
+                {
+                    "target": "lord-of-the-flies",
+                    "type": "interaction",
+                    "label": "精神对话"
+                }
+            ]
+        },
+        {
+            "id": "roger",
+            "name": "罗杰",
+            "nameEn": "Roger",
+            "faction": "savagery",
+            "archetype": "施虐者 (The Sadist)",
+            "avatar": "assets/images/lord-of-the-flies/characters/roger.webp",
+            "description": "性格阴沉、沉默寡言的男孩。最初只是扔石头取乐（不敢砸中），随着文明约束消失，彻底释放出残忍的本性，成为杰克的刽子手。",
+            "traits": [
+                "残忍",
+                "冷血",
+                "无道德",
+                "执行者"
+            ],
+            "quote": "无言的暴力（他直接推下了巨石）",
+            "arc": [
+                {
+                    "chapter": 4,
+                    "state": "受约束的施虐者",
+                    "desc": "向亨利扔石头，但故意扔偏，因为“文明的禁忌”还在。"
+                },
+                {
+                    "chapter": 11,
+                    "state": "完全的罪犯",
+                    "desc": "独自决定推下巨石杀死猪崽子，从追随者变为独立作恶者。"
+                }
+            ],
+            "relationships": [
+                {
+                    "target": "jack",
+                    "type": "leader",
+                    "label": "恐怖共生"
+                },
+                {
+                    "target": "piggy",
+                    "type": "victim",
+                    "label": "谋杀对象"
+                }
+            ]
+        },
+        {
+            "id": "lord-of-the-flies",
+            "name": "蝇王",
+            "nameEn": "Lord of the Flies",
+            "faction": "savagery",
+            "archetype": "恶的具象 (The Beast)",
+            "avatar": "assets/images/lord-of-the-flies/symbols/lord-of-the-flies.webp",
+            "description": "插在木桩上的母猪头，在西蒙的幻觉中与他对话，揭示了“恶”存在于每个人心中的真相。它是恐惧和野蛮的图腾。",
+            "traits": [
+                "邪恶",
+                "虚无",
+                "诱惑"
+            ],
+            "quote": "我是这所有一切的一部分……因为这里没你的份儿，所以也没人来帮你。",
+            "arc": [],
+            "relationships": []
+        }
+    ],
+    "factions": [
+        {
+            "id": "civilization",
+            "name": "文明派 (Civilization)",
+            "color": "#3182CE",
+            "description": "以拉尔夫和海螺为核心，主张建立规则、生火求救、保持秩序。",
+            "members": [
+                "ralph",
+                "piggy",
+                "samneric"
+            ]
+        },
+        {
+            "id": "savagery",
+            "name": "野蛮派 (Savagery)",
+            "color": "#C53030",
+            "description": "以杰克为首，涂花脸，崇尚狩猎、暴力、肉食和极权统治。",
+            "members": [
+                "jack",
+                "roger",
+                "maurice"
+            ]
+        },
+        {
+            "id": "neutral",
+            "name": "中立/游离 (Neutral)",
+            "color": "#718096",
+            "members": [
+                "simon",
+                "littluns"
+            ]
+        }
+    ]
+}

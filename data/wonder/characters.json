@@ -1,0 +1,236 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "auggie",
+                "name": "奥古斯特 (Auggie)",
+                "role": "主角",
+                "description": "一个聪明幽默的10岁男孩，天生面部畸形。他热爱《星球大战》、他的狗黛西和Xbox。他勇敢、坚韧且善良。",
+                "avatar": "assets/images/wonder/characters/avatar_auggie.webp",
+                "group": "family",
+                "color": "#FFD700"
+            }
+        },
+        {
+            "data": {
+                "id": "via",
+                "name": "维娅 (Via)",
+                "role": "姐姐",
+                "description": "奥吉的姐姐。她深爱着弟弟，但也挣扎于在这个围绕奥吉旋转的家庭中寻找自己的位置。",
+                "avatar": "assets/images/wonder/characters/avatar_via.webp",
+                "group": "family",
+                "color": "#FF69B4"
+            }
+        },
+        {
+            "data": {
+                "id": "jack",
+                "name": "杰克·威尔",
+                "role": "最好的朋友",
+                "description": "奥吉在比彻预科学校最好的朋友。他曾屈服于同伴压力，但最终选择了真正的友谊而非虚名。",
+                "avatar": "assets/images/wonder/characters/avatar_jack.webp",
+                "group": "school",
+                "color": "#87CEEB"
+            }
+        },
+        {
+            "data": {
+                "id": "summer",
+                "name": "萨默尔 (Summer)",
+                "role": "朋友",
+                "description": "一个善良的女孩，开学第一天主动选择坐在奥吉对面，只因为她觉得这是正确的事。",
+                "avatar": "assets/images/wonder/characters/avatar_summer.webp",
+                "group": "school",
+                "color": "#FFA500"
+            }
+        },
+        {
+            "data": {
+                "id": "julian",
+                "name": "朱利安",
+                "role": "对立者",
+                "description": "学校里的风云人物，因为偏见排挤奥吉，并试图孤立他。代表了霸凌与排斥的力量。",
+                "avatar": "assets/images/wonder/characters/avatar_julian.webp",
+                "group": "school",
+                "color": "#696969"
+            }
+        },
+        {
+            "data": {
+                "id": "browne",
+                "name": "布朗先生",
+                "role": "老师",
+                "description": "奥吉的英语老师，每月都会提出一条“信念”(Precept)，启发学生思考如何做人。",
+                "avatar": "assets/images/wonder/characters/avatar_browne.webp",
+                "group": "school",
+                "color": "#8B4513"
+            }
+        },
+        {
+            "data": {
+                "id": "tushman",
+                "name": "图什曼先生",
+                "role": "校长",
+                "description": "比彻预科学校的校长，和蔼可亲，坚信教育的包容性，一直支持着奥吉。",
+                "avatar": "assets/images/wonder/characters/avatar_tushman.webp",
+                "group": "school",
+                "color": "#4682B4"
+            }
+        },
+        {
+            "data": {
+                "id": "mom",
+                "name": "伊莎贝尔 (妈妈)",
+                "role": "母亲",
+                "description": "为了在家教导奥吉而放弃事业的伟大母亲。她是奥吉最坚定的支持者。",
+                "avatar": "assets/images/wonder/characters/avatar_mom.webp",
+                "group": "family",
+                "color": "#FFB6C1"
+            }
+        },
+        {
+            "data": {
+                "id": "dad",
+                "name": "奈特 (爸爸)",
+                "role": "父亲",
+                "description": "幽默风趣的父亲，总是用笑话来缓解家庭的紧张气氛，深爱着孩子们。",
+                "avatar": "assets/images/wonder/characters/avatar_dad.webp",
+                "group": "family",
+                "color": "#4169E1"
+            }
+        },
+        {
+            "data": {
+                "id": "miranda",
+                "name": "米兰达 (Miranda)",
+                "role": "维娅旧友",
+                "description": "维娅曾经最好的朋友，有着粉红色的头发。虽然与维娅渐行渐远，但她内心深处依然深爱着奥吉，并最终与维娅和解。",
+                "avatar": "assets/images/wonder/characters/avatar_miranda.webp",
+                "group": "family",
+                "color": "#DB7093"
+            }
+        },
+        {
+            "data": {
+                "id": "justin",
+                "name": "贾斯汀 (Justin)",
+                "role": "维娅男友",
+                "description": "维娅的男朋友，拉着一手好提琴，也是个Zydeco乐队的乐手。他善良正直，曾为了保护杰克而挺身而出。",
+                "avatar": "assets/images/wonder/characters/avatar_justin.webp",
+                "group": "family",
+                "color": "#20B2AA"
+            }
+        },
+        {
+            "data": {
+                "id": "daisy",
+                "name": "黛西 (Daisy)",
+                "role": "宠物",
+                "description": "普尔曼家的老狗。它无条件地爱着奥吉，从不在乎他的长相。",
+                "avatar": "assets/images/wonder/characters/avatar_daisy.webp",
+                "group": "family",
+                "color": "#DEB887"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "source": "mom",
+                "target": "auggie",
+                "label": "母爱/守护"
+            }
+        },
+        {
+            "data": {
+                "source": "dad",
+                "target": "auggie",
+                "label": "逗乐/支持"
+            }
+        },
+        {
+            "data": {
+                "source": "via",
+                "target": "auggie",
+                "label": "守护/理解"
+            }
+        },
+        {
+            "data": {
+                "source": "daisy",
+                "target": "auggie",
+                "label": "陪伴"
+            }
+        },
+        {
+            "data": {
+                "source": "jack",
+                "target": "auggie",
+                "label": "挚友"
+            }
+        },
+        {
+            "data": {
+                "source": "summer",
+                "target": "auggie",
+                "label": "善良/朋友"
+            }
+        },
+        {
+            "data": {
+                "source": "julian",
+                "target": "auggie",
+                "label": "霸凌/排挤"
+            }
+        },
+        {
+            "data": {
+                "source": "browne",
+                "target": "auggie",
+                "label": "启迪"
+            }
+        },
+        {
+            "data": {
+                "source": "tushman",
+                "target": "auggie",
+                "label": "包容/支持"
+            }
+        },
+        {
+            "data": {
+                "source": "miranda",
+                "target": "via",
+                "label": "旧友/和解"
+            }
+        },
+        {
+            "data": {
+                "source": "miranda",
+                "target": "auggie",
+                "label": "如亲姐般关爱"
+            }
+        },
+        {
+            "data": {
+                "source": "justin",
+                "target": "via",
+                "label": "恋人"
+            }
+        },
+        {
+            "data": {
+                "source": "justin",
+                "target": "jack",
+                "label": "挺身而出"
+            }
+        },
+        {
+            "data": {
+                "source": "tushman",
+                "target": "julian",
+                "label": "教育/惩戒"
+            }
+        }
+    ]
+}

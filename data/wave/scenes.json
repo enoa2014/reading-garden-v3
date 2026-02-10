@@ -1,0 +1,210 @@
+{
+    "scenes": [
+        {
+            "id": "history-classroom",
+            "name": "历史教室",
+            "image": "../assets/images/wave/scenes/classroom.webp",
+            "description": "本·罗斯的历史课教室，\"浪潮\"实验的发源地。从播放纳粹纪录片到建立浪潮组织，一切都从这里开始。",
+            "events": [
+                "播放二战纳粹纪录片",
+                "学生提出\"德国人为何没有阻止\"的问题",
+                "开始坐姿和纪律训练",
+                "创建\"浪潮\"组织的标语、手势和口号"
+            ],
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "罗斯老师进行了哪些纪律训练？学生的反应如何？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "为什么如此简单的训练能产生这么大的影响？这说明了什么？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "在你的课堂/家庭中，纪律与自由的边界在哪里？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何设计一个既有纪律又保护独立思考的课堂活动？"
+                }
+            ],
+            "keywords": [
+                "纪律",
+                "坐姿",
+                "训练",
+                "口号",
+                "手势",
+                "纪录片"
+            ]
+        },
+        {
+            "id": "cafeteria",
+            "name": "学校餐厅",
+            "image": "../assets/images/wave/scenes/cafeteria.webp",
+            "description": "学生社交的主要场所。随着\"浪潮\"扩张，餐厅成为区分成员与非成员的战场。罗伯特在这里找到了归属感。",
+            "events": [
+                "罗伯特首次被浪潮成员接纳",
+                "成员开始排斥非成员",
+                "\"圈内人\"与\"圈外人\"的界限形成",
+                "劳里发现越来越多学生回避她"
+            ],
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "罗伯特在加入浪潮前后的社交处境有何变化？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "为什么群体归属感对边缘学生如此有吸引力？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "你身边是否有类似罗伯特的学生/孩子？他们的需求是什么？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何帮助边缘学生建立健康的、不依赖极端组织的归属感？"
+                }
+            ],
+            "keywords": [
+                "罗伯特",
+                "归属感",
+                "排斥",
+                "午餐",
+                "社交"
+            ]
+        },
+        {
+            "id": "gymnasium",
+            "name": "体育馆",
+            "image": "../assets/images/wave/scenes/gymnasium.webp",
+            "description": "\"浪潮\"大型集会的场所。全校成员在这里高呼口号、行礼。场面令人不寒而栗，也是真相揭露的关键场所。",
+            "events": [
+                "全校浪潮成员集会",
+                "统一口号、统一行礼",
+                "罗斯老师宣布\"领袖将出现\"",
+                "播放希特勒演讲，真相揭露"
+            ],
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "集会上学生们做了什么？他们的情绪状态如何？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "为什么集会的仪式感能如此强烈地强化群体认同？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "这种集会形式让你联想到现实中的哪些场景？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何利用集体活动的正面力量，同时避免其滑向盲从？"
+                }
+            ],
+            "keywords": [
+                "集会",
+                "口号",
+                "领袖",
+                "希特勒",
+                "真相"
+            ]
+        },
+        {
+            "id": "newspaper-office",
+            "name": "校报编辑室",
+            "image": "../assets/images/wave/scenes/newspaper-office.webp",
+            "description": "《戈登葡萄报》编辑室，反抗\"浪潮\"的据点。劳里在这里坚持发出不同的声音，揭露浪潮的阴暗面。",
+            "events": [
+                "劳里开始质疑浪潮",
+                "撰写批评浪潮的文章",
+                "其他编辑逐渐支持劳里",
+                "报纸出版引发巨大争议"
+            ],
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "劳里的文章揭露了浪潮的哪些问题？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "独立媒体在抵抗群体疯狂中起到什么作用？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "在你的环境中，谁扮演着\"发出不同声音\"的角色？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何鼓励学生/孩子勇敢表达不同意见，同时保护他们不受报复？"
+                }
+            ],
+            "keywords": [
+                "校报",
+                "劳里",
+                "文章",
+                "批评",
+                "媒体"
+            ]
+        },
+        {
+            "id": "laurie-home",
+            "name": "劳里家",
+            "image": "../assets/images/wave/scenes/laurie-home.webp",
+            "description": "劳里与父母讨论\"浪潮\"的地方。父母的理性引导帮助劳里坚定了独立思考的立场。",
+            "events": [
+                "劳里向父母讲述学校的变化",
+                "母亲表达对浪潮的担忧",
+                "父亲分析群体行为的危险",
+                "家人支持她写文章揭露真相"
+            ],
+            "discussion": [
+                {
+                    "type": "fact",
+                    "icon": "🔍",
+                    "question": "劳里的父母分别持什么态度？他们如何表达？"
+                },
+                {
+                    "type": "analysis",
+                    "icon": "🤔",
+                    "question": "家庭讨论如何帮助劳里保持独立思考？"
+                },
+                {
+                    "type": "reflection",
+                    "icon": "💭",
+                    "question": "在你的家庭/课堂中，是否有类似的开放讨论氛围？"
+                },
+                {
+                    "type": "action",
+                    "icon": "🎯",
+                    "question": "如何创造一个孩子愿意分享学校经历、家长能够有效引导的沟通环境？"
+                }
+            ],
+            "keywords": [
+                "家庭",
+                "父母",
+                "讨论",
+                "支持",
+                "独立思考"
+            ]
+        }
+    ]
+}

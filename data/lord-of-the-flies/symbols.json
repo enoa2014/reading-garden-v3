@@ -1,0 +1,120 @@
+{
+    "symbols": [
+        {
+            "id": "conch",
+            "name": "海螺",
+            "nameEn": "The Conch",
+            "image": "assets/images/lord-of-the-flies/symbols/conch.webp",
+            "meaning": "民主、法治、发言权、不仅是权力的象征，更是所有人都必须遵守的规则本身。",
+            "evolution": [
+                {
+                    "chapter": 1,
+                    "title": "发现与确立",
+                    "description": "猪崽子发现海螺，并教拉尔夫吹响它。海螺召集了散落的孩子，成为选举领袖和发言权的标志。"
+                },
+                {
+                    "chapter": 2,
+                    "title": "规则的工具",
+                    "description": "确立规则：“谁拿海螺谁发言”。这时大家都尊重海螺的权威，秩序井然。"
+                },
+                {
+                    "chapter": 5,
+                    "title": "权威受挫",
+                    "description": "杰克质疑海螺的作用：“我们不需要海螺了……我们知道谁该说话。”海螺的权威开始动摇。"
+                },
+                {
+                    "chapter": 8,
+                    "title": "被忽视",
+                    "description": "杰克分裂出去建立部落，彻底无视海螺的规则。海螺只在拉尔夫的小团体中有效。"
+                },
+                {
+                    "chapter": 11,
+                    "title": "粉碎",
+                    "description": "猪崽子手持海螺试图讲理，罗杰推下巨石，海螺被炸成碎片。这标志着岛上民主与文明的彻底终结。"
+                }
+            ]
+        },
+        {
+            "id": "fire",
+            "name": "信号火",
+            "nameEn": "The Signal Fire",
+            "image": "assets/images/lord-of-the-flies/symbols/fire.webp",
+            "meaning": "文明的火种、回归社会的希望、理性的象征。但它也是双刃剑，失控时会带来毁灭。",
+            "evolution": [
+                {
+                    "chapter": 2,
+                    "title": "希望之火",
+                    "description": "孩子们在山顶通过眼镜点燃第一堆火，目的是为了发出信号求救。"
+                },
+                {
+                    "chapter": 2,
+                    "title": "失控之火",
+                    "description": "火势失去控制，烧毁了一片树林，可能导致带胎记的小男孩失踪。预示了野蛮力量的不可控。"
+                },
+                {
+                    "chapter": 4,
+                    "title": "熄灭",
+                    "description": "杰克带人去打猎，导致无人看守，火堆熄灭，正好有一艘船经过。错失获救机会，文明与野蛮冲突升级。"
+                },
+                {
+                    "chapter": 12,
+                    "title": "毁灭与获救",
+                    "description": "杰克为了猎杀拉尔夫放火烧山。讽刺的是，这场旨在毁灭的大火却引来了海军军官，最终救了他们。"
+                }
+            ]
+        },
+        {
+            "id": "glasses",
+            "name": "猪崽子的眼镜",
+            "nameEn": "Piggy's Glasses",
+            "image": "assets/images/lord-of-the-flies/symbols/glasses.webp",
+            "meaning": "科学、技术、理性和洞察力。它是生火的唯一工具，意味着只有凭借理性才能维持文明的希望。",
+            "evolution": [
+                {
+                    "chapter": 1,
+                    "title": "完整",
+                    "description": "猪崽子戴着眼镜，代表他对通过文明手段解决问题的坚持。"
+                },
+                {
+                    "chapter": 2,
+                    "title": "工具",
+                    "description": "被强行拿下来聚焦阳光生火。知识被权力征用。"
+                },
+                {
+                    "chapter": 4,
+                    "title": "破损",
+                    "description": "杰克打了猪崽子，眼镜被打碎一片。象征理性的局部受损和暴力的抬头。"
+                },
+                {
+                    "chapter": 10,
+                    "title": "被夺",
+                    "description": "杰克夜袭掠走了眼镜。理性彻底丧失力量，成为野蛮力量手中的工具（仅用于生火烤肉）。"
+                }
+            ]
+        },
+        {
+            "id": "fly-lord",
+            "name": "蝇王",
+            "nameEn": "Lord of the Flies",
+            "image": "assets/images/lord-of-the-flies/symbols/lord-of-the-flies.webp",
+            "meaning": "其名源于“别西卜”（Baalzebub，万恶之首）。那个插在木棒上的血淋淋的猪头，象征着人性深处的原始邪恶。",
+            "evolution": [
+                {
+                    "chapter": 8,
+                    "title": "供品",
+                    "description": "杰克把母猪头插在木棒上献给“野兽”，作为某种图腾式的供奉。"
+                },
+                {
+                    "chapter": 8,
+                    "title": "对话",
+                    "description": "在西蒙的幻觉中，猪头对他说话，自称“蝇王”，并指出恶并不在外部，而是在孩子们体内。"
+                },
+                {
+                    "chapter": 12,
+                    "title": "空壳",
+                    "description": "拉尔夫在逃亡中遇到那个只剩下白骨的猪头，愤怒地将它打碎。虽然图腾碎了，但其代表的恶已遍布全岛。"
+                }
+            ]
+        }
+    ]
+}

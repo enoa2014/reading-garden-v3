@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "method": "上吊",
+        "methodEn": "Hanging",
+        "icon": "hook",
+        "chapter": 7,
+        "location": "客厅",
+        "preparation": "穿上西装，铺好塑料膜，在天花板钻洞",
+        "interruptedBy": "帕尔瓦娜",
+        "interruptReason": "送蛋糕道谢",
+        "result": "帮忙倒车入库",
+        "quote": "他刚要踢开凳子，门铃响了。",
+        "image": null
+    },
+    {
+        "id": 2,
+        "method": "一氧化碳中毒",
+        "methodEn": "Carbon Monoxide",
+        "icon": "car",
+        "chapter": 9,
+        "location": "车库",
+        "preparation": "发动萨博，关闭车库门",
+        "interruptedBy": "帕特里克",
+        "interruptReason": "借梯子",
+        "result": "帮忙修理窗户",
+        "quote": "那个盲流又来了。",
+        "image": "../assets/images/a-man-called-ove/ove-saab.webp"
+    },
+    {
+        "id": 3,
+        "method": "卧轨",
+        "methodEn": "Train",
+        "icon": "train",
+        "chapter": 17,
+        "location": "火车站",
+        "preparation": "站在月台边缘等待列车",
+        "interruptedBy": "倒在铁轨上的人",
+        "interruptReason": "需要救助",
+        "result": "救了一个心脏病发作的人",
+        "quote": "他只是想死，结果却救了别人的命。",
+        "image": null
+    },
+    {
+        "id": 4,
+        "method": "枪击",
+        "methodEn": "Shooting",
+        "icon": "gun",
+        "chapter": 23,
+        "location": "家中",
+        "preparation": "找出父亲留下的猎枪",
+        "interruptedBy": "猫",
+        "interruptReason": "猫饿了需要喂食",
+        "result": "开始照顾猫",
+        "quote": "那只该死的猫又叫了。",
+        "image": "../assets/images/a-man-called-ove/ove-cat-chair.webp"
+    },
+    {
+        "id": 5,
+        "method": "上吊（二次）",
+        "methodEn": "Hanging (Second)",
+        "icon": "hook",
+        "chapter": 31,
+        "location": "客厅",
+        "preparation": "再次准备绳索",
+        "interruptedBy": "鲁尼家的求助",
+        "interruptReason": "白衣人要带走鲁尼",
+        "result": "帮助安妮塔对抗政府官员",
+        "quote": "这一次，他选择活下去。",
+        "image": null
+    }
+]
