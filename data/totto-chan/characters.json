@@ -6,7 +6,15 @@
                 "name": "小豆豆",
                 "role": "student",
                 "color": "#FFD93D",
-                "avatar": "../assets/images/totto-chan/characters/avatar_totto.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_totto.webp",
+                "description": "本书的主角，一个因淘气被原学校退学的一年级女生。在巴学园里，她遇到了小林校长，在他的爱护和引导下，逐渐从一个“怪孩子”变成了一个懂礼貌、快乐的孩子。",
+                "quote": "校长先生，这是真的吗？我真的是个好孩子吗？",
+                "traits": [
+                    "活泼",
+                    "好奇",
+                    "善良",
+                    "天真"
+                ]
             }
         },
         {
@@ -15,7 +23,15 @@
                 "name": "小林校长",
                 "role": "principal",
                 "color": "#87CEEB",
-                "avatar": "../assets/images/totto-chan/characters/avatar_kobayashi.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_kobayashi.webp",
+                "description": "巴学园的创办者，一位伟大的教育家。他创办了独特的“电车教室”，尊重每个孩子的个性，耐心倾听小豆豆说了四个小时的话。他用“你真是一个好孩子”这句话，温暖并改变了小豆豆的一生。",
+                "quote": "无论发生什么，你都是一个好孩子。",
+                "traits": [
+                    "尊重儿童",
+                    "耐心",
+                    "有远见",
+                    "慈爱"
+                ]
             }
         },
         {
@@ -24,7 +40,15 @@
                 "name": "妈妈",
                 "role": "parent",
                 "color": "#90EE90",
-                "avatar": "../assets/images/totto-chan/characters/avatar_mama.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_mama.webp",
+                "description": "小豆豆的母亲，一位充满智慧和包容心的女性。当小豆豆被退学时，她没有责备孩子，而是默默寻找适合她的学校。她始终信任小豆豆，保护着孩子的自尊心。",
+                "quote": "我们去看看新学校吧，只要你喜欢就好。",
+                "traits": [
+                    "温柔",
+                    "包容",
+                    "睿智",
+                    "信任"
+                ]
             }
         },
         {
@@ -33,7 +57,15 @@
                 "name": "泰明",
                 "role": "student",
                 "color": "#F8BBD9",
-                "avatar": "../assets/images/totto-chan/characters/avatar_yasuaki.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_yasuaki.webp",
+                "description": "小豆豆的同班同学，患有小儿麻痹症，但这并没有阻碍他对知识的渴望。在小豆豆的帮助下，他第一次爬上了树，看到了从未见过的风景。他温和善良，是小豆豆珍贵的朋友。",
+                "quote": "小豆豆，谢谢你带我爬树，这是我第一次看到这么远的风景。",
+                "traits": [
+                    "坚强",
+                    "好学",
+                    "温和",
+                    "乐观"
+                ]
             }
         },
         {
@@ -42,7 +74,15 @@
                 "name": "高桥君",
                 "role": "student",
                 "color": "#FFCC80",
-                "avatar": "../assets/images/totto-chan/characters/avatar_takahashi.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_takahashi.webp",
+                "description": "小豆豆的同学，因为种种原因停止了身体发育，但这并不影响他的优秀。在巴学园的运动会上，凭借小林校长特意设计的比赛项目，他获得了第一名，找回了自信和光彩。",
+                "quote": "我也能拿第一名！",
+                "traits": [
+                    "自信",
+                    "努力",
+                    "聪明",
+                    "勇敢"
+                ]
             }
         },
         {
@@ -51,7 +91,15 @@
                 "name": "火车教室",
                 "role": "location",
                 "color": "#FFF8E8",
-                "avatar": "../assets/images/totto-chan/characters/avatar_train.webp"
+                "avatar": "../assets/images/totto-chan/characters/avatar_train.webp",
+                "description": "巴学园独特的教室，由废弃的电车车厢改装而成。孩子们在这里可以自由选择座位，按自己喜欢的顺序学习科目。它象征着巴学园自由、开放、快乐的教育氛围。",
+                "quote": "电车教室开始上课啦！大家选自己喜欢的科目开始学习吧。",
+                "traits": [
+                    "自由",
+                    "创新",
+                    "快乐",
+                    "开放"
+                ]
             }
         }
     ],

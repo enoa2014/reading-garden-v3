@@ -60,9 +60,27 @@ export function createModal() {
     modal.addEventListener("click", (e) => {
       const t = e.target;
       if (!(t instanceof HTMLElement)) return;
+      // Backdrop click
+      if (t.classList.contains("rg-modal__backdrop")) {
+        close();
+        return;
+      }
+      // Delegate close button in case of dynamic content, though we prefer direct bind if possible
       if (t.closest("[data-modal-close]")) {
         close();
       }
+    });
+
+    // Determine if we need to re-bind on open, but since the close button is static in the DOM (in book.html), we can bind once.
+    // However, let's look at creaetModal.
+    // The modal HTML is static in book.html? Yes.
+    // So we can bind to valid close buttons now.
+    const closeBtns = modal.querySelectorAll("[data-modal-close]");
+    closeBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent double triggering if bubbling
+        close();
+      });
     });
 
     window.addEventListener("keydown", (e) => {
