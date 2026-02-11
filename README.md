@@ -54,6 +54,7 @@ CI 门禁：
 - `workflow_dispatch` 可通过 `pack_stats_require_valid_selection` 控制严格校验（默认 true）
 - CI Job Summary 会输出 `packStats` 摘要（含 missing requested IDs）
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
+- 严格模式下会额外校验抽样 ID 格式（仅允许 `a-z0-9-`）
 
 ## 项目概览
 

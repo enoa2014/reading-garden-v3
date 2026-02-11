@@ -74,12 +74,13 @@ Phase 9
 - [x] CI Job Summary 输出 `packStats` 摘要
 - [x] 无效 `packStats` 抽样 ID 支持严格失败策略
 - [x] `workflow_dispatch` 支持输入覆盖严格校验开关
+- [x] 严格模式增加抽样 ID 格式校验
 - **Status:** in_progress
 
 ## Key Questions
 1. 缺失资源分类统计是否需要用于 CI 阈值告警？
 2. 最近模板导入模式是否需要支持“预览差异”？
-3. `workflow_dispatch` 是否需要限制非法输入格式（如空格/分号）？
+3. CI summary 是否需要额外显示“格式非法 ID”计数告警？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -99,3 +100,4 @@ Phase 9
 | CI summary 固定输出 packStats 关键指标与 missing IDs | 降低排查成本，提升输入错误可见性 |
 | CI 默认启用严格抽样校验（invalid ID fail） | 尽早暴露输入错误，避免产出误导性对比结果 |
 | workflow_dispatch 允许按需关闭严格校验 | 兼容探索性分析场景，默认仍保持严格 |
+| 严格模式补充抽样 ID 格式校验 | 提前拦截输入错误，减少“误判为缺失书籍”噪声 |

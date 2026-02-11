@@ -443,11 +443,16 @@ async function estimateSitePackStats() {
 
   const dedupRequested = [];
   const seenRequested = new Set();
+  const invalidFormatBookIds = [];
+  const BOOK_ID_PATTERN = /^[a-z0-9-]+$/;
   String(process.env.EDITOR_PACK_STATS_SELECTED_BOOKS || "")
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean)
     .forEach((id) => {
+      if (!BOOK_ID_PATTERN.test(id)) {
+        invalidFormatBookIds.push(id);
+      }
       if (seenRequested.has(id)) return;
       seenRequested.add(id);
       dedupRequested.push(id);
@@ -463,6 +468,7 @@ async function estimateSitePackStats() {
     mode: "auto",
     requestedBookIds: dedupRequested,
     missingBookIds: [],
+    invalidFormatBookIds,
   };
 
   if (dedupRequested.length) {
@@ -480,6 +486,11 @@ async function estimateSitePackStats() {
   }
 
   const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
+  if (requireValidSelection && selectionMeta.invalidFormatBookIds.length) {
+    throw new Error(
+      `ASSERT_FAILED: invalid pack stats selected book id format -> ${selectionMeta.invalidFormatBookIds.join(", ")}`
+    );
+  }
   if (requireValidSelection && selectionMeta.missingBookIds.length) {
     throw new Error(
       `ASSERT_FAILED: pack stats selected books not found -> ${selectionMeta.missingBookIds.join(", ")}`
@@ -586,7 +597,7 @@ async function testPackSizeStats() {
 async function testPackStatsStrictSelection() {
   const prevSelected = process.env.EDITOR_PACK_STATS_SELECTED_BOOKS;
   const prevStrict = process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION;
-  process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = "__missing_book_for_strict_test__";
+  process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = "missing-book-for-strict-test";
   process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION = "1";
 
   let failed = false;
@@ -610,6 +621,33 @@ async function testPackStatsStrictSelection() {
   assert(failed, "strict pack stats should fail when selected books are missing");
 }
 
+async function testPackStatsStrictFormat() {
+  const prevSelected = process.env.EDITOR_PACK_STATS_SELECTED_BOOKS;
+  const prevStrict = process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION;
+  process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = "bad;id";
+  process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION = "1";
+
+  let failed = false;
+  try {
+    await estimateSitePackStats();
+  } catch (err) {
+    failed = String(err?.message || "").includes("invalid pack stats selected book id format");
+  } finally {
+    if (typeof prevSelected === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_SELECTED_BOOKS;
+    } else {
+      process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = prevSelected;
+    }
+    if (typeof prevStrict === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION;
+    } else {
+      process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION = prevStrict;
+    }
+  }
+
+  assert(failed, "strict pack stats should fail when selection format is invalid");
+}
+
 async function writeReport(report) {
   await mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -622,6 +660,7 @@ async function runChecks() {
     { name: "site-pack-markers", run: testSitePackSourceMarkers },
     { name: "diagnostic-markers", run: testDiagnosticSourceMarkers },
     { name: "pack-size-strict-selection", run: testPackStatsStrictSelection },
+    { name: "pack-size-strict-format", run: testPackStatsStrictFormat },
     { name: "pack-size-stats", run: testPackSizeStats },
   ];
 
