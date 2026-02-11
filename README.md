@@ -18,7 +18,7 @@ python3 -m http.server 8080
 
 - 路径：`reading-garden-editor/index.html`
 - 当前阶段：Sprint 4（安全校验 + 发布打包）
-- 已实现：打开项目、书架管理、新建书、`rgbook` 导入导出、`rgsite` 全量/子集发布包导出（subset 支持 balanced/minimal + missingAssets/MISSING-ASSETS.txt）
+- 已实现：打开项目、书架管理、新建书、`rgbook` 导入导出、`rgsite` 全量/子集发布包导出（subset 支持 balanced/minimal + missingAssets/MISSING-ASSETS.txt 分组）
 - 已实现：`rgbook` 导入失败诊断报告下载（完整/脱敏/自定义 + 最近模板复用/清空）、编辑器回归脚本
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 

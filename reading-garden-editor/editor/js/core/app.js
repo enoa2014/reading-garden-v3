@@ -648,11 +648,15 @@ async function exportSiteFlow(options = {}) {
     const missingText = Array.isArray(result.missingAssets) && result.missingAssets.length
       ? `，missingAssets ${result.missingAssets.length}`
       : "";
+    const missingGroupCount = result.missingAssetsByGroup
+      ? Object.keys(result.missingAssetsByGroup).length
+      : 0;
+    const groupText = missingGroupCount ? `，groups ${missingGroupCount}` : "";
     const reportText = result.missingAssetsReportAdded ? "，含 MISSING-ASSETS.txt" : "";
     setState({
       packFeedback: {
         type: "ok",
-        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}${missingText}${reportText}）`,
+        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}${missingText}${groupText}${reportText}）`,
       },
     });
     setStatus("rgsite exported");
