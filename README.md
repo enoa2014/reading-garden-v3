@@ -32,7 +32,7 @@ python3 -m http.server 8080
 - 已实现：Live Preview 自动刷新开关（写入后按需自动刷新 iframe）
 - 已实现：Live Preview 自动刷新偏好支持“全局默认 + 项目覆盖”持久化（兼容旧版 localStorage）
 - 已实现：Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
-- 已实现：Live Preview 自动刷新策略支持导入/导出（支持 `replace/merge`）
+- 已实现：Live Preview 自动刷新策略支持导入/导出（支持 `replace/merge`，merge 可选覆盖默认值）
 - 已实现：组合策略包导入/导出（会话快照策略 + 自动刷新策略，一次迁移）
 - 已实现：组合策略包导入兼容旧单策略文件（recovery 或 auto-refresh）
 - 已实现：`books.json` / `registry.json` 路径级校验提示（含修复建议）
@@ -47,7 +47,7 @@ python3 -m http.server 8080
 - 已实现：会话快照清理阈值支持按项目独立配置（项目级覆盖全局默认）
 - 已实现：会话快照策略支持一键恢复全局默认（针对当前项目）
 - 已实现：会话快照策略显示当前来源（项目覆盖/全局默认）
-- 已实现：会话快照策略支持导入/导出（跨设备复制，支持 `replace/merge` 导入模式）
+- 已实现：会话快照策略支持导入/导出（跨设备复制，支持 `replace/merge`，merge 可选覆盖默认值）
 - 已实现：新建书模板支持可选 `timeline/interactive` 模块脚手架
 - 已实现：新建书支持模板级别（`minimal/standard/teaching/custom`）一键套用
 - 已实现：新建书支持自定义模板预设（保存/应用/导入/导出/清空）

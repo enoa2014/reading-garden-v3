@@ -553,6 +553,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("applyPreviewAutoRefreshPreferenceForProject"), "app should support project-scoped preview auto-refresh preference");
   assert(appSource.includes("clearProjectPreviewAutoRefreshPreferenceInStorage"), "app should support clearing project-scoped preview auto-refresh policy");
   assert(appSource.includes("normalizePreviewAutoRefreshImportMode"), "app should normalize preview auto-refresh policy import mode");
+  assert(appSource.includes("normalizePolicyImportOptions"), "app should normalize shared policy import options");
   assert(appSource.includes("mergePreviewAutoRefreshPolicyPayload"), "app should support merging preview auto-refresh policy payloads");
   assert(appSource.includes("exportPreviewAutoRefreshPolicyFlow"), "app should support exporting preview auto-refresh policy");
   assert(appSource.includes("importPreviewAutoRefreshPolicyFlow"), "app should support importing preview auto-refresh policy");
@@ -574,6 +575,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("onResetPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy reset handler");
+  assert(appSource.includes("onUpdateRecoveryPolicyImportOptions"), "app should wire policy import option updates");
   assert(appSource.includes("onExportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy export handler");
   assert(appSource.includes("onImportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy import handler");
   assert(appSource.includes("onExportEditorPolicyBundle"), "app should wire editor policy bundle export handler");
@@ -625,7 +627,9 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-export-recovery-policy-btn"), "dashboard should expose recovery policy export action");
   assert(dashboardSource.includes("preview-import-recovery-policy-btn"), "dashboard should expose recovery policy import action");
   assert(dashboardSource.includes("recoveryPolicyImportMode"), "dashboard should expose recovery policy import mode selector");
+  assert(dashboardSource.includes("recoveryPolicyImportIncludeDefaultOnMerge"), "dashboard should expose merge-include-default option");
   assert(dashboardSource.includes("importRecoveryPolicyMode"), "dashboard should pass recovery policy import mode");
+  assert(dashboardSource.includes("importPolicyOptions"), "dashboard should pass policy import options");
   assert(dashboardSource.includes("recoveryHistoryMaxAgeDays"), "dashboard should expose recovery history max-age selector");
   assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
   assert(dashboardSource.includes("当前来源："), "dashboard should show recovery policy source");
@@ -647,6 +651,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("onImportPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy import handler");
   assert(dashboardSource.includes("onExportEditorPolicyBundle"), "dashboard should wire editor policy bundle export handler");
   assert(dashboardSource.includes("onImportEditorPolicyBundle"), "dashboard should wire editor policy bundle import handler");
+  assert(dashboardSource.includes("onUpdateRecoveryPolicyImportOptions"), "dashboard should wire policy import option updates");
   assert(dashboardSource.includes("onResetRecoveryHistoryPolicy"), "dashboard should wire recovery policy reset handler");
   assert(dashboardSource.includes("onExportRecoveryHistoryPolicy"), "dashboard should wire recovery policy export handler");
   assert(dashboardSource.includes("onImportRecoveryHistoryPolicy"), "dashboard should wire recovery policy import handler");
@@ -689,6 +694,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("recoveryHistory"), "state should track recovery snapshot history");
   assert(stateSource.includes("recoveryHistoryMaxAgeDays"), "state should track recovery history max-age policy");
   assert(stateSource.includes("recoveryHistoryPolicyScope"), "state should track recovery history policy scope");
+  assert(stateSource.includes("recoveryPolicyImportIncludeDefaultOnMerge"), "state should track merge-include-default import option");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");

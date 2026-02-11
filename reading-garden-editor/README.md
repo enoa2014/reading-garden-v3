@@ -44,7 +44,7 @@
   - 支持 Live Preview 自动刷新开关：在导入/新建/覆盖写入后按设置自动刷新
   - 支持 Live Preview 自动刷新偏好“全局默认 + 项目覆盖”持久化（兼容旧版 localStorage）
   - 支持 Live Preview 自动刷新偏好当前项目一键恢复全局默认
-  - 支持 Live Preview 自动刷新策略导入/导出（支持 `replace` / `merge`）
+  - 支持 Live Preview 自动刷新策略导入/导出（支持 `replace` / `merge`，merge 可选覆盖默认值）
   - 支持组合策略包导入/导出（会话快照策略 + 自动刷新策略）
   - 组合策略包导入兼容旧单策略文件（recovery/auto-refresh）
   - 数据校验增强：`books.json` 与 `registry.json` 输出路径级错误与修复建议
@@ -59,7 +59,7 @@
   - 会话快照清理阈值支持按项目独立配置（项目级覆盖全局默认）
   - 会话快照策略支持一键恢复全局默认（当前项目）
   - 会话快照策略显示当前来源（项目覆盖/全局默认）
-  - 会话快照策略支持导入/导出（跨设备复制，支持 `replace`/`merge` 导入模式）
+  - 会话快照策略支持导入/导出（跨设备复制，支持 `replace`/`merge`，merge 可选覆盖默认值）
   - 新建书支持模板级别：`minimal/standard/teaching/custom`（可一键套用并手动切换）
   - 新建书支持自定义模板预设（保存/应用/导入/导出/清空，基于 localStorage）
   - 新建书模板支持可选 `timeline` / `interactive` 模块与对应数据模板文件

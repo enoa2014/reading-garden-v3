@@ -2172,6 +2172,28 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 124: Sprint 4 merge 导入可选覆盖默认值
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增共享导入选项解析（`normalizePolicyImportOptions`）
+  - `mergeRecoveryHistoryPolicyPayload/mergePreviewAutoRefreshPolicyPayload` 支持 `includeDefaultOnMerge`
+  - Recovery / AutoRefresh / Bundle 三类导入流程接入“merge 可选覆盖默认值”
+  - `dashboard.js` 新增“merge 时覆盖默认值（default）”勾选项并贯通导入参数
+  - `state.js` 新增 `recoveryPolicyImportIncludeDefaultOnMerge` 状态
+  - 回归脚本新增导入选项与状态标记断言
+  - 运行 `node --check`（`app.js/state.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / task_plan / findings / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2181,8 +2203,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 123 |
-| Where am I going? | Phase 123 -> checkpoint commit -> push |
+| Where am I? | Phase 124 |
+| Where am I going? | Phase 124 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 导入反馈必须明确默认值保留/覆盖行为，才能减少 `merge` 模式使用误解 |
-| What have I done? | 已同步用户决策并完成导入反馈澄清增强，回归通过且文档已写盘 |
+| What have I learned? | `merge` 行为需要“可切换 + 明确反馈”两者同时具备，才能兼顾安全默认和全量迁移 |
+| What have I done? | 已完成 merge 导入可选覆盖默认值闭环，并接入 UI、回归与文档同步 |

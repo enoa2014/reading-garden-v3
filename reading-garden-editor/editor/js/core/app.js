@@ -433,8 +433,19 @@ function normalizePreviewAutoRefreshImportMode(rawMode = "replace") {
   return mode === "merge" ? "merge" : "replace";
 }
 
-function mergePreviewAutoRefreshPolicyPayload(basePayload, importedPayload, mode = "replace") {
+function normalizePolicyImportOptions(rawOptions = {}) {
+  if (rawOptions === true) {
+    return { includeDefaultOnMerge: true };
+  }
+  const safe = rawOptions && typeof rawOptions === "object" ? rawOptions : {};
+  return {
+    includeDefaultOnMerge: safe.includeDefaultOnMerge === true,
+  };
+}
+
+function mergePreviewAutoRefreshPolicyPayload(basePayload, importedPayload, mode = "replace", rawOptions = {}) {
   const normalizedMode = normalizePreviewAutoRefreshImportMode(mode);
+  const options = normalizePolicyImportOptions(rawOptions);
   const base = normalizePreviewAutoRefreshPolicyPayload(basePayload);
   const incoming = normalizePreviewAutoRefreshPolicyPayload(importedPayload);
   if (normalizedMode === "replace") {
@@ -446,7 +457,7 @@ function mergePreviewAutoRefreshPolicyPayload(basePayload, importedPayload, mode
   return {
     mode: normalizedMode,
     payload: {
-      defaultEnabled: base.defaultEnabled,
+      defaultEnabled: options.includeDefaultOnMerge ? incoming.defaultEnabled : base.defaultEnabled,
       projects: {
         ...base.projects,
         ...incoming.projects,
@@ -851,8 +862,9 @@ function normalizeRecoveryPolicyImportMode(rawMode = "replace") {
   return mode === "merge" ? "merge" : "replace";
 }
 
-function mergeRecoveryHistoryPolicyPayload(basePayload, importedPayload, mode = "replace") {
+function mergeRecoveryHistoryPolicyPayload(basePayload, importedPayload, mode = "replace", rawOptions = {}) {
   const normalizedMode = normalizeRecoveryPolicyImportMode(mode);
+  const options = normalizePolicyImportOptions(rawOptions);
   const base = normalizeRecoveryHistoryPolicyPayload(basePayload);
   const incoming = normalizeRecoveryHistoryPolicyPayload(importedPayload);
   if (normalizedMode === "replace") {
@@ -864,7 +876,7 @@ function mergeRecoveryHistoryPolicyPayload(basePayload, importedPayload, mode = 
   return {
     mode: normalizedMode,
     payload: {
-      defaultMaxAgeDays: base.defaultMaxAgeDays,
+      defaultMaxAgeDays: options.includeDefaultOnMerge ? incoming.defaultMaxAgeDays : base.defaultMaxAgeDays,
       projects: {
         ...base.projects,
         ...incoming.projects,
@@ -873,7 +885,7 @@ function mergeRecoveryHistoryPolicyPayload(basePayload, importedPayload, mode = 
   };
 }
 
-async function importRecoveryHistoryPolicyFlow(file, mode = "replace") {
+async function importRecoveryHistoryPolicyFlow(file, mode = "replace", rawOptions = {}) {
   if (!file) {
     setState({
       recoveryFeedback: {
@@ -887,17 +899,20 @@ async function importRecoveryHistoryPolicyFlow(file, mode = "replace") {
   setState({ busy: true, recoveryFeedback: null });
   setStatus("Importing recovery policy...");
   try {
+    const options = normalizePolicyImportOptions(rawOptions);
     const text = await file.text();
     const parsed = JSON.parse(text);
     const current = readRecoveryHistoryPolicyPayloadFromStorage();
     const incoming = normalizeRecoveryHistoryPolicyPayload(parsed?.policy || parsed);
-    const merged = mergeRecoveryHistoryPolicyPayload(current, incoming, mode);
+    const merged = mergeRecoveryHistoryPolicyPayload(current, incoming, mode, options);
     writeRecoveryHistoryPolicyPayloadToStorage(merged.payload);
     const state = getState();
     const projectName = String(state.projectName || "").trim();
     const applied = applyRecoveryHistoryPolicyForProject(projectName, merged.payload);
     const importedProjects = Object.keys(incoming.projects || {}).length;
-    const defaultBehaviorText = merged.mode === "merge" ? "default=local" : "default=imported";
+    const defaultBehaviorText = merged.mode === "merge"
+      ? (options.includeDefaultOnMerge ? "default=imported" : "default=local")
+      : "default=imported";
     const patch = {
       recoveryHistoryMaxAgeDays: applied.maxAgeDays,
       recoveryHistoryPolicyScope: applied.scope,
@@ -999,7 +1014,7 @@ function readEditorPolicyBundleSections(parsed) {
   };
 }
 
-async function importEditorPolicyBundleFlow(file, mode = "replace") {
+async function importEditorPolicyBundleFlow(file, mode = "replace", rawOptions = {}) {
   if (!file) {
     setState({
       recoveryFeedback: {
@@ -1013,6 +1028,7 @@ async function importEditorPolicyBundleFlow(file, mode = "replace") {
   setState({ busy: true, recoveryFeedback: null });
   setStatus("Importing editor policy bundle...");
   try {
+    const options = normalizePolicyImportOptions(rawOptions);
     const text = await file.text();
     const parsed = JSON.parse(text);
     const sections = readEditorPolicyBundleSections(parsed);
@@ -1028,8 +1044,8 @@ async function importEditorPolicyBundleFlow(file, mode = "replace") {
     const incomingPreview = sections.preview
       ? normalizePreviewAutoRefreshPolicyPayload(sections.preview)
       : currentPreview;
-    const mergedRecovery = mergeRecoveryHistoryPolicyPayload(currentRecovery, incomingRecovery, mode);
-    const mergedPreview = mergePreviewAutoRefreshPolicyPayload(currentPreview, incomingPreview, mode);
+    const mergedRecovery = mergeRecoveryHistoryPolicyPayload(currentRecovery, incomingRecovery, mode, options);
+    const mergedPreview = mergePreviewAutoRefreshPolicyPayload(currentPreview, incomingPreview, mode, options);
 
     writeRecoveryHistoryPolicyPayloadToStorage(mergedRecovery.payload);
     writePreviewAutoRefreshPolicyPayloadToStorage(mergedPreview.payload);
@@ -1045,7 +1061,9 @@ async function importEditorPolicyBundleFlow(file, mode = "replace") {
       ? Object.keys(incomingPreview.projects || {}).length
       : 0;
     const normalizedMode = normalizeRecoveryPolicyImportMode(mode);
-    const defaultBehaviorText = normalizedMode === "merge" ? "defaults=local" : "defaults=imported";
+    const defaultBehaviorText = normalizedMode === "merge"
+      ? (options.includeDefaultOnMerge ? "defaults=imported" : "defaults=local")
+      : "defaults=imported";
 
     const patch = {
       recoveryHistoryMaxAgeDays: appliedRecovery.maxAgeDays,
@@ -1208,6 +1226,7 @@ function render() {
       onDownloadAnalysisSuggestion: downloadAnalysisSuggestionFlow,
       onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
       onUpdatePreviewState: updatePreviewStateFlow,
+      onUpdateRecoveryPolicyImportOptions: updateRecoveryPolicyImportOptionsFlow,
       onResetPreviewAutoRefreshPolicy: resetPreviewAutoRefreshPreferenceFlow,
       onExportPreviewAutoRefreshPolicy: exportPreviewAutoRefreshPolicyFlow,
       onImportPreviewAutoRefreshPolicy: importPreviewAutoRefreshPolicyFlow,
@@ -1330,6 +1349,12 @@ function buildPreviewStatePatch(state, books, overrides = {}) {
   };
 }
 
+function updateRecoveryPolicyImportOptionsFlow({ includeDefaultOnMerge = false } = {}) {
+  setState({
+    recoveryPolicyImportIncludeDefaultOnMerge: includeDefaultOnMerge === true,
+  });
+}
+
 function updatePreviewStateFlow({ bookId = "", device = "", autoRefresh } = {}) {
   const state = getState();
   const patch = buildPreviewStatePatch(state, state.books, {
@@ -1392,7 +1417,7 @@ function exportPreviewAutoRefreshPolicyFlow() {
   setStatus("Preview auto-refresh policy exported");
 }
 
-async function importPreviewAutoRefreshPolicyFlow(file, mode = "replace") {
+async function importPreviewAutoRefreshPolicyFlow(file, mode = "replace", rawOptions = {}) {
   if (!file) {
     setState({
       recoveryFeedback: {
@@ -1406,17 +1431,20 @@ async function importPreviewAutoRefreshPolicyFlow(file, mode = "replace") {
   setState({ busy: true, recoveryFeedback: null });
   setStatus("Importing preview auto-refresh policy...");
   try {
+    const options = normalizePolicyImportOptions(rawOptions);
     const text = await file.text();
     const parsed = JSON.parse(text);
     const current = readPreviewAutoRefreshPolicyPayloadFromStorage();
     const incoming = normalizePreviewAutoRefreshPolicyPayload(parsed?.policy || parsed);
-    const merged = mergePreviewAutoRefreshPolicyPayload(current, incoming, mode);
+    const merged = mergePreviewAutoRefreshPolicyPayload(current, incoming, mode, options);
     writePreviewAutoRefreshPolicyPayloadToStorage(merged.payload);
     const state = getState();
     const projectName = String(state.projectName || "").trim();
     const applied = applyPreviewAutoRefreshPreferenceForProject(projectName, merged.payload);
     const importedProjects = Object.keys(incoming.projects || {}).length;
-    const defaultBehaviorText = merged.mode === "merge" ? "default=local" : "default=imported";
+    const defaultBehaviorText = merged.mode === "merge"
+      ? (options.includeDefaultOnMerge ? "default=imported" : "default=local")
+      : "default=imported";
     setState({
       previewAutoRefresh: applied.enabled,
       previewAutoRefreshPolicyScope: applied.scope,

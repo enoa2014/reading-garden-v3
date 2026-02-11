@@ -116,12 +116,12 @@
     - 会话快照策略支持一键清除项目覆盖并回退全局默认
     - 会话快照策略在 UI 显示来源标签（项目覆盖/全局默认）
     - 会话快照策略支持单文件导入/导出（跨设备迁移）
-    - 会话快照策略导入支持 `replace` / `merge` 模式（merge 仅合并项目策略映射）
+    - 会话快照策略导入支持 `replace` / `merge` 模式（merge 可选覆盖默认值，默认仅合并项目映射）
     - 新建书支持模板级别（minimal/standard/teaching/custom）并支持手动切换 custom
     - 新建书支持自定义模板预设（保存/应用/导入/导出/清空）
     - Live Preview 自动刷新偏好支持“全局默认 + 项目覆盖”持久化（兼容旧版 localStorage 值）
     - Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
-    - Live Preview 自动刷新策略支持导入/导出（`replace` / `merge`，merge 保留本地默认）
+    - Live Preview 自动刷新策略支持导入/导出（`replace` / `merge`，merge 可选覆盖默认值）
     - 支持组合策略包导入/导出（会话快照策略 + 自动刷新策略）
     - 组合策略包导入兼容旧单策略文件（`rg-recovery-history-policy` / `rg-preview-auto-refresh-policy`）
     - 用户确认：新建书模板预设按项目隔离暂不做；组合策略包加密/脱敏暂不做

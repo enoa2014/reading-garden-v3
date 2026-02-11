@@ -655,6 +655,7 @@ function renderPreviewPanel(state) {
   const recoveryPolicyImportMode = String(state.recoveryPolicyImportMode || "replace") === "merge"
     ? "merge"
     : "replace";
+  const recoveryPolicyImportIncludeDefaultOnMerge = state.recoveryPolicyImportIncludeDefaultOnMerge === true;
   const recoveryPolicyScope = String(state.recoveryHistoryPolicyScope || "global") === "project"
     ? "项目覆盖"
     : "全局默认";
@@ -730,6 +731,10 @@ function renderPreviewPanel(state) {
             <option value="replace" ${recoveryPolicyImportMode === "replace" ? "selected" : ""}>replace（覆盖策略文件）</option>
             <option value="merge" ${recoveryPolicyImportMode === "merge" ? "selected" : ""}>merge（合并项目策略）</option>
           </select>
+        </label>
+        <label class="checkbox-inline">
+          <input name="recoveryPolicyImportIncludeDefaultOnMerge" type="checkbox" ${recoveryPolicyImportIncludeDefaultOnMerge ? "checked" : ""} ${busy} />
+          merge 时覆盖默认值（default）
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-reset-auto-refresh-policy-btn" type="button" ${busy}>Auto Refresh Global</button>
@@ -1368,7 +1373,15 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewImportPolicyBundleBtn = root.querySelector(".preview-import-policy-bundle-btn");
   const previewImportPolicyBundleInput = root.querySelector(".preview-import-policy-bundle-input");
   const recoveryPolicyImportModeEl = root.querySelector('select[name="recoveryPolicyImportMode"]');
+  const recoveryPolicyImportIncludeDefaultOnMergeEl = root.querySelector('input[name="recoveryPolicyImportIncludeDefaultOnMerge"]');
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
+  recoveryPolicyImportIncludeDefaultOnMergeEl?.addEventListener("change", () => {
+    if (handlers.onUpdateRecoveryPolicyImportOptions) {
+      handlers.onUpdateRecoveryPolicyImportOptions({
+        includeDefaultOnMerge: recoveryPolicyImportIncludeDefaultOnMergeEl.checked === true,
+      });
+    }
+  });
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
       handlers.onRefreshPreview();
@@ -1407,9 +1420,12 @@ export function renderDashboard(root, state, handlers = {}) {
   previewImportAutoRefreshPolicyInput?.addEventListener("change", () => {
     const file = previewImportAutoRefreshPolicyInput.files?.[0];
     const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
+    const importPolicyOptions = {
+      includeDefaultOnMerge: recoveryPolicyImportIncludeDefaultOnMergeEl?.checked === true,
+    };
     if (previewImportAutoRefreshPolicyInput) previewImportAutoRefreshPolicyInput.value = "";
     if (handlers.onImportPreviewAutoRefreshPolicy) {
-      handlers.onImportPreviewAutoRefreshPolicy(file || null, importRecoveryPolicyMode);
+      handlers.onImportPreviewAutoRefreshPolicy(file || null, importRecoveryPolicyMode, importPolicyOptions);
     }
   });
   previewResetRecoveryPolicyBtn?.addEventListener("click", () => {
@@ -1428,9 +1444,12 @@ export function renderDashboard(root, state, handlers = {}) {
   previewImportRecoveryPolicyInput?.addEventListener("change", () => {
     const file = previewImportRecoveryPolicyInput.files?.[0];
     const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
+    const importPolicyOptions = {
+      includeDefaultOnMerge: recoveryPolicyImportIncludeDefaultOnMergeEl?.checked === true,
+    };
     if (previewImportRecoveryPolicyInput) previewImportRecoveryPolicyInput.value = "";
     if (handlers.onImportRecoveryHistoryPolicy) {
-      handlers.onImportRecoveryHistoryPolicy(file || null, importRecoveryPolicyMode);
+      handlers.onImportRecoveryHistoryPolicy(file || null, importRecoveryPolicyMode, importPolicyOptions);
     }
   });
   previewExportPolicyBundleBtn?.addEventListener("click", () => {
@@ -1444,9 +1463,12 @@ export function renderDashboard(root, state, handlers = {}) {
   previewImportPolicyBundleInput?.addEventListener("change", () => {
     const file = previewImportPolicyBundleInput.files?.[0];
     const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
+    const importPolicyOptions = {
+      includeDefaultOnMerge: recoveryPolicyImportIncludeDefaultOnMergeEl?.checked === true,
+    };
     if (previewImportPolicyBundleInput) previewImportPolicyBundleInput.value = "";
     if (handlers.onImportEditorPolicyBundle) {
-      handlers.onImportEditorPolicyBundle(file || null, importRecoveryPolicyMode);
+      handlers.onImportEditorPolicyBundle(file || null, importRecoveryPolicyMode, importPolicyOptions);
     }
   });
 

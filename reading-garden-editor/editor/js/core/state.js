@@ -24,6 +24,7 @@ const state = {
   recoveryHistory: [],
   recoveryHistoryMaxAgeDays: 30,
   recoveryHistoryPolicyScope: "global",
+  recoveryPolicyImportIncludeDefaultOnMerge: false,
   analysisFeedback: null,
   analysisSuggestion: null,
   previewBookId: "",
