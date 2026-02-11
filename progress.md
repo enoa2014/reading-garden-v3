@@ -2265,6 +2265,30 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 129: Sprint 4 EdgeOne 预检自测扩展（真实资产样例）
+- **Status:** complete
+- Actions taken:
+  - 新增 `scripts/edgeone-preflight-selftest.sh`，统一执行 EdgeOne 预检自测
+  - 自测覆盖场景：
+    - 最小样例正向通过
+    - checksum mismatch 反例失败断言
+    - unsafe checksum path（`../`）反例失败断言
+    - 基于仓库真实 `index.html/book.html/css/js` 与书籍 registry 的样例正向通过
+  - `.github/workflows/editor-regression.yml` 改为直接调用 `./scripts/edgeone-preflight-selftest.sh`
+  - `scripts/editor-regression.mjs` 新增 selftest 脚本关键标记断言，防止 CI 自测回退
+  - 运行 `bash -n scripts/edgeone-preflight-selftest.sh`、`./scripts/edgeone-preflight-selftest.sh`、`./scripts/editor-regression.sh` 均通过
+  - 同步 `README.md` / `reading-garden-editor/README.md` / `docs/edgeone-手动部署验收与回滚清单.md` / `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `scripts/edgeone-preflight-selftest.sh` (created)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `docs/edgeone-手动部署验收与回滚清单.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2275,8 +2299,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 128 |
-| Where am I going? | Phase 128 -> checkpoint commit -> push -> 下一轮真实导出包样例校验 |
+| Where am I? | Phase 129 |
+| Where am I going? | Phase 129 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 仅做结构校验不足以覆盖传输/篡改风险，预检需补充 manifest checksum 校验 |
-| What have I done? | 已完成 checksum 预检落地、回归验证与文档同步，可进入提交推送阶段 |
+| What have I learned? | 仅最小样例不足以覆盖真实发布复杂度，需将真实资产样例与失败断言纳入统一自测 |
+| What have I done? | 已完成多场景 EdgeOne 预检自测脚本、CI 接入与文档同步，可进入提交推送阶段 |

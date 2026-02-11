@@ -517,6 +517,10 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "scripts/edgeone-preflight.sh"),
     "utf8"
   );
+  const edgeonePreflightSelftestSource = await readFile(
+    path.resolve(ROOT, "scripts/edgeone-preflight-selftest.sh"),
+    "utf8"
+  );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(appSource.includes("saveAiSettingsFlow"), "app should support saving ai settings");
   assert(appSource.includes("exportAiSettingsFlow"), "app should support exporting ai settings");
@@ -742,6 +746,9 @@ async function testDiagnosticSourceMarkers() {
   assert(edgeonePreflightSource.includes("sha256"), "edgeone preflight script should support sha256 checksum verification");
   assert(edgeonePreflightSource.includes("invalid checksum target path"), "edgeone preflight script should reject unsafe checksum target paths");
   assert(edgeonePreflightShellSource.includes("edgeone-preflight.mjs"), "edgeone preflight shell wrapper should call node script");
+  assert(edgeonePreflightSelftestSource.includes("real-asset sample"), "edgeone preflight selftest should include real-asset sample flow");
+  assert(edgeonePreflightSelftestSource.includes("checksum mismatch"), "edgeone preflight selftest should validate checksum mismatch failures");
+  assert(edgeonePreflightSelftestSource.includes("invalid checksum target path"), "edgeone preflight selftest should validate unsafe checksum path failures");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {

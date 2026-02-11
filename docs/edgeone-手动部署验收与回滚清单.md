@@ -36,6 +36,7 @@ releases/
 | 检查项 | 命令/动作 | 通过标准 |
 |---|---|---|
 | 编辑器回归 | `./scripts/editor-regression.sh` | 输出 `editor-regression: ok` |
+| 预检自测（开发） | `./scripts/edgeone-preflight-selftest.sh` | 输出 `[edgeone-selftest] ok` |
 | 生成发布包 | 编辑器 `Export rgsite` | 成功下载 `*.rgsite.zip` |
 | 发布包预检 | `./scripts/edgeone-preflight.sh /path/to/*.rgsite.zip` | 输出 `edgeone-preflight: ok` |
 | Manifest 校验 | 解压后检查 `rgsite-manifest.json` | `format` 为 `rgsite`，字段完整 |
