@@ -54,7 +54,7 @@ Phase 8
 ### Phase 8: 下一迭代规划
 - [ ] 为 subset 导出增加“最小资源集”模式
 - [ ] 为诊断报告增加脱敏导出选项
-- [ ] 规划 CI 门禁（回归脚本接入）
+- [x] 规划并接入 CI 门禁（回归脚本接入）
 - **Status:** in_progress
 
 ## Key Questions

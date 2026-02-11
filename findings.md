@@ -92,6 +92,7 @@
     - 新增 `scripts/editor-regression.sh`
     - 新增 `scripts/editor-regression.mjs`
     - 覆盖语法检查、pack-utils 关键规则、merge 关键策略、site-pack 关键标记
+    - 新增 `.github/workflows/editor-regression.yml` 接入 CI 门禁
   - 文档同步：
     - `README.md` 与 `reading-garden-editor/README.md` 已更新到 Sprint 4 状态
 

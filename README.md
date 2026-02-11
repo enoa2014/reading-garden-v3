@@ -40,6 +40,10 @@ python3 -m http.server 8080
 ./scripts/editor-regression.sh
 ```
 
+CI 门禁：
+
+- `.github/workflows/editor-regression.yml` 已接入回归检查（push/PR 自动执行）
+
 ## 项目概览
 
 | 指标 | 数值 |

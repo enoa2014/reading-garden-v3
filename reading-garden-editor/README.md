@@ -47,6 +47,11 @@ python3 -m http.server 8080
 ./scripts/editor-regression.sh
 ```
 
+4. CI 门禁：
+
+- 已接入 GitHub Actions：`.github/workflows/editor-regression.yml`
+- 当 `reading-garden-editor/**` 或回归脚本变更时，PR/Push 会自动执行回归检查
+
 ## 回滚策略（第一版）
 
 1. 关键开发节点采用小步提交（checkpoint commit）。
