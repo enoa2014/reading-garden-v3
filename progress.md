@@ -136,6 +136,7 @@
 | 自定义脱敏链路 | 审查 `dashboard(custom fields) -> app(custom redaction)` | 可按字段路径导出 custom 脱敏报告 | 已接入 | ✓ |
 | 缺失资源报告文件检查 | 审查 `site-pack-service` 导出逻辑 | 缺失资产时包含 `MISSING-ASSETS.txt` | 已接入 | ✓ |
 | 最近模板复用检查 | 审查 `dashboard(localStorage) -> custom report` | 自定义脱敏字段可复用最近模板 | 已接入（最多 5 条） | ✓ |
+| 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -591,6 +592,37 @@
   - `progress.md` (updated)
 
 ### Phase 36: Sprint 4 checkpoint（recent-template 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`5719322`（recent redaction templates）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 37: Sprint 4 回归包体统计
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加 `pack-size-stats` 检查
+  - 生成 `packStats`（full/subset-balanced/subset-minimal）并写入回归报告
+  - 回归中增加体积合理性断言（minimal <= balanced）
+  - 本地回归脚本复跑通过并验证报告内容
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 38: Sprint 4 checkpoint（pack-stats 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -608,8 +640,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 36 |
-| Where am I going? | Phase 36 -> checkpoint commit -> push |
+| Where am I? | Phase 38 |
+| Where am I going? | Phase 38 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成最近模板复用并等待增量 checkpoint |
+| What have I done? | 已完成回归包体统计并等待增量 checkpoint |

@@ -62,11 +62,12 @@ Phase 9
 - [x] CI 门禁增加 artifacts（回归输出）上传
 - [x] `rgsite minimal` 增加缺失资源回退提示
 - [x] 自定义脱敏字段支持“最近模板”本地复用
+- [x] 回归报告增加 `packStats`（full/subset/minimal 对比）
 - **Status:** in_progress
 
 ## Key Questions
 1. 最近模板是否需要支持“一键清空历史”操作？
-2. 回归报告是否需要补充包体统计（full/subset/minimal 对比）？
+2. `packStats` 的 subset 样本是否需要支持自定义书籍组合？
 3. `MISSING-ASSETS.txt` 是否需要按模块分组输出？
 
 ## Decisions Made
@@ -76,3 +77,4 @@ Phase 9
 | `rgbook` 校验默认严格失败即阻断 | 防止脏数据进入本地书架 |
 | `rgsite` 首版采用运行时白名单导出 | 先保证可部署正确性，再扩展可选内容 |
 | 自定义脱敏字段先落地“最近 5 条模板”本地存储 | 在不引入后端配置的前提下提升复用效率 |
+| 回归报告内置包体统计并固定抽样前 2 本书 | 低成本提供趋势对比，先满足 CI 可观测性 |

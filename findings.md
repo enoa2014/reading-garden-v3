@@ -99,6 +99,7 @@
     - 新增 `scripts/editor-regression.mjs`
     - 覆盖语法检查、pack-utils 关键规则、merge 关键策略、site-pack 关键标记
     - 生成 `tmp/editor-regression-report.json` 报告
+    - 回归报告新增 `packStats`（full/subset-balanced/subset-minimal 体积对比）
     - 新增 `.github/workflows/editor-regression.yml` 接入 CI 门禁
     - CI 自动上传 `editor-regression-report` artifact（失败场景也保留）
   - 文档同步：
