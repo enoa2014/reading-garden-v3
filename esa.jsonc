@@ -1,6 +1,8 @@
 {
-  "assets": "dist",
-  "index": "index.html",
-  "error": "index.html",
-  "output": "dist"
+  "name": "reading-garden-v3",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "assets": {
+    "directory": "./dist"
+  }
 }
