@@ -2078,6 +2078,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 119: Sprint 4 Live Preview 自动刷新偏好一键恢复全局默认
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `clearProjectPreviewAutoRefreshPreferenceInStorage` 与 `resetPreviewAutoRefreshPreferenceFlow`
+  - 在项目上下文支持一键清除自动刷新项目覆盖策略并回退全局默认
+  - `dashboard.js` Preview 面板新增 `Auto Refresh Global` 操作按钮
+  - 自动刷新回退结果写入 `previewAutoRefreshPolicyScope` 并复用 `recoveryFeedback` 回显
+  - 回归脚本新增自动刷新策略回退关键标记断言
+  - 运行 `node --check`（`app.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2087,8 +2107,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 118 |
-| Where am I going? | Phase 118 -> checkpoint commit -> push |
+| Where am I? | Phase 119 |
+| Where am I going? | Phase 119 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 预览偏好在多项目场景下需要“全局默认 + 项目覆盖”模型，才能避免项目间相互污染 |
-| What have I done? | 已完成 Live Preview 自动刷新偏好项目级隔离，并接入 UI 来源标识、回归与文档同步 |
+| What have I learned? | 项目级偏好要可回退到全局默认，才能控制长期配置漂移并降低排查成本 |
+| What have I done? | 已完成 Live Preview 自动刷新偏好“项目覆盖 + 一键回退全局默认”闭环，并同步回归与文档 |

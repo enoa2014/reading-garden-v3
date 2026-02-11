@@ -413,6 +413,21 @@ function writePreviewAutoRefreshPreference(nextValue, projectName = "") {
   };
 }
 
+function clearProjectPreviewAutoRefreshPreferenceInStorage(projectName = "") {
+  const safeProjectName = String(projectName || "").trim();
+  const payload = readPreviewAutoRefreshPolicyPayloadFromStorage();
+  const existed = safeProjectName && Object.prototype.hasOwnProperty.call(payload.projects, safeProjectName);
+  if (safeProjectName && existed) {
+    delete payload.projects[safeProjectName];
+    writePreviewAutoRefreshPolicyPayloadToStorage(payload);
+  }
+  return {
+    existed: Boolean(existed),
+    scope: resolvePreviewAutoRefreshPolicyScopeForProject(safeProjectName, payload),
+    policyPayload: payload,
+  };
+}
+
 function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = null) {
   const safeProjectName = String(projectName || "").trim();
   const policyPayload = payload
@@ -1014,6 +1029,7 @@ function render() {
       onDownloadAnalysisSuggestion: downloadAnalysisSuggestionFlow,
       onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
       onUpdatePreviewState: updatePreviewStateFlow,
+      onResetPreviewAutoRefreshPolicy: resetPreviewAutoRefreshPreferenceFlow,
       onRefreshPreview: refreshPreviewFlow,
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
@@ -1146,6 +1162,33 @@ function updatePreviewStateFlow({ bookId = "", device = "", autoRefresh } = {}) 
     patch.previewAutoRefreshPolicyScope = previewAutoRefreshPolicy.scope;
   }
   setState(patch);
+}
+
+function resetPreviewAutoRefreshPreferenceFlow() {
+  const state = getState();
+  const projectName = String(state.projectName || "").trim();
+  if (!projectName) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "当前未打开项目，无法恢复预览自动刷新全局默认。",
+      },
+    });
+    return;
+  }
+  const cleared = clearProjectPreviewAutoRefreshPreferenceInStorage(projectName);
+  const previewPolicy = applyPreviewAutoRefreshPreferenceForProject(projectName, cleared.policyPayload);
+  setState({
+    previewAutoRefresh: previewPolicy.enabled,
+    previewAutoRefreshPolicyScope: previewPolicy.scope,
+    recoveryFeedback: {
+      type: "ok",
+      message: cleared.existed
+        ? `已恢复预览自动刷新全局默认：${projectName}`
+        : `当前项目未设置预览自动刷新覆盖，保持全局默认（${previewPolicy.enabled ? "on" : "off"}）。`,
+    },
+  });
+  setStatus("Preview auto-refresh policy reset");
 }
 
 function refreshPreviewFlow() {

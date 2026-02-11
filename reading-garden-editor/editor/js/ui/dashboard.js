@@ -732,6 +732,7 @@ function renderPreviewPanel(state) {
           </select>
         </label>
         <div class="full actions-row">
+          <button class="btn btn-secondary preview-reset-auto-refresh-policy-btn" type="button" ${busy}>Auto Refresh Global</button>
           <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>
           <button class="btn btn-secondary preview-export-recovery-policy-btn" type="button" ${busy}>Export Policy</button>
           <button class="btn btn-secondary preview-import-recovery-policy-btn" type="button" ${busy}>Import Policy</button>
@@ -1349,6 +1350,7 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");
+  const previewResetAutoRefreshPolicyBtn = root.querySelector(".preview-reset-auto-refresh-policy-btn");
   const previewResetRecoveryPolicyBtn = root.querySelector(".preview-reset-recovery-policy-btn");
   const previewExportRecoveryPolicyBtn = root.querySelector(".preview-export-recovery-policy-btn");
   const previewImportRecoveryPolicyBtn = root.querySelector(".preview-import-recovery-policy-btn");
@@ -1375,6 +1377,11 @@ export function renderDashboard(root, state, handlers = {}) {
     if (handlers.onRemoveRecoverySnapshot) {
       const recoverySelect = root.querySelector('select[name="recoverySavedAt"]');
       handlers.onRemoveRecoverySnapshot(String(recoverySelect?.value || ""));
+    }
+  });
+  previewResetAutoRefreshPolicyBtn?.addEventListener("click", () => {
+    if (handlers.onResetPreviewAutoRefreshPolicy) {
+      handlers.onResetPreviewAutoRefreshPolicy();
     }
   });
   previewResetRecoveryPolicyBtn?.addEventListener("click", () => {

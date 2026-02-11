@@ -31,6 +31,7 @@ python3 -m http.server 8080
 - 已实现：编辑器内 Live Preview（desktop/tablet/mobile 视口切换 + 刷新 + 新标签页预览）
 - 已实现：Live Preview 自动刷新开关（写入后按需自动刷新 iframe）
 - 已实现：Live Preview 自动刷新偏好支持“全局默认 + 项目覆盖”持久化（兼容旧版 localStorage）
+- 已实现：Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
 - 已实现：`books.json` / `registry.json` 路径级校验提示（含修复建议）
 - 已实现：`rgbook` 导入 `manual` 预检查策略（先看冲突计划，不直接写入）
 - 已实现：IndexedDB 会话快照（500ms 防抖 + 30s 周期）与重开项目自动恢复
