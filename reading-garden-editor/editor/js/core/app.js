@@ -17,6 +17,57 @@ const fs = createFileSystemAdapter();
 const mergeService = new ImportMergeService();
 const bookPackService = new BookPackService({ fs, mergeService });
 const sitePackService = new SitePackService({ fs });
+const AI_SETTINGS_PATH = "reading-garden-editor/config/ai-settings.json";
+
+function buildDefaultAiSettings() {
+  return {
+    analysis: {
+      mode: "manual",
+    },
+    llm: {
+      enabled: false,
+      baseUrl: "",
+      apiKey: "",
+      model: "",
+    },
+    image: {
+      mode: "disabled",
+      baseUrl: "",
+      apiKey: "",
+      model: "",
+      promptFilePath: "",
+    },
+  };
+}
+
+function sanitizeAiSettings(raw) {
+  const safe = raw && typeof raw === "object" ? raw : {};
+  const analysisRaw = safe.analysis && typeof safe.analysis === "object" ? safe.analysis : {};
+  const llmRaw = safe.llm && typeof safe.llm === "object" ? safe.llm : {};
+  const imageRaw = safe.image && typeof safe.image === "object" ? safe.image : {};
+  const analysisMode = String(analysisRaw.mode || "manual").trim();
+  const imageMode = String(imageRaw.mode || "disabled").trim();
+  return {
+    analysis: {
+      mode: analysisMode === "auto-suggest" ? "auto-suggest" : "manual",
+    },
+    llm: {
+      enabled: Boolean(llmRaw.enabled),
+      baseUrl: String(llmRaw.baseUrl || "").trim(),
+      apiKey: String(llmRaw.apiKey || "").trim(),
+      model: String(llmRaw.model || "").trim(),
+    },
+    image: {
+      mode: ["disabled", "api", "prompt-file", "emoji", "none"].includes(imageMode)
+        ? imageMode
+        : "disabled",
+      baseUrl: String(imageRaw.baseUrl || "").trim(),
+      apiKey: String(imageRaw.apiKey || "").trim(),
+      model: String(imageRaw.model || "").trim(),
+      promptFilePath: String(imageRaw.promptFilePath || "").trim(),
+    },
+  };
+}
 
 function qs(sel) {
   return document.querySelector(sel);
@@ -48,6 +99,7 @@ function render() {
   if (state.currentView === "dashboard") {
     renderDashboard(root, state, {
       onCreateBook: createBookFlow,
+      onSaveAiSettings: saveAiSettingsFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -188,6 +240,31 @@ async function loadBooksAndHealth() {
   }
 }
 
+async function loadAiSettingsFlow() {
+  const defaults = buildDefaultAiSettings();
+  try {
+    const exists = await fs.exists(AI_SETTINGS_PATH);
+    if (!exists) {
+      setState({
+        aiSettings: defaults,
+      });
+      return;
+    }
+    const parsed = await fs.readJson(AI_SETTINGS_PATH);
+    setState({
+      aiSettings: sanitizeAiSettings(parsed),
+    });
+  } catch (err) {
+    setState({
+      aiSettings: defaults,
+      aiFeedback: {
+        type: "error",
+        message: `读取 AI 配置失败，已回退默认值：${err?.message || String(err)}`,
+      },
+    });
+  }
+}
+
 async function refreshProjectData() {
   const booksResult = await loadBooksAndHealth();
   setState({
@@ -199,7 +276,7 @@ async function refreshProjectData() {
 
 async function openProjectFlow() {
   setStatus("Opening project...");
-  setState({ busy: true, newBookFeedback: null, packFeedback: null, packDiagnostic: null });
+  setState({ busy: true, newBookFeedback: null, packFeedback: null, packDiagnostic: null, aiFeedback: null });
 
   try {
     const handle = await fs.openProject();
@@ -223,8 +300,9 @@ async function openProjectFlow() {
         books: booksResult.books,
         bookHealth: booksResult.bookHealth,
       });
+      await loadAiSettingsFlow();
     } else {
-      setState({ books: [], bookHealth: [] });
+      setState({ books: [], bookHealth: [], aiSettings: buildDefaultAiSettings() });
     }
 
     setState({
@@ -245,6 +323,8 @@ async function openProjectFlow() {
       books: [],
       bookHealth: [],
       errors: [msg],
+      aiSettings: buildDefaultAiSettings(),
+      aiFeedback: null,
     });
 
     setNavEnabled(false);
@@ -253,6 +333,37 @@ async function openProjectFlow() {
 
   setState({ busy: false });
   render();
+}
+
+async function saveAiSettingsFlow(rawSettings) {
+  const state = getState();
+  if (!state.projectHandle || !state.structure?.ok) return;
+
+  const nextSettings = sanitizeAiSettings(rawSettings);
+  setState({ busy: true, aiFeedback: null, newBookFeedback: null, packFeedback: null });
+  setStatus("Saving AI settings...");
+
+  try {
+    await fs.writeJson(AI_SETTINGS_PATH, nextSettings);
+    setState({
+      aiSettings: nextSettings,
+      aiFeedback: {
+        type: "ok",
+        message: `AI 配置已保存：${AI_SETTINGS_PATH}`,
+      },
+    });
+    setStatus("AI settings saved");
+  } catch (err) {
+    setState({
+      aiFeedback: {
+        type: "error",
+        message: `保存 AI 配置失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("AI settings save failed");
+  }
+
+  setState({ busy: false });
 }
 
 async function createBookFlow(rawInput) {

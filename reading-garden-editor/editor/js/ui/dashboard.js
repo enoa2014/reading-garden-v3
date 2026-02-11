@@ -209,6 +209,34 @@ async function importCustomRedactionTemplates(file, mode = "replace") {
   }
 }
 
+function resolveAiSettings(raw) {
+  const llm = raw?.llm || {};
+  const image = raw?.image || {};
+  const analysis = raw?.analysis || {};
+  const analysisMode = String(analysis.mode || "manual");
+  const imageMode = String(image.mode || "disabled");
+  return {
+    analysis: {
+      mode: analysisMode === "auto-suggest" ? "auto-suggest" : "manual",
+    },
+    llm: {
+      enabled: Boolean(llm.enabled),
+      baseUrl: String(llm.baseUrl || ""),
+      apiKey: String(llm.apiKey || ""),
+      model: String(llm.model || ""),
+    },
+    image: {
+      mode: ["disabled", "api", "prompt-file", "emoji", "none"].includes(imageMode)
+        ? imageMode
+        : "disabled",
+      baseUrl: String(image.baseUrl || ""),
+      apiKey: String(image.apiKey || ""),
+      model: String(image.model || ""),
+      promptFilePath: String(image.promptFilePath || ""),
+    },
+  };
+}
+
 function renderStructurePanel(state) {
   const missing = state.structure?.missing || [];
   const ok = state.structure?.ok;
@@ -246,6 +274,80 @@ function renderStructurePanel(state) {
           <div>${state.books.length}</div>
         </div>
       </div>
+    </section>
+  `;
+}
+
+function renderAiSettingsPanel(state) {
+  if (!state.structure?.ok) return "";
+  const busy = state.busy ? "disabled" : "";
+  const settings = resolveAiSettings(state.aiSettings || {});
+  const llm = settings.llm;
+  const image = settings.image;
+  const analysis = settings.analysis;
+  const feedback = state.aiFeedback
+    ? `<p class="${state.aiFeedback.type === "error" ? "error-text" : "ok-text"}">${state.aiFeedback.message}</p>`
+    : "";
+
+  return `
+    <section class="panel">
+      <h3>AI Settings (Local)</h3>
+      <p class="muted">可选配置：LLM 自动建议与图片生成接口。未配置时仍可手动编辑与导出。</p>
+      <form id="aiSettingsForm" class="form-grid">
+        <label>
+          分析模式
+          <select name="analysisMode" ${busy}>
+            <option value="manual" ${analysis.mode === "manual" ? "selected" : ""}>manual（仅手动配置）</option>
+            <option value="auto-suggest" ${analysis.mode === "auto-suggest" ? "selected" : ""}>auto-suggest（允许模型建议）</option>
+          </select>
+        </label>
+        <label class="checkbox-inline">
+          <input name="llmEnabled" type="checkbox" ${llm.enabled ? "checked" : ""} ${busy} />
+          启用 LLM 接口
+        </label>
+        <label>
+          LLM Base URL
+          <input name="llmBaseUrl" type="text" value="${escapeHtml(llm.baseUrl)}" placeholder="https://api.openai.com/v1" ${busy} />
+        </label>
+        <label>
+          LLM API Key
+          <input name="llmApiKey" type="password" value="${escapeHtml(llm.apiKey)}" placeholder="sk-..." ${busy} />
+        </label>
+        <label>
+          LLM Model
+          <input name="llmModel" type="text" value="${escapeHtml(llm.model)}" placeholder="gpt-4.1-mini" ${busy} />
+        </label>
+        <label>
+          图片模式
+          <select name="imageMode" ${busy}>
+            <option value="disabled" ${image.mode === "disabled" ? "selected" : ""}>disabled（关闭）</option>
+            <option value="api" ${image.mode === "api" ? "selected" : ""}>api（调用生图接口）</option>
+            <option value="prompt-file" ${image.mode === "prompt-file" ? "selected" : ""}>prompt-file（仅导出提示词）</option>
+            <option value="emoji" ${image.mode === "emoji" ? "selected" : ""}>emoji（使用 emoji 占位）</option>
+            <option value="none" ${image.mode === "none" ? "selected" : ""}>none（无图模式）</option>
+          </select>
+        </label>
+        <label>
+          Image Base URL
+          <input name="imageBaseUrl" type="text" value="${escapeHtml(image.baseUrl)}" placeholder="https://api.example.com/image" ${busy} />
+        </label>
+        <label>
+          Image API Key
+          <input name="imageApiKey" type="password" value="${escapeHtml(image.apiKey)}" placeholder="image-key" ${busy} />
+        </label>
+        <label>
+          Image Model
+          <input name="imageModel" type="text" value="${escapeHtml(image.model)}" placeholder="image-model-v1" ${busy} />
+        </label>
+        <label class="full">
+          Prompt File Path
+          <input name="promptFilePath" type="text" value="${escapeHtml(image.promptFilePath)}" placeholder="reading-garden-editor/prompts/book-image-prompts.md" ${busy} />
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-primary" type="submit" ${busy}>Save AI Settings</button>
+        </div>
+      </form>
+      ${feedback}
     </section>
   `;
 }
@@ -521,6 +623,7 @@ export function renderDashboard(root, state, handlers = {}) {
   if (!root) return;
   root.innerHTML = `
     ${renderStructurePanel(state)}
+    ${renderAiSettingsPanel(state)}
     ${renderNewBookPanel(state)}
     ${renderPackPanel(state)}
     ${renderBookHealthPanel(state)}
@@ -554,6 +657,32 @@ export function renderDashboard(root, state, handlers = {}) {
         description: String(fd.get("description") || ""),
         includeCharacters: fd.get("includeCharacters") === "on",
         includeThemes: fd.get("includeThemes") === "on",
+      });
+    });
+  }
+
+  const aiSettingsForm = root.querySelector("#aiSettingsForm");
+  if (aiSettingsForm && handlers.onSaveAiSettings) {
+    aiSettingsForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const fd = new FormData(aiSettingsForm);
+      handlers.onSaveAiSettings({
+        analysis: {
+          mode: String(fd.get("analysisMode") || "manual"),
+        },
+        llm: {
+          enabled: fd.get("llmEnabled") === "on",
+          baseUrl: String(fd.get("llmBaseUrl") || ""),
+          apiKey: String(fd.get("llmApiKey") || ""),
+          model: String(fd.get("llmModel") || ""),
+        },
+        image: {
+          mode: String(fd.get("imageMode") || "disabled"),
+          baseUrl: String(fd.get("imageBaseUrl") || ""),
+          apiKey: String(fd.get("imageApiKey") || ""),
+          model: String(fd.get("imageModel") || ""),
+          promptFilePath: String(fd.get("promptFilePath") || ""),
+        },
       });
     });
   }
