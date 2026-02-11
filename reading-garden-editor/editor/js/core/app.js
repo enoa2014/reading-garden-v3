@@ -303,13 +303,26 @@ function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = 
   return normalizeRecoveryHistoryMaxAgeDays(policyPayload.defaultMaxAgeDays);
 }
 
+function resolveRecoveryHistoryPolicyScopeForProject(projectName = "", payload = null) {
+  const safeProjectName = String(projectName || "").trim();
+  if (!safeProjectName) return "global";
+  const policyPayload = payload
+    ? normalizeRecoveryHistoryPolicyPayload(payload)
+    : readRecoveryHistoryPolicyPayloadFromStorage();
+  return Object.prototype.hasOwnProperty.call(policyPayload.projects, safeProjectName)
+    ? "project"
+    : "global";
+}
+
 function applyRecoveryHistoryPolicyForProject(projectName = "", payload = null) {
   const policyPayload = payload
     ? normalizeRecoveryHistoryPolicyPayload(payload)
     : readRecoveryHistoryPolicyPayloadFromStorage();
   const maxAgeDays = resolveRecoveryHistoryMaxAgeDaysForProject(projectName, policyPayload);
+  const scope = resolveRecoveryHistoryPolicyScopeForProject(projectName, policyPayload);
   return {
     maxAgeDays: applyRecoveryHistoryPolicy(maxAgeDays),
+    scope,
     policyPayload,
   };
 }
@@ -329,6 +342,7 @@ function writeRecoveryHistoryPolicyToStorage(
   writeRecoveryHistoryPolicyPayloadToStorage(payload);
   return {
     maxAgeDays: normalized,
+    scope: safeProjectName ? "project" : "global",
     policyPayload: payload,
   };
 }
@@ -343,6 +357,7 @@ function clearProjectRecoveryHistoryPolicyInStorage(projectName = "") {
   }
   return {
     existed: Boolean(existed),
+    scope: resolveRecoveryHistoryPolicyScopeForProject(safeProjectName, payload),
     policyPayload: payload,
   };
 }
@@ -563,9 +578,10 @@ async function updateRecoveryHistoryPolicyFlow(maxAgeDays = DEFAULT_RECOVERY_HIS
     const state = getState();
     const projectName = String(state.projectName || "").trim();
     const normalizedDays = applyRecoveryHistoryPolicy(maxAgeDays);
-    writeRecoveryHistoryPolicyToStorage(normalizedDays, projectName);
+    const policy = writeRecoveryHistoryPolicyToStorage(normalizedDays, projectName);
     const patch = {
       recoveryHistoryMaxAgeDays: normalizedDays,
+      recoveryHistoryPolicyScope: policy.scope,
       recoveryFeedback: {
         type: "ok",
         message: normalizedDays > 0
@@ -613,6 +629,7 @@ async function resetRecoveryHistoryPolicyFlow() {
     const history = await recoveryStore.loadProjectHistory(projectName);
     setState({
       recoveryHistoryMaxAgeDays: normalizedDays,
+      recoveryHistoryPolicyScope: "global",
       recoveryHistory: Array.isArray(history) ? history : [],
       recoveryFeedback: {
         type: "ok",
@@ -1067,6 +1084,7 @@ async function openProjectFlow() {
       projectHandle: handle,
       projectName: handle?.name || "",
       recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
+      recoveryHistoryPolicyScope: recoveryPolicy.scope,
     });
 
     setStatus("Verifying project structure...");
@@ -1128,6 +1146,7 @@ async function openProjectFlow() {
       recoveryFeedback: null,
       recoveryHistory: [],
       recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
+      recoveryHistoryPolicyScope: recoveryPolicy.scope,
       analysisFeedback: null,
       analysisSuggestion: null,
       packManualPlan: null,
@@ -2243,6 +2262,7 @@ function boot() {
   const historyPolicy = applyRecoveryHistoryPolicyForProject("");
   setState({
     recoveryHistoryMaxAgeDays: historyPolicy.maxAgeDays,
+    recoveryHistoryPolicyScope: historyPolicy.scope,
   });
   bindNav();
   detectMode();

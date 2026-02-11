@@ -475,6 +475,9 @@ function renderPreviewPanel(state) {
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
   const recoveryHistoryMaxAgeDays = String(state.recoveryHistoryMaxAgeDays ?? 30);
+  const recoveryPolicyScope = String(state.recoveryHistoryPolicyScope || "global") === "project"
+    ? "项目覆盖"
+    : "全局默认";
   const recoveryHistory = Array.isArray(state.recoveryHistory) ? state.recoveryHistory : [];
   const historyOptions = recoveryHistory
     .map((item, index) => {
@@ -538,6 +541,7 @@ function renderPreviewPanel(state) {
           <select name="recoveryHistoryMaxAgeDays" ${busy}>
             ${recoveryHistoryMaxAgeOptions}
           </select>
+          <small class="muted">当前来源：${recoveryPolicyScope}</small>
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>

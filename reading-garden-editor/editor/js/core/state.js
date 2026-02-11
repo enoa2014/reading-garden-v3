@@ -23,6 +23,7 @@ const state = {
   recoveryFeedback: null,
   recoveryHistory: [],
   recoveryHistoryMaxAgeDays: 30,
+  recoveryHistoryPolicyScope: "global",
   analysisFeedback: null,
   analysisSuggestion: null,
   previewBookId: "",

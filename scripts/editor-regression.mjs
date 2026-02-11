@@ -545,6 +545,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
   assert(appSource.includes("applyRecoveryHistoryPolicy"), "app should apply recovery history policy");
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
+  assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
   assert(appSource.includes("payload.projects"), "app should persist per-project recovery policy entries");
@@ -586,6 +587,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-reset-recovery-policy-btn"), "dashboard should expose recovery policy reset action");
   assert(dashboardSource.includes("recoveryHistoryMaxAgeDays"), "dashboard should expose recovery history max-age selector");
   assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
+  assert(dashboardSource.includes("当前来源："), "dashboard should show recovery policy source");
   assert(dashboardSource.includes("Use Global Default"), "dashboard should expose global-default reset button");
   assert(dashboardSource.includes("recoverySavedAt"), "dashboard should expose recovery history selector");
   assert(dashboardSource.includes("Restore Selected Snapshot"), "dashboard should expose restore snapshot button label");
@@ -631,6 +633,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");
   assert(stateSource.includes("recoveryHistory"), "state should track recovery snapshot history");
   assert(stateSource.includes("recoveryHistoryMaxAgeDays"), "state should track recovery history max-age policy");
+  assert(stateSource.includes("recoveryHistoryPolicyScope"), "state should track recovery history policy scope");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
