@@ -3,6 +3,13 @@ import { sanitizeBookId } from "../core/path-resolver.js";
 const DEFAULT_CUSTOM_REDACTION_FIELDS = "project.name,input.fileName";
 const CUSTOM_REDACTION_TEMPLATES_KEY = "rg.editor.customRedactionTemplates";
 const MAX_CUSTOM_REDACTION_TEMPLATES = 5;
+const RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS = [
+  { value: "0", label: "关闭自动清理" },
+  { value: "7", label: "7 天" },
+  { value: "30", label: "30 天（默认）" },
+  { value: "90", label: "90 天" },
+  { value: "180", label: "180 天" },
+];
 const NEW_BOOK_TEMPLATE_PRESETS = {
   minimal: {
     includeCharacters: false,
@@ -467,6 +474,7 @@ function renderPreviewPanel(state) {
     ? String(state.previewDevice || "desktop")
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
+  const recoveryHistoryMaxAgeDays = String(state.recoveryHistoryMaxAgeDays ?? 30);
   const recoveryHistory = Array.isArray(state.recoveryHistory) ? state.recoveryHistory : [];
   const historyOptions = recoveryHistory
     .map((item, index) => {
@@ -494,6 +502,11 @@ function renderPreviewPanel(state) {
   ]
     .map((item) => `<option value="${item.value}" ${item.value === previewDevice ? "selected" : ""}>${item.label}</option>`)
     .join("");
+  const recoveryHistoryMaxAgeOptions = RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS
+    .map((item) => (
+      `<option value="${item.value}" ${item.value === recoveryHistoryMaxAgeDays ? "selected" : ""}>${item.label}</option>`
+    ))
+    .join("");
 
   const openLink = previewUrl
     ? `<a class="btn btn-secondary preview-open-link" href="${escapeHtml(previewUrl)}" target="_blank" rel="noreferrer">Open in New Tab</a>`
@@ -519,6 +532,12 @@ function renderPreviewPanel(state) {
         <label class="checkbox-inline">
           <input name="previewAutoRefresh" type="checkbox" ${previewAutoRefresh ? "checked" : ""} ${busy} />
           写入后自动刷新预览
+        </label>
+        <label>
+          快照自动清理
+          <select name="recoveryHistoryMaxAgeDays" ${busy}>
+            ${recoveryHistoryMaxAgeOptions}
+          </select>
         </label>
         <label class="full">
           恢复历史快照（最近 5 条）
@@ -1017,6 +1036,12 @@ export function renderDashboard(root, state, handlers = {}) {
       });
     });
   }
+  const recoveryPolicySelect = root.querySelector('select[name="recoveryHistoryMaxAgeDays"]');
+  recoveryPolicySelect?.addEventListener("change", () => {
+    if (handlers.onUpdateRecoveryHistoryPolicy) {
+      handlers.onUpdateRecoveryHistoryPolicy(String(recoveryPolicySelect.value || "30"));
+    }
+  });
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");

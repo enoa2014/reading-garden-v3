@@ -1905,6 +1905,28 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 110: Sprint 4 会话快照清理阈值可配置
+- **Status:** complete
+- Actions taken:
+  - `recovery-store.js` 新增 `setHistoryPolicy/getHistoryPolicy`，支持运行时更新历史清理策略
+  - `app.js` 新增清理阈值策略读写（localStorage）与更新流程（`updateRecoveryHistoryPolicyFlow`）
+  - `dashboard.js` Preview 面板新增“快照自动清理”下拉（关闭/7/30/90/180 天）
+  - 阈值修改后即时生效，并自动刷新当前项目历史快照列表
+  - `state.js` 新增 `recoveryHistoryMaxAgeDays` 状态
+  - 回归脚本补充策略配置相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1914,8 +1936,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 109 |
-| Where am I going? | Phase 109 -> checkpoint commit -> push |
+| Where am I? | Phase 110 |
+| Where am I going? | Phase 110 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 历史快照治理要同时控制“数量上限 + 时间窗口”，才能长期稳定运行 |
-| What have I done? | 已完成 30 天自动清理策略，并在加载/保存/删除路径统一落地与回归校验 |
+| What have I learned? | 清理策略需要“可调参数 + 即时生效 + 本地持久化”三者结合，才便于真实线下使用 |
+| What have I done? | 已完成会话快照清理阈值可配置与持久化，并接入 UI、状态管理与回归校验 |

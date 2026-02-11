@@ -22,6 +22,7 @@ const state = {
   aiFeedback: null,
   recoveryFeedback: null,
   recoveryHistory: [],
+  recoveryHistoryMaxAgeDays: 30,
   analysisFeedback: null,
   analysisSuggestion: null,
   previewBookId: "",

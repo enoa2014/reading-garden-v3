@@ -24,6 +24,9 @@ const recoveryStore = createRecoveryStore();
 const AI_SETTINGS_PATH = "reading-garden-editor/config/ai-settings.json";
 const RECOVERY_SNAPSHOT_DEBOUNCE_MS = 500;
 const RECOVERY_SNAPSHOT_INTERVAL_MS = 30_000;
+const RECOVERY_HISTORY_POLICY_STORAGE_KEY = "rg.editor.recoveryHistoryPolicy";
+const DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS = 30;
+const RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS = [0, 7, 30, 90, 180];
 let recoverySnapshotDebounceTimer = null;
 let recoverySnapshotIntervalId = null;
 let recoverySnapshotSaving = false;
@@ -214,6 +217,54 @@ function buildDefaultAiSettings() {
       promptFilePath: "",
     },
   };
+}
+
+function normalizeRecoveryHistoryMaxAgeDays(rawDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
+  const parsed = Number(rawDays);
+  if (!Number.isFinite(parsed)) return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+  const days = Math.max(0, Math.trunc(parsed));
+  if (RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS.includes(days)) return days;
+  return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+}
+
+function recoveryHistoryDaysToMs(days = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
+  const normalized = normalizeRecoveryHistoryMaxAgeDays(days);
+  if (normalized <= 0) return null;
+  return normalized * 24 * 60 * 60 * 1000;
+}
+
+function applyRecoveryHistoryPolicy(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
+  const normalizedDays = normalizeRecoveryHistoryMaxAgeDays(maxAgeDays);
+  recoveryStore.setHistoryPolicy({
+    historyMaxAgeMs: recoveryHistoryDaysToMs(normalizedDays),
+  });
+  return normalizedDays;
+}
+
+function readRecoveryHistoryPolicyFromStorage() {
+  try {
+    const raw = window.localStorage.getItem(RECOVERY_HISTORY_POLICY_STORAGE_KEY);
+    if (!raw) return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+    const parsed = JSON.parse(raw);
+    return normalizeRecoveryHistoryMaxAgeDays(parsed?.maxAgeDays);
+  } catch {
+    return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+  }
+}
+
+function writeRecoveryHistoryPolicyToStorage(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
+  const normalized = normalizeRecoveryHistoryMaxAgeDays(maxAgeDays);
+  try {
+    window.localStorage.setItem(
+      RECOVERY_HISTORY_POLICY_STORAGE_KEY,
+      JSON.stringify({
+        maxAgeDays: normalized,
+      })
+    );
+  } catch {
+    // ignore storage errors in private mode or blocked storage contexts
+  }
+  return normalized;
 }
 
 function normalizeTemplatePreset(rawPreset = "") {
@@ -427,6 +478,37 @@ function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
   setStatus("Recovery snapshot restored");
 }
 
+async function updateRecoveryHistoryPolicyFlow(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
+  try {
+    const normalizedDays = applyRecoveryHistoryPolicy(maxAgeDays);
+    writeRecoveryHistoryPolicyToStorage(normalizedDays);
+    const state = getState();
+    const patch = {
+      recoveryHistoryMaxAgeDays: normalizedDays,
+      recoveryFeedback: {
+        type: "ok",
+        message: normalizedDays > 0
+          ? `会话快照自动清理阈值已更新为 ${normalizedDays} 天。`
+          : "会话快照自动清理已关闭。",
+      },
+    };
+    if (state.projectName) {
+      const history = await recoveryStore.loadProjectHistory(state.projectName);
+      patch.recoveryHistory = Array.isArray(history) ? history : [];
+    }
+    setState(patch);
+    setStatus("Recovery policy updated");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `更新快照清理阈值失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Recovery policy update failed");
+  }
+}
+
 async function removeRecoveryHistorySnapshotFlow(savedAt = "") {
   const state = getState();
   const stamp = String(savedAt || "").trim();
@@ -562,6 +644,7 @@ function render() {
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
       onRemoveRecoverySnapshot: removeRecoveryHistorySnapshotFlow,
+      onUpdateRecoveryHistoryPolicy: updateRecoveryHistoryPolicyFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,
@@ -2027,6 +2110,10 @@ function detectMode() {
 }
 
 function boot() {
+  const historyMaxAgeDays = applyRecoveryHistoryPolicy(readRecoveryHistoryPolicyFromStorage());
+  setState({
+    recoveryHistoryMaxAgeDays: historyMaxAgeDays,
+  });
   bindNav();
   detectMode();
   startRecoverySnapshotTicker();

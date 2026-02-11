@@ -534,10 +534,14 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("loadProjectHistory"), "app should load project recovery history");
   assert(appSource.includes("restoreRecoveryHistorySnapshotFlow"), "app should support restoring recovery snapshot history");
   assert(appSource.includes("removeRecoveryHistorySnapshotFlow"), "app should support removing recovery snapshot history item");
+  assert(appSource.includes("updateRecoveryHistoryPolicyFlow"), "app should support updating recovery history policy");
   assert(appSource.includes("clearRecoverySnapshotFlow"), "app should support clearing recovery snapshot");
   assert(appSource.includes("onRestoreRecoverySnapshot"), "app should wire recovery history restore handler");
   assert(appSource.includes("onRemoveRecoverySnapshot"), "app should wire recovery history remove handler");
+  assert(appSource.includes("onUpdateRecoveryHistoryPolicy"), "app should wire recovery history policy handler");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
+  assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
+  assert(appSource.includes("applyRecoveryHistoryPolicy"), "app should apply recovery history policy");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("resolveCreateBookModuleIncludes"), "app should normalize create-book module includes");
   assert(appSource.includes("formatTemplatePresetForFeedback"), "app should format template preset feedback");
@@ -573,6 +577,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
   assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
   assert(dashboardSource.includes("preview-remove-recovery-btn"), "dashboard should expose recovery remove action");
+  assert(dashboardSource.includes("recoveryHistoryMaxAgeDays"), "dashboard should expose recovery history max-age selector");
+  assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
   assert(dashboardSource.includes("recoverySavedAt"), "dashboard should expose recovery history selector");
   assert(dashboardSource.includes("Restore Selected Snapshot"), "dashboard should expose restore snapshot button label");
   assert(dashboardSource.includes("Delete Selected Snapshot"), "dashboard should expose remove snapshot button label");
@@ -615,6 +621,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("validationFeedback"), "state should track validation feedback");
   assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");
   assert(stateSource.includes("recoveryHistory"), "state should track recovery snapshot history");
+  assert(stateSource.includes("recoveryHistoryMaxAgeDays"), "state should track recovery history max-age policy");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
@@ -633,6 +640,8 @@ async function testDiagnosticSourceMarkers() {
   assert(recoveryStoreSource.includes("HISTORY_MAX_AGE_MS"), "recovery store should enforce history max age");
   assert(recoveryStoreSource.includes("pruneRecoveryHistory"), "recovery store should prune stale recovery history");
   assert(recoveryStoreSource.includes("historyMaxAgeMs"), "recovery store should support configurable history max age");
+  assert(recoveryStoreSource.includes("setHistoryPolicy"), "recovery store should support runtime history policy update");
+  assert(recoveryStoreSource.includes("getHistoryPolicy"), "recovery store should expose current history policy");
   assert(recoveryStoreSource.includes("clearByProject"), "recovery store should support clearing project snapshot");
   assert(recoveryStoreSource.includes("clearLatest"), "recovery store should support snapshot clear");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");

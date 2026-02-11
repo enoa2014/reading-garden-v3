@@ -66,6 +66,22 @@ function resolveSavedAtMs(item) {
   return stamp;
 }
 
+function normalizeHistoryLimit(value, fallback = HISTORY_LIMIT) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return Math.max(1, Math.trunc(fallback || HISTORY_LIMIT));
+  return Math.max(1, Math.trunc(parsed));
+}
+
+function normalizeHistoryMaxAgeMs(value, fallback = HISTORY_MAX_AGE_MS) {
+  if (value == null) return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return fallback == null ? null : Math.max(1, Math.trunc(Number(fallback) || HISTORY_MAX_AGE_MS));
+  }
+  if (parsed <= 0) return null;
+  return Math.max(1, Math.trunc(parsed));
+}
+
 function pruneRecoveryHistory(history, { limit = HISTORY_LIMIT, maxAgeMs = HISTORY_MAX_AGE_MS } = {}) {
   const now = Date.now();
   const seen = new Set();
@@ -110,6 +126,8 @@ export function createRecoveryStore({
   historyMaxAgeMs = HISTORY_MAX_AGE_MS,
 } = {}) {
   let dbPromise = null;
+  let currentHistoryLimit = normalizeHistoryLimit(historyLimit, HISTORY_LIMIT);
+  let currentHistoryMaxAgeMs = normalizeHistoryMaxAgeMs(historyMaxAgeMs, HISTORY_MAX_AGE_MS);
 
   const getDb = async () => {
     if (typeof indexedDB === "undefined") {
@@ -127,8 +145,8 @@ export function createRecoveryStore({
     const history = await readValue(db, storeName, historyKey);
     const safeHistory = Array.isArray(history) ? history : [];
     const pruned = pruneRecoveryHistory(safeHistory, {
-      limit: historyLimit,
-      maxAgeMs: historyMaxAgeMs,
+      limit: currentHistoryLimit,
+      maxAgeMs: currentHistoryMaxAgeMs,
     });
     if (!sameHistoryOrder(safeHistory, pruned)) {
       if (pruned.length) {
@@ -152,13 +170,37 @@ export function createRecoveryStore({
   };
 
   return {
+    getHistoryPolicy() {
+      return {
+        historyLimit: currentHistoryLimit,
+        historyMaxAgeMs: currentHistoryMaxAgeMs,
+      };
+    },
+    setHistoryPolicy(policy = {}) {
+      const safePolicy = policy && typeof policy === "object" ? policy : {};
+      if (Object.prototype.hasOwnProperty.call(safePolicy, "historyLimit")) {
+        currentHistoryLimit = normalizeHistoryLimit(safePolicy.historyLimit, currentHistoryLimit);
+      }
+      if (Object.prototype.hasOwnProperty.call(safePolicy, "historyMaxAgeMs")) {
+        currentHistoryMaxAgeMs = normalizeHistoryMaxAgeMs(
+          safePolicy.historyMaxAgeMs,
+          currentHistoryMaxAgeMs == null ? HISTORY_MAX_AGE_MS : currentHistoryMaxAgeMs
+        );
+      }
+      return {
+        historyLimit: currentHistoryLimit,
+        historyMaxAgeMs: currentHistoryMaxAgeMs,
+      };
+    },
     async loadLatest() {
       const db = await getDb();
       const snapshot = await readValue(db, storeName, LATEST_KEY);
       if (!snapshot || typeof snapshot !== "object") return null;
       const stamp = resolveSavedAtMs(snapshot);
       const stale = stamp == null
-        || (historyMaxAgeMs != null && historyMaxAgeMs >= 0 && Date.now() - stamp > historyMaxAgeMs);
+        || (currentHistoryMaxAgeMs != null
+          && currentHistoryMaxAgeMs >= 0
+          && Date.now() - stamp > currentHistoryMaxAgeMs);
       if (!stale) return snapshot;
 
       const safeProject = String(snapshot?.projectName || "").trim();
@@ -184,7 +226,9 @@ export function createRecoveryStore({
       if (!snapshot || typeof snapshot !== "object") return null;
       const stamp = resolveSavedAtMs(snapshot);
       const stale = stamp == null
-        || (historyMaxAgeMs != null && historyMaxAgeMs >= 0 && Date.now() - stamp > historyMaxAgeMs);
+        || (currentHistoryMaxAgeMs != null
+          && currentHistoryMaxAgeMs >= 0
+          && Date.now() - stamp > currentHistoryMaxAgeMs);
       if (!stale) return snapshot;
       const history = await loadAndPruneProjectHistory(db, safeProject);
       return syncProjectPointer(db, safeProject, history);
@@ -210,8 +254,8 @@ export function createRecoveryStore({
       const db = await getDb();
       const history = await readValue(db, storeName, historyKey);
       const safeHistory = pruneRecoveryHistory(Array.isArray(history) ? history : [], {
-        limit: historyLimit,
-        maxAgeMs: historyMaxAgeMs,
+        limit: currentHistoryLimit,
+        maxAgeMs: currentHistoryMaxAgeMs,
       });
       const nextHistory = safeHistory.filter((item) => String(item?.savedAt || "") !== stamp);
       if (nextHistory.length === safeHistory.length) {
@@ -267,11 +311,11 @@ export function createRecoveryStore({
         await writeValue(db, storeName, key, payload);
         const historyKey = projectHistoryKey(payload.projectName);
         if (historyKey) {
-        const history = await readValue(db, storeName, historyKey);
+          const history = await readValue(db, storeName, historyKey);
           const safeHistory = Array.isArray(history) ? history : [];
           const nextHistory = pruneRecoveryHistory([payload, ...safeHistory], {
-            limit: historyLimit,
-            maxAgeMs: historyMaxAgeMs,
+            limit: currentHistoryLimit,
+            maxAgeMs: currentHistoryMaxAgeMs,
           });
           await writeValue(db, storeName, historyKey, nextHistory);
         }
