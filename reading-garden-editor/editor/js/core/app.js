@@ -945,12 +945,53 @@ function exportEditorPolicyBundleFlow() {
 
 function readEditorPolicyBundleSections(parsed) {
   const safe = parsed && typeof parsed === "object" ? parsed : {};
-  const recoverySource = safe.recoveryHistoryPolicy
+  let recoverySource = safe.recoveryHistoryPolicy
     ?? safe.recoveryPolicy
     ?? safe.recovery;
-  const previewSource = safe.previewAutoRefreshPolicy
+  let previewSource = safe.previewAutoRefreshPolicy
     ?? safe.previewPolicy
     ?? safe.preview;
+  const format = String(safe.format || "").trim();
+  const policySource = safe.policy;
+
+  // Backward compatibility: accept old single-policy export files.
+  if (!recoverySource && !previewSource && policySource && typeof policySource === "object") {
+    if (format === "rg-recovery-history-policy") {
+      recoverySource = policySource;
+    } else if (format === "rg-preview-auto-refresh-policy") {
+      previewSource = policySource;
+    } else {
+      if (
+        Object.prototype.hasOwnProperty.call(policySource, "defaultMaxAgeDays")
+        || Object.prototype.hasOwnProperty.call(policySource, "maxAgeDays")
+      ) {
+        recoverySource = policySource;
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(policySource, "defaultEnabled")
+        || Object.prototype.hasOwnProperty.call(policySource, "enabled")
+      ) {
+        previewSource = policySource;
+      }
+    }
+  }
+
+  // Backward compatibility: accept direct policy objects without wrapper.
+  if (!recoverySource && !previewSource) {
+    if (
+      Object.prototype.hasOwnProperty.call(safe, "defaultMaxAgeDays")
+      || Object.prototype.hasOwnProperty.call(safe, "maxAgeDays")
+    ) {
+      recoverySource = safe;
+    }
+    if (
+      Object.prototype.hasOwnProperty.call(safe, "defaultEnabled")
+      || Object.prototype.hasOwnProperty.call(safe, "enabled")
+    ) {
+      previewSource = safe;
+    }
+  }
+
   return {
     recovery: recoverySource?.policy || recoverySource || null,
     preview: previewSource?.policy || previewSource || null,

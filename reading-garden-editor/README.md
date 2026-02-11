@@ -46,6 +46,7 @@
   - 支持 Live Preview 自动刷新偏好当前项目一键恢复全局默认
   - 支持 Live Preview 自动刷新策略导入/导出（支持 `replace` / `merge`）
   - 支持组合策略包导入/导出（会话快照策略 + 自动刷新策略）
+  - 组合策略包导入兼容旧单策略文件（recovery/auto-refresh）
   - 数据校验增强：`books.json` 与 `registry.json` 输出路径级错误与修复建议
   - `rgbook` 导入支持 `manual` 预检查：先输出冲突与推荐策略，不直接导入
   - IndexedDB 会话快照：500ms 防抖 + 30s 周期写入，重开项目自动恢复最近建议与预览偏好

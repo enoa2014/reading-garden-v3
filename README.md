@@ -34,6 +34,7 @@ python3 -m http.server 8080
 - 已实现：Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
 - 已实现：Live Preview 自动刷新策略支持导入/导出（支持 `replace/merge`）
 - 已实现：组合策略包导入/导出（会话快照策略 + 自动刷新策略，一次迁移）
+- 已实现：组合策略包导入兼容旧单策略文件（recovery 或 auto-refresh）
 - 已实现：`books.json` / `registry.json` 路径级校验提示（含修复建议）
 - 已实现：`rgbook` 导入 `manual` 预检查策略（先看冲突计划，不直接写入）
 - 已实现：IndexedDB 会话快照（500ms 防抖 + 30s 周期）与重开项目自动恢复

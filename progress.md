@@ -2139,6 +2139,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 122: Sprint 4 组合策略包导入兼容旧单策略文件
+- **Status:** complete
+- Actions taken:
+  - `app.js` 增强 `readEditorPolicyBundleSections`，支持识别旧格式单策略文件
+  - 支持 `rg-recovery-history-policy` 与 `rg-preview-auto-refresh-policy` 文件通过组合包入口导入
+  - 支持直接策略对象与 `policy` 包装对象的兼容解析，降低迁移门槛
+  - 回归脚本新增旧格式兼容标记断言
+  - 运行 `node --check`（`app.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2148,8 +2166,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 121 |
-| Where am I going? | Phase 121 -> checkpoint commit -> push |
+| Where am I? | Phase 122 |
+| Where am I going? | Phase 122 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 教学场景迁移更偏好“一次导出/一次导入”的组合策略包，而不是多文件分步操作 |
-| What have I done? | 已完成组合策略包导入导出闭环，并接入 UI、回归与文档同步 |
+| What have I learned? | 迁移入口需要兼容旧文件格式，否则用户在升级期会频繁因入口误选而失败 |
+| What have I done? | 已完成组合策略包入口对旧单策略文件的兼容导入，并同步回归与文档 |

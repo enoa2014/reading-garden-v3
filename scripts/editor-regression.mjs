@@ -568,6 +568,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("exportEditorPolicyBundleFlow"), "app should support exporting editor policy bundle");
   assert(appSource.includes("importEditorPolicyBundleFlow"), "app should support importing editor policy bundle");
   assert(appSource.includes("readEditorPolicyBundleSections"), "app should parse editor policy bundle sections");
+  assert(appSource.includes("rg-recovery-history-policy"), "app should support legacy recovery policy file import via bundle flow");
+  assert(appSource.includes("rg-preview-auto-refresh-policy"), "app should support legacy preview policy file import via bundle flow");
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("onResetPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy reset handler");

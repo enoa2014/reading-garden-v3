@@ -123,6 +123,7 @@
     - Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
     - Live Preview 自动刷新策略支持导入/导出（`replace` / `merge`，merge 保留本地默认）
     - 支持组合策略包导入/导出（会话快照策略 + 自动刷新策略）
+    - 组合策略包导入兼容旧单策略文件（`rg-recovery-history-policy` / `rg-preview-auto-refresh-policy`）
     - 新建书模板扩展：支持 `timeline/interactive` 可选模块与数据脚手架
     - `manual` 导入预检查新增“一键应用推荐策略”入口
     - Validation Issues 支持导出结构化校验报告（JSON）
