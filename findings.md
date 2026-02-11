@@ -1,91 +1,58 @@
-# Findings: Reading Garden V3
+# Findings: Reading Garden Editor 开发实施
 
 ## Requirements Source
-- `reading-garden/docs/UI_UX_DESIGN_REQUIREMENTS.md` (dated 2026-02-10)
+- `docs/reading-garden-editor-需求文档.md`（v1.1）
+- `docs/reading-garden-editor-详细设计文档.md`（v1.1）
 
-## Key Product Constraints
-- Pure static site; no build step.
-- Config-driven: book registries define modules and data files.
-- Native HTML/CSS/JS (ES Modules); Cytoscape.js for relationship graphs.
+## 当前任务目标
+- 启动 Sprint 1 开发，先实现离线手工模式下的最小可运行编辑器骨架。
+- 强制执行“关键节点写盘”策略：`task_plan.md`、`findings.md`、`progress.md` 同步更新。
+- 用户已批准对 `reading-garden-v3` 本体进行改造，但要求必须具备清晰回滚策略。
 
-## Data/Assets Observations (Copied From Existing Project)
-- `data/books.json` defines 6 books with cover + tags.
-- Per-book `data/<bookId>/registry.json` lists modules and module entry JS paths.
-- Data shapes vary by book/module:
-  - Reading chapters: object-with-`chapters`, array, and lazy-loaded chapter detail files (LOTF).
-  - Characters: Cytoscape elements (totto) vs simple nodes/edges (wave).
-  - Themes: multiple formats (array w/ steps; object w/ themes; minimal list).
-  - Timeline: simple day-based vs multi-timeline (Ove).
+## Sprint 1 约束
+- 纯静态站点，禁止引入后端与强依赖构建链。
+- 先实现基础模块：filesystem/state/path-resolver/validator/app/dashboard。
+- 先打通“打开项目 -> 校验结构 -> 读取 books.json -> 显示书架”闭环。
+- AI/图片策略/交换包先留接口位，不在本阶段重实现完整能力。
 
-## Implementation Notes
-- Asset paths in data can be `assets/...` or `../assets/...` while registries are under `data/<bookId>/`. Runtime now normalizes any path containing `assets/` to project root based on registry URL (works whether site is deployed at `/` or `/reading-garden-v3/`).
-- Sandbox environment blocks opening local HTTP sockets (`Operation not permitted`), so browser smoke tests need to be done manually; registries were validated via filesystem checks.
+## 技术决策
+| Decision | Rationale |
+|----------|-----------|
+| 在 `reading-garden-v3/reading-garden-editor/` 新建独立编辑器子应用 | 与运行时站点解耦，便于渐进集成 |
+| 使用 ES Modules + 浏览器原生 API | 保持零构建、易分发、离线可运行 |
+| 校验层先做“基础规则校验”，后续接入完整 schema | Sprint 1 聚焦打通主链路 |
+| 所有文件操作经统一 filesystem/path-resolver 层 | 为后续导入导出、路径重写做基础 |
+| 写操作设计“备份优先” | 满足用户对回滚策略的要求 |
 
-## UX Priorities (From Requirements)
-- Warm, literary, paper-like feel; avoid cold tech.
-- Responsive: mobile-first for parents, projection/desktop for teachers.
-- Reading module: comfort, notes, font size control, progress memory, mobile swipe.
-- Tab behavior: bottom-fixed on mobile, top horizontal on desktop; fade transitions.
-- Accessibility: contrast, focus, keyboard nav, reduced motion.
-- Performance: dynamic import modules; lazy images.
+## 已完成实现（当前节点）
+- 已创建独立子应用：`reading-garden-editor/`
+- 已落地核心模块：
+  - `editor/js/core/state.js`
+  - `editor/js/core/path-resolver.js`
+  - `editor/js/core/filesystem.js`
+  - `editor/js/core/validator.js`
+  - `editor/js/core/app.js`
+  - `editor/js/ui/dashboard.js`
+- 已打通最小链路：
+  - 打开本地目录
+  - 校验项目结构（`index.html/data/js/css`）
+  - 读取并校验 `data/books.json`
+  - 在仪表盘展示书架和错误信息
+- 回滚策略已落地第一版：
+  - `writeText` 默认先备份旧文件到 `.rg-editor-backups/<timestamp>/...`
+  - 写入成功返回 `backupPath` 供后续恢复流程使用
+- 项目入口文档已同步：
+  - `README.md` 新增“编辑器开发（WIP）”章节
+  - 包含编辑器入口、关联文档与回滚策略说明
 
-## 2026-02-11 Analysis Pass (In Progress)
-- Analysis scope: architecture, data flow, module quality, UX/performance/accessibility, technical debt.
-- Method: inspect entry HTML, CSS system, runtime JS, module implementations, and per-book data registries.
+## Risks & Watchpoints
+- 浏览器不支持 File System Access API 时需要明确降级提示。
+- `books.json`/目录结构异常时要给出可理解错误，避免静默失败。
+- 状态管理若无订阅机制，后续 UI 扩展会快速失控。
 
-## Architecture Findings
-- Home implementation is now single-path:
-  - Active: `index.html` + `js/bookshelf.js` + `css/bookshelf.css`
-- Book page is fully runtime-driven:
-  - Entry: `book.html` -> `js/app/book.js`
-  - Runtime: `js/core/book-runtime.js` dynamically imports module entry files from each book's `registry.json`.
-- Runtime path normalization is robust for mixed asset paths (`assets/...`, `../assets/...`).
-
-## Config/Contract Findings
-- Main registries (`data/*/registry.json`) are valid: module `entry` and `data` files exist (query strings stripped for fs validation).
-- Legacy configs had been broken/stale and are now removed:
-  - `data/wonder/registry.legacy.json`
-  - `data/wonder/registry.modular.json`
-- Registry fields are partially ignored by runtime:
-  - `book.logo` is ignored (runtime renders fixed SVG by module id).
-  - `capabilities`, `themeMode`, `themeStorageKey`, etc. are not consumed.
-- Module naming drift exists: `totto-chan` uses module id `quiz`, while general module is `interactive`.
-
-## Code Quality Findings
-- High-risk event-listener leak in reading module:
-  - `js/modules/reading-module.js` adds anonymous `change`/`input` listeners on each render, but destroy only removes click/pointer handlers.
-  - Re-entering reading tab can stack handlers.
-- Potential UI lock bug:
-  - Reading drawer sets `document.body.style.overflow = "hidden"` on open.
-  - Module destroy does not force restore overflow if module is switched while drawer is open.
-- Remaining cleanup opportunities:
-  - CSS: multiple unreferenced theme/legacy files and backup (`css/ove-theme.css.bak`)
-
-## UX/Performance/A11y Findings
-- Strengths:
-  - Dynamic `import()` per module.
-  - Lazy image loading is used widely.
-  - Keyboard support exists for tabs and modal escape/focus trap.
-  - `prefers-reduced-motion` is respected at base CSS level.
-- Gaps:
-  - No automated tests (unit/integration/e2e).
-  - Some ARIA state semantics are incomplete (for collapsible reading sidebar/drawer controls).
-- Browser-level cross-device regression testing has not been automated.
-
-## Data/Safety Findings
-- Suicide module UI is intentionally non-actionable, but raw data still contains explicit method/preparation fields in `data/a-man-called-ove/suicide_attempts.json`.
-- If stricter safety/privacy posture is required, sensitive fields should be removed at data source, not only hidden in UI.
-
-## 2026-02-11 Fixes Applied
-- Fixed reading module listener accumulation:
-  - Converted delegated `change` / `input` handlers to tracked state handlers.
-  - Added symmetric removal in `destroy`.
-- Fixed swipe listener cleanup target:
-  - Swipe listeners were bound on `#rgChapterBody` but previously removed from `panelEl`.
-  - Added `swipeTargetEl` tracking and proper cleanup.
-- Added body scroll unlock safeguard on reading module destroy:
-  - Prevents lingering `document.body.style.overflow = "hidden"` when switching modules with drawer open.
-- Removed stale artifacts:
-  - Deleted old/unreferenced JS files: `js/app/home.js`, `js/book-template-app.js`, `js/modules/shared/mobile-swipe.js`, `js/modules/shared/story-modal.js`
-  - Deleted invalid wonder legacy registries.
-  - Synced `README.md` metrics and tree with current file state.
+## Resources
+- `reading-garden-v3/`
+- `docs/reading-garden-editor-需求文档.md`
+- `docs/reading-garden-editor-详细设计文档.md`
+- `task_plan.md`
+- `progress.md`

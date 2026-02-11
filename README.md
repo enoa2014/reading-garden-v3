@@ -12,6 +12,26 @@ python3 -m http.server 8080
 
 > 需要本地 HTTP 服务器，否则浏览器会阻止 `fetch` / `import()`。
 
+## 编辑器开发（WIP）
+
+`reading-garden-v3` 正在新增本地可运行的编辑器子应用：
+
+- 路径：`reading-garden-editor/index.html`
+- 当前阶段：Sprint 1（基础骨架与最小闭环）
+- 目标闭环：打开项目目录 -> 结构校验 -> 读取 `data/books.json` -> 展示书架
+
+配套文档：
+
+- 需求文档：`docs/reading-garden-editor-需求文档.md`
+- 详细设计：`docs/reading-garden-editor-详细设计文档.md`
+- 规划评审：`docs/reading-garden-v3-新规划翻译与评审.md`
+
+回滚策略（开发中）：
+
+1. 所有关键节点小步提交（checkpoint commit）
+2. 编辑器文件写入默认先备份到 `.rg-editor-backups/<timestamp>/`
+3. `task_plan.md` / `findings.md` / `progress.md` 持续写盘，支持断电后恢复开发上下文
+
 ## 项目概览
 
 | 指标 | 数值 |

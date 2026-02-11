@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reading Garden Editor</title>
+    <link rel="stylesheet" href="./editor/css/editor.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>Reading Garden Editor</h1>
+          <p id="statusText" class="muted">Ready</p>
+        </div>
+        <div class="topbar-actions">
+          <span id="modeBadge" class="badge">Mode: checking</span>
+          <button id="openProjectBtn" type="button" class="btn btn-primary">Open Project</button>
+        </div>
+      </header>
+
+      <div class="main-layout">
+        <aside class="sidebar">
+          <button class="nav-item active" data-view="dashboard" type="button">Dashboard</button>
+          <button class="nav-item" data-view="book-editor" type="button" disabled>Book Editor</button>
+          <button class="nav-item" data-view="data-editor" type="button" disabled>Data Editor</button>
+          <button class="nav-item" data-view="export" type="button" disabled>Export</button>
+        </aside>
+
+        <main id="viewRoot" class="view-root" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <script type="module" src="./editor/js/core/app.js"></script>
+  </body>
+</html>

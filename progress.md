@@ -1,51 +1,79 @@
-# Progress Log: Reading Garden V3
+# Progress Log: Reading Garden Editor 开发实施
 
-## 2026-02-10
-- Created `reading-garden-v3/` and copied `assets/` + `data/` from `reading-garden/`.
-- Read and extracted UI/UX requirements; inspected existing data/module formats.
-- Implemented missing modules and updated registries:
-  - `js/modules/linguistics-module.js` (双画布动画 + 播放/暂停 + 速度滑块)
-  - `js/modules/suicide-module.js`（内容提示 + 非可操作呈现 + 跳转阅读）
-  - `js/modules/symbols-module.js`, `js/modules/discussion-module.js`, `js/modules/teaching-module.js`（蝇王）
-- Fixed runtime asset resolution to work whether deployed at site root or under `/reading-garden-v3/`.
-- Replaced header book logo emoji with SVG mark (avoid emoji icons).
-- Added module CSS for new modules; added `README.md` with local run instructions.
-- Note: sandbox blocks local HTTP requests, so only filesystem-level validation was performed here.
+## Session: 2026-02-11
 
-## 2026-02-11
-- Switched planning context from implementation task to project analysis task.
-- Reframed `task_plan.md` into 4 analysis phases and started repository discovery.
-- Completed full scan of:
-  - Entry pages (`index.html`, `book.html`)
-  - Runtime/core (`js/app/*`, `js/core/*`)
-  - All modules (`js/modules/*.js`)
-  - Data contracts (`data/books.json`, all `data/*/registry*.json`, representative content files)
-  - CSS architecture and file usage
-- Performed validation checks:
-  - Registry `entry`/`data` path existence (all primary registries valid)
-  - JS syntax check via `node --check` (pass)
-  - Asset reference existence scan (no missing local asset files detected)
-- Identified key risks:
-  - Reading module listener accumulation
-  - Potential body scroll lock persistence when leaving reading drawer
-  - Stale legacy registries and unreferenced files causing maintenance drift
-- Implemented targeted runtime fixes in `js/modules/reading-module.js`:
-  - Added tracked `onChange` / `onInput` handlers and cleanup in `destroy`.
-  - Fixed swipe listener cleanup by tracking the real binding target (`swipeTargetEl`).
-  - Added `document.body.style.overflow = \"\"` safeguard in `destroy`.
-- Validation after fix:
-  - `node --check js/modules/reading-module.js` passed.
-  - Full `node --check` across all JS files passed.
-- Cleanup pass completed:
-  - Removed stale/unused files:
-    - `data/wonder/registry.legacy.json`
-    - `data/wonder/registry.modular.json`
-    - `js/app/home.js`
-    - `js/book-template-app.js`
-    - `js/modules/shared/mobile-swipe.js`
-    - `js/modules/shared/story-modal.js`
-  - Updated `README.md` stats and tree:
-    - JavaScript lines: 5171
-    - CSS lines: 13673
-    - Total code lines: 18844
-    - Image assets: 194
+### Phase 1: 开发基线与结构初始化
+- **Status:** complete
+- **Started:** 2026-02-11
+- Actions taken:
+  - 将规划文件从“分析模式”切换为“开发实施模式”
+  - 锁定 Sprint 1 范围：核心骨架 + 最小闭环
+  - 重写 `task_plan.md` / `findings.md` / `progress.md` 作为本轮事实基线
+  - 记录新增约束：允许改造原项目，但必须有回滚策略
+- Files created/modified:
+  - `task_plan.md` (rewritten)
+  - `findings.md` (rewritten)
+  - `progress.md` (rewritten)
+  - `reading-garden-editor/` (created)
+
+### Phase 2: 核心基础模块实现
+- **Status:** complete
+- Actions taken:
+  - 实现 `state.js`（订阅式状态容器）
+  - 实现 `path-resolver.js`（路径归一化、join、query剥离、bookId清洗）
+  - 实现 `filesystem.js`（目录接入、结构校验、读写、写前备份）
+  - 实现 `validator.js`（结构校验与 books 数据基础规则校验）
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (created)
+  - `reading-garden-editor/editor/js/core/path-resolver.js` (created)
+  - `reading-garden-editor/editor/js/core/filesystem.js` (created)
+  - `reading-garden-editor/editor/js/core/validator.js` (created)
+
+### Phase 3: 最小 UI 与主流程打通
+- **Status:** complete
+- Actions taken:
+  - 创建 `index.html`、`editor.css`
+  - 实现 `app.js`（模式检测、打开项目、载入书架、导航）
+  - 实现 `dashboard.js`（结构状态、错误、书架展示）
+  - 打通最小闭环：打开项目 -> 校验结构 -> 读取 `data/books.json` -> 展示书架
+- Files created/modified:
+  - `reading-garden-editor/index.html` (created)
+  - `reading-garden-editor/editor/css/editor.css` (created)
+  - `reading-garden-editor/editor/js/core/app.js` (created)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (created)
+
+### Phase 4: 自检与文档同步
+- **Status:** complete
+- Actions taken:
+  - 执行 `node --check` 对编辑器核心文件进行语法检查
+  - 修复 `dashboard.js` 模板字符串语法问题
+  - 更新 `README.md`：新增编辑器入口、文档路径、回滚策略说明
+  - 同步更新 `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+## Test Results
+| Test | Input | Expected | Actual | Status |
+|------|-------|----------|--------|--------|
+| 开发基线确认 | 读取需求/设计文档与仓库结构 | 明确 Sprint 1 范围 | 已完成 | ✓ |
+| JS 语法检查 | `node --check` 对编辑器核心文件 | 无语法错误 | 通过 | ✓ |
+| 回滚机制检查 | `filesystem.js` 写流程审查 | 写前备份可用 | 已实现 `backupFileIfExists` | ✓ |
+| 文档入口检查 | README 编辑器章节 | 可定位入口、文档、回滚策略 | 已补充 | ✓ |
+
+## Error Log
+| Timestamp | Error | Attempt | Resolution |
+|-----------|-------|---------|------------|
+|           |       | 1       |            |
+
+## 5-Question Reboot Check
+| Question | Answer |
+|----------|--------|
+| Where am I? | Phase 4 |
+| Where am I going? | Phase 5 |
+| What's the goal? | 打通编辑器最小可运行闭环 |
+| What have I learned? | 回滚策略需要内置在写路径中，而非只依赖 git |
+| What have I done? | 已完成骨架编码并通过语法自检 |
