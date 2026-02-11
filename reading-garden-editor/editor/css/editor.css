@@ -75,6 +75,12 @@ body {
   color: #fff;
 }
 
+.btn-secondary {
+  background: #fff;
+  border-color: var(--line);
+  color: var(--text);
+}
+
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -232,6 +238,10 @@ body {
   box-shadow: 0 0 0 2px rgba(47, 111, 89, 0.12);
 }
 
+.form-grid select[multiple] {
+  min-height: 120px;
+}
+
 .checkbox-inline {
   display: flex !important;
   align-items: center;
@@ -258,6 +268,19 @@ body {
   color: var(--danger);
   margin: 10px 0 0;
   font-size: 0.9rem;
+}
+
+.diag-box {
+  margin-top: 10px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.diag-title {
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
 code {

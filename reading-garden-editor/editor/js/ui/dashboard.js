@@ -165,6 +165,16 @@ function renderPackPanel(state) {
     ? `<p class="${state.packFeedback.type === "error" ? "error-text" : "ok-text"}">${state.packFeedback.message}</p>`
     : "";
 
+  const diagnostic = state.packDiagnostic
+    ? `
+      <div class="diag-box">
+        <div class="diag-title">导入失败诊断可用</div>
+        <p class="muted">包含错误码、文件信息与建议，可用于问题复现与排查。</p>
+        <button id="downloadImportReportBtn" class="btn btn-secondary" type="button" ${busy}>Download Report</button>
+      </div>
+    `
+    : "";
+
   return `
     <section class="panel">
       <h3>Book Pack Exchange (rgbook)</h3>
@@ -203,11 +213,25 @@ function renderPackPanel(state) {
           <input name="includeEditor" type="checkbox" ${busy} />
           包含 <code>reading-garden-editor</code> 子应用
         </label>
+        <label>
+          导出范围
+          <select name="siteScope" ${busy}>
+            <option value="all">全部书籍（full）</option>
+            <option value="selected">仅选中书籍（subset）</option>
+          </select>
+        </label>
+        <label class="full">
+          选中书籍（用于 subset）
+          <select name="selectedBooks" multiple size="6" ${busy}>
+            ${options}
+          </select>
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Export rgsite</button>
         </div>
       </form>
       ${feedback}
+      ${diagnostic}
     </section>
   `;
 }
@@ -292,9 +316,22 @@ export function renderDashboard(root, state, handlers = {}) {
     exportSiteForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const fd = new FormData(exportSiteForm);
+      const selectedEl = exportSiteForm.querySelector('select[name="selectedBooks"]');
+      const selectedBookIds = selectedEl
+        ? Array.from(selectedEl.selectedOptions).map((item) => item.value)
+        : [];
       handlers.onExportSite({
         includeEditor: fd.get("includeEditor") === "on",
+        scope: String(fd.get("siteScope") || "all"),
+        selectedBookIds,
       });
+    });
+  }
+
+  const reportBtn = root.querySelector("#downloadImportReportBtn");
+  if (reportBtn && handlers.onDownloadImportReport) {
+    reportBtn.addEventListener("click", () => {
+      handlers.onDownloadImportReport();
     });
   }
 }

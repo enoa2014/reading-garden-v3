@@ -15,6 +15,7 @@ const state = {
   busy: false,
   newBookFeedback: null,
   packFeedback: null,
+  packDiagnostic: null,
 };
 
 function emit(key) {

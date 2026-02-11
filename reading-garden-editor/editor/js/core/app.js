@@ -51,6 +51,7 @@ function render() {
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
+      onDownloadImportReport: downloadImportReportFlow,
     });
     return;
   }
@@ -194,7 +195,7 @@ async function refreshProjectData() {
 
 async function openProjectFlow() {
   setStatus("Opening project...");
-  setState({ busy: true, newBookFeedback: null, packFeedback: null });
+  setState({ busy: true, newBookFeedback: null, packFeedback: null, packDiagnostic: null });
 
   try {
     const handle = await fs.openProject();
@@ -294,7 +295,7 @@ async function createBookFlow(rawInput) {
     if (!existed) createdPaths.push({ path, recursive: false });
   };
 
-  setState({ busy: true, newBookFeedback: null, packFeedback: null });
+  setState({ busy: true, newBookFeedback: null, packFeedback: null, packDiagnostic: null });
   setStatus("Creating new book...");
 
   try {
@@ -375,7 +376,7 @@ async function exportPackFlow(bookId) {
     return;
   }
 
-  setState({ busy: true, packFeedback: null });
+  setState({ busy: true, packFeedback: null, packDiagnostic: null });
   setStatus("Exporting rgbook...");
 
   try {
@@ -416,7 +417,7 @@ async function importPackFlow(file, strategy) {
     return;
   }
 
-  setState({ busy: true, packFeedback: null });
+  setState({ busy: true, packFeedback: null, packDiagnostic: null });
   setStatus("Importing rgbook...");
 
   try {
@@ -435,6 +436,7 @@ async function importPackFlow(file, strategy) {
           type: "ok",
           message: "导入已跳过（skip 策略）。",
         },
+        packDiagnostic: null,
       });
       setStatus("Import skipped");
     } else {
@@ -443,15 +445,24 @@ async function importPackFlow(file, strategy) {
           type: "ok",
           message: `导入成功：${result.targetBookId}（${result.strategy}）`,
         },
+        packDiagnostic: null,
       });
       setStatus("rgbook imported");
     }
   } catch (err) {
+    const diagnostic = buildPackImportDiagnostic({
+      file,
+      strategy,
+      error: err,
+      mode: getState().mode,
+      projectName: getState().projectName,
+    });
     setState({
       packFeedback: {
         type: "error",
-        message: `导入失败：${err?.message || String(err)}`,
+        message: `导入失败：${err?.message || String(err)}（可下载诊断报告）`,
       },
+      packDiagnostic: diagnostic,
     });
     setStatus("Import failed");
   }
@@ -459,19 +470,107 @@ async function importPackFlow(file, strategy) {
   setState({ busy: false });
 }
 
+function inferErrorCode(err) {
+  const message = String(err?.message || err || "UNKNOWN_ERROR");
+  const direct = message.match(/\b[A-Z][A-Z0-9_]{3,}\b/);
+  return direct ? direct[0] : "UNKNOWN_ERROR";
+}
+
+function buildPackImportDiagnostic({ file, strategy, error, mode, projectName }) {
+  const now = new Date().toISOString();
+  const fileName = file?.name || "(unknown)";
+  const fileSize = Number(file?.size || 0);
+  const errorMessage = String(error?.message || error || "UNKNOWN_ERROR");
+
+  return {
+    type: "rgbook-import-diagnostic",
+    generatedAt: now,
+    project: {
+      name: projectName || "",
+      mode: mode || "",
+    },
+    input: {
+      fileName,
+      fileSize,
+      strategy: strategy || "rename",
+    },
+    error: {
+      code: inferErrorCode(error),
+      message: errorMessage,
+      stack: String(error?.stack || "").slice(0, 4000),
+    },
+    hints: [
+      "确认压缩包为本工具导出的 .rgbook.zip",
+      "检查 manifest/checksum 是否被二次修改",
+      "若为路径或大小限制错误，建议重新导出并避免手工改包",
+    ],
+  };
+}
+
+function downloadDiagnosticReport(report) {
+  if (!report) return;
+  const stamp = String(report.generatedAt || new Date().toISOString()).replace(/[:.]/g, "-");
+  const filename = `rgbook-import-diagnostic-${stamp}.json`;
+  const text = `${JSON.stringify(report, null, 2)}\n`;
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadImportReportFlow() {
+  const state = getState();
+  if (!state.packDiagnostic) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: "当前没有可导出的诊断报告。",
+      },
+    });
+    return;
+  }
+
+  downloadDiagnosticReport(state.packDiagnostic);
+  setState({
+    packFeedback: {
+      type: "ok",
+      message: "诊断报告已下载。",
+    },
+  });
+}
+
 async function exportSiteFlow(options = {}) {
-  setState({ busy: true, packFeedback: null });
+  const scope = String(options.scope || "all");
+  const selectedBookIds = Array.isArray(options.selectedBookIds) ? options.selectedBookIds : [];
+  if (scope === "selected" && !selectedBookIds.length) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: "请选择至少一本书用于子集导出。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, packFeedback: null, packDiagnostic: null });
   setStatus("Exporting rgsite...");
 
   try {
     const result = await sitePackService.exportSitePack({
       includeEditor: Boolean(options.includeEditor),
+      selectedBookIds: scope === "selected" ? selectedBookIds : [],
     });
 
+    const scopeText = result.scope === "subset"
+      ? `subset(${result.selectedBookIds.length}本)`
+      : "full";
     setState({
       packFeedback: {
         type: "ok",
-        message: `发布包导出成功：${result.filename}（files ${result.files}，books ${result.books}）`,
+        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}）`,
       },
     });
     setStatus("rgsite exported");

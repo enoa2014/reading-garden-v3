@@ -18,7 +18,8 @@ python3 -m http.server 8080
 
 - 路径：`reading-garden-editor/index.html`
 - 当前阶段：Sprint 4（安全校验 + 发布打包）
-- 已实现：打开项目、书架管理、新建书、`rgbook` 导入导出、`rgsite` 发布包导出
+- 已实现：打开项目、书架管理、新建书、`rgbook` 导入导出、`rgsite` 全量/子集发布包导出
+- 已实现：`rgbook` 导入失败诊断报告下载、编辑器回归脚本
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 
 配套文档：
@@ -32,6 +33,12 @@ python3 -m http.server 8080
 1. 所有关键节点小步提交（checkpoint commit）
 2. 编辑器文件写入默认先备份到 `.rg-editor-backups/<timestamp>/`
 3. `task_plan.md` / `findings.md` / `progress.md` 持续写盘，支持断电后恢复开发上下文
+
+回归脚本：
+
+```bash
+./scripts/editor-regression.sh
+```
 
 ## 项目概览
 

@@ -86,6 +86,12 @@
   - Dashboard 与应用流程：
     - 新增 `Export rgsite` 表单（可选包含 `reading-garden-editor`）
     - `app.js` 新增发布包导出流与反馈信息
+    - `rgsite` 新增 `full/subset` 导出模式（subset 支持按书籍筛选）
+    - `rgbook` 导入失败新增诊断报告下载
+  - 自动化回归：
+    - 新增 `scripts/editor-regression.sh`
+    - 新增 `scripts/editor-regression.mjs`
+    - 覆盖语法检查、pack-utils 关键规则、merge 关键策略、site-pack 关键标记
   - 文档同步：
     - `README.md` 与 `reading-garden-editor/README.md` 已更新到 Sprint 4 状态
 
@@ -96,6 +102,7 @@
 - 新建书回滚当前仅处理“本次新建路径”删除，尚未实现“基于备份自动恢复覆盖文件”流程。
 - `rgbook` 安全校验加入后需注意性能：大包 checksum 可能导致导入等待变长。
 - `rgsite` 首版白名单若漏文件会造成线上 404，需要补充分层校验与提示。
+- `rgsite subset` 仍可能包含未使用共享资源，后续可增加“最小资源集”模式降低包体。
 
 ## Sprint 4 后续建议
 - 目标 1：补充 `rgsite` 引用扫描深度（静态资源跨文件依赖、死链清单）。

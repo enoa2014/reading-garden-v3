@@ -23,8 +23,10 @@
 - Sprint 4 进行中：
   - `rgbook` 增加 checksum 与压缩包安全门禁（路径/文件数/体积）
   - 新增 `rgsite` 发布包导出（`*.rgsite.zip`）
+  - 新增 `rgsite` 子集导出（按选中书籍过滤 `books.json` 与书籍目录）
   - 导出包附带 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
   - Dashboard 增加 `Export rgsite` 入口（可选包含编辑器子应用）
+  - `rgbook` 导入失败可下载诊断报告（JSON）
 
 ## 运行方式
 
@@ -39,6 +41,12 @@ python3 -m http.server 8080
 
 - `http://127.0.0.1:8080/reading-garden-editor/index.html`
 
+3. 运行回归脚本（可选）：
+
+```bash
+./scripts/editor-regression.sh
+```
+
 ## 回滚策略（第一版）
 
 1. 关键开发节点采用小步提交（checkpoint commit）。
@@ -49,5 +57,5 @@ python3 -m http.server 8080
 ## 下个迭代目标（Sprint 4 后续）
 
 - 细化 `rgsite` 导出前校验（跨文件引用全扫描）
-- 为 `rgbook`/`rgsite` 增加自动化回归测试
+- 增加导入导出失败场景的端到端回归样例
 - 增加导入导出过程日志面板（可追踪、可复制）

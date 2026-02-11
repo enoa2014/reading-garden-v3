@@ -17,6 +17,14 @@ const DEFAULT_INCLUDE_ROOTS = [
   "design-system",
 ];
 
+const SUBSET_CORE_ROOTS = [
+  "index.html",
+  "book.html",
+  "css",
+  "js",
+  "design-system",
+];
+
 const SENSITIVE_KEY_PATTERN = /(api[-_]?key|token|secret|authorization|password)/i;
 const TEXT_ENCODER = new TextEncoder();
 
@@ -35,6 +43,30 @@ function normalizeAssetPath(bookId, rawPath) {
   const marker = resolved.indexOf("assets/");
   if (marker >= 0) return resolved.slice(marker).split("?")[0];
   return "";
+}
+
+function collectStrings(value, output) {
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectStrings(item, output));
+    return;
+  }
+  if (value && typeof value === "object") {
+    Object.values(value).forEach((item) => collectStrings(item, output));
+    return;
+  }
+  if (typeof value === "string") output.push(value);
+}
+
+function normalizeSelection(selectedBookIds = []) {
+  const out = [];
+  const seen = new Set();
+  selectedBookIds.forEach((raw) => {
+    const id = String(raw || "").trim();
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    out.push(id);
+  });
+  return out;
 }
 
 function redactSensitiveValue(value) {
@@ -101,6 +133,15 @@ async function collectRuntimeFiles(fs, path, outputSet) {
   }
 }
 
+function bookIdFromAssetPath(assetPath, allBookIdsSet) {
+  const marker = "assets/images/";
+  if (!assetPath.startsWith(marker)) return null;
+  const rest = assetPath.slice(marker.length);
+  const candidate = rest.split("/")[0];
+  if (!candidate) return null;
+  return allBookIdsSet.has(candidate) ? candidate : null;
+}
+
 function buildEdgeOneGuide() {
   return [
     "# EdgeOne 部署说明",
@@ -118,7 +159,67 @@ export class SitePackService {
     this.fs = fs;
   }
 
-  async validateForExport() {
+  resolveTargetBooks({ books, selectedBookIds, errors }) {
+    if (!selectedBookIds.length) return books;
+
+    const bookMap = new Map(books.map((book) => [String(book?.id || "").trim(), book]));
+    const target = [];
+
+    selectedBookIds.forEach((id) => {
+      const hit = bookMap.get(id);
+      if (hit) {
+        target.push(hit);
+      } else {
+        errors.push(`未找到书籍：${id}`);
+      }
+    });
+
+    return target;
+  }
+
+  async collectReferencedAssets(book, outAssets) {
+    const bookId = String(book?.id || "").trim();
+    if (!bookId) return;
+
+    const cover = normalizeAssetPath(bookId, book?.cover);
+    if (cover) outAssets.add(cover);
+
+    const registryPath = `data/${bookId}/registry.json`;
+    let registry = null;
+    try {
+      registry = await this.fs.readJson(registryPath);
+    } catch {
+      return;
+    }
+
+    const modules = Array.isArray(registry?.modules) ? registry.modules : [];
+    for (const mod of modules) {
+      const dataRaw = String(mod?.data || "").trim();
+      if (!dataRaw) continue;
+
+      const dataPath = normalizePath(`data/${bookId}/${dataRaw}`);
+      // eslint-disable-next-line no-await-in-loop
+      const exists = await this.fs.exists(dataPath);
+      if (!exists) continue;
+
+      // eslint-disable-next-line no-await-in-loop
+      const text = await this.fs.readText(dataPath);
+      try {
+        const parsed = JSON.parse(text);
+        const strings = [];
+        collectStrings(parsed, strings);
+        strings.forEach((raw) => {
+          const asset = normalizeAssetPath(bookId, raw);
+          if (asset) outAssets.add(asset);
+        });
+      } catch {
+        // ignore non-json files
+      }
+    }
+  }
+
+  async validateForExport({ selectedBookIds = [] } = {}) {
+    const normalizedSelected = normalizeSelection(selectedBookIds);
     const errors = [];
     let booksCount = 0;
     let missingAssets = 0;
@@ -145,9 +246,14 @@ export class SitePackService {
     }
 
     const books = Array.isArray(booksData?.books) ? booksData.books : [];
-    booksCount = books.length;
+    const targetBooks = this.resolveTargetBooks({
+      books,
+      selectedBookIds: normalizedSelected,
+      errors,
+    });
+    booksCount = targetBooks.length;
 
-    for (const book of books) {
+    for (const book of targetBooks) {
       const id = String(book?.id || "").trim();
       if (!id) {
         errors.push("books.json 含空书籍 id");
@@ -222,6 +328,9 @@ export class SitePackService {
       ok: errors.length === 0,
       errors,
       booksCount,
+      targetBooks,
+      allBooks: books,
+      selectedBookIds: normalizedSelected,
       checks: {
         schema: Boolean(structure?.ok) && booksDataReadOk,
         assets: missingAssets === 0,
@@ -234,6 +343,7 @@ export class SitePackService {
   async buildManifest({
     booksCount,
     includeEditor,
+    selectedBookIds,
     checks,
     filesCount,
     totalBytes,
@@ -243,11 +353,12 @@ export class SitePackService {
   }) {
     return {
       format: "rgsite",
-      formatVersion: "1.1.0",
+      formatVersion: "1.2.0",
       booksCount: Number(booksCount || 0),
       entry: "index.html",
       buildTime: new Date().toISOString(),
       includeEditor: Boolean(includeEditor),
+      selectedBookIds: Array.isArray(selectedBookIds) ? selectedBookIds : [],
       checks: {
         schema: Boolean(checks?.schema),
         assets: Boolean(checks?.assets),
@@ -264,31 +375,100 @@ export class SitePackService {
     };
   }
 
-  async exportSitePack({ includeEditor = false } = {}) {
-    const readiness = await this.validateForExport();
-    if (!readiness.ok) {
-      throw new Error(`SITE_EXPORT_BLOCKED: ${readiness.errors.slice(0, 8).join("；")}`);
-    }
-
-    const Zip = getZipCtor();
-    const zip = new Zip();
-    const includeRoots = includeEditor
-      ? [...DEFAULT_INCLUDE_ROOTS, "reading-garden-editor"]
-      : DEFAULT_INCLUDE_ROOTS;
-
+  async collectSubsetFiles({ targetBooks, allBooks, includeEditor }) {
     const fileSet = new Set();
-    for (const root of includeRoots) {
+    const assetSet = new Set();
+
+    const allBookIdsSet = new Set(
+      (allBooks || []).map((book) => String(book?.id || "").trim()).filter(Boolean)
+    );
+    const selectedIds = (targetBooks || [])
+      .map((book) => String(book?.id || "").trim())
+      .filter(Boolean);
+    const selectedIdsSet = new Set(selectedIds);
+
+    const roots = includeEditor
+      ? [...SUBSET_CORE_ROOTS, "reading-garden-editor"]
+      : SUBSET_CORE_ROOTS;
+    for (const root of roots) {
       // eslint-disable-next-line no-await-in-loop
       await collectRuntimeFiles(this.fs, root, fileSet);
     }
 
-    const orderedFiles = Array.from(fileSet).sort((a, b) => a.localeCompare(b));
+    for (const book of targetBooks) {
+      const id = String(book?.id || "").trim();
+      if (!id) continue;
+
+      // eslint-disable-next-line no-await-in-loop
+      await collectRuntimeFiles(this.fs, `data/${id}`, fileSet);
+      // eslint-disable-next-line no-await-in-loop
+      await this.collectReferencedAssets(book, assetSet);
+    }
+
+    const allAssets = new Set();
+    await collectRuntimeFiles(this.fs, "assets", allAssets);
+    allAssets.forEach((assetPath) => {
+      const ownerId = bookIdFromAssetPath(assetPath, allBookIdsSet);
+      if (ownerId && !selectedIdsSet.has(ownerId)) return;
+      fileSet.add(assetPath);
+    });
+    assetSet.forEach((assetPath) => fileSet.add(assetPath));
+
+    return {
+      fileSet,
+      filteredBooksJson: {
+        books: targetBooks,
+      },
+      selectedIds,
+    };
+  }
+
+  async exportSitePack({ includeEditor = false, selectedBookIds = [] } = {}) {
+    const normalizedSelected = normalizeSelection(selectedBookIds);
+    const readiness = await this.validateForExport({
+      selectedBookIds: normalizedSelected,
+    });
+    if (!readiness.ok) {
+      throw new Error(`SITE_EXPORT_BLOCKED: ${readiness.errors.slice(0, 8).join("；")}`);
+    }
+
+    const subsetMode = normalizedSelected.length > 0;
+    const Zip = getZipCtor();
+    const zip = new Zip();
     const checksumEnabled = Boolean(globalThis?.crypto?.subtle);
     const checksums = {};
     const redactedFiles = [];
 
+    const fileSet = new Set();
+    let filteredBooksJsonText = "";
+    let effectiveSelectedIds = [];
+
+    if (subsetMode) {
+      const subsetFiles = await this.collectSubsetFiles({
+        targetBooks: readiness.targetBooks,
+        allBooks: readiness.allBooks,
+        includeEditor,
+      });
+      subsetFiles.fileSet.forEach((item) => fileSet.add(item));
+      filteredBooksJsonText = `${JSON.stringify(subsetFiles.filteredBooksJson, null, 2)}\n`;
+      effectiveSelectedIds = subsetFiles.selectedIds;
+    } else {
+      const includeRoots = includeEditor
+        ? [...DEFAULT_INCLUDE_ROOTS, "reading-garden-editor"]
+        : DEFAULT_INCLUDE_ROOTS;
+      for (const root of includeRoots) {
+        // eslint-disable-next-line no-await-in-loop
+        await collectRuntimeFiles(this.fs, root, fileSet);
+      }
+    }
+
+    const orderedFiles = Array.from(fileSet).sort((a, b) => a.localeCompare(b));
     let totalBytes = 0;
     for (const filePath of orderedFiles) {
+      if (subsetMode && filePath === "data/books.json") {
+        continue;
+      }
+
       const isText = isLikelyTextFile(filePath);
       if (isText) {
         // eslint-disable-next-line no-await-in-loop
@@ -321,6 +501,14 @@ export class SitePackService {
       }
     }
 
+    if (subsetMode) {
+      zip.file("data/books.json", filteredBooksJsonText);
+      totalBytes += TEXT_ENCODER.encode(filteredBooksJsonText).byteLength;
+      if (checksumEnabled) {
+        checksums["data/books.json"] = await sha256Text(filteredBooksJsonText);
+      }
+    }
+
     const deployGuide = buildEdgeOneGuide();
     zip.file("DEPLOY-EDGEONE.md", deployGuide);
     totalBytes += TEXT_ENCODER.encode(deployGuide).byteLength;
@@ -331,8 +519,9 @@ export class SitePackService {
     const manifest = await this.buildManifest({
       booksCount: readiness.booksCount,
       includeEditor,
+      selectedBookIds: effectiveSelectedIds,
       checks: readiness.checks,
-      filesCount: orderedFiles.length + 2,
+      filesCount: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
       totalBytes,
       checksumMode: checksumEnabled ? "sha256" : "none",
       checksums: checksumEnabled ? checksums : {},
@@ -340,17 +529,20 @@ export class SitePackService {
     });
     zip.file("rgsite-manifest.json", JSON.stringify(manifest, null, 2));
 
-    const filename = `reading-garden-site-${nowStamp()}.rgsite.zip`;
+    const suffix = subsetMode ? "subset" : "full";
+    const filename = `reading-garden-site-${suffix}-${nowStamp()}.rgsite.zip`;
     const blob = await zip.generateAsync({ type: "blob" });
     downloadBlob(blob, filename);
 
     return {
       ok: true,
       filename,
-      files: orderedFiles.length + 2,
+      files: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
       books: readiness.booksCount,
       checksumMode: checksumEnabled ? "sha256" : "none",
       redacted: redactedFiles.length,
+      scope: subsetMode ? "subset" : "full",
+      selectedBookIds: effectiveSelectedIds,
     };
   }
 }

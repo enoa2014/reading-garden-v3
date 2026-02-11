@@ -4,7 +4,7 @@
 补齐 `rgbook` 安全校验与 `rgsite` 发布包导出能力，形成可直接上传腾讯云 EdgeOne 的稳定打包链路，并保持断点恢复文档持续同步。
 
 ## Current Phase
-Phase 6
+Phase 7
 
 ## Phases
 ### Phase 1: Sprint 3 收尾同步
@@ -40,15 +40,21 @@ Phase 6
 - **Status:** complete
 
 ### Phase 6: 下一迭代规划
-- [ ] 增加 `rgbook` 导入失败诊断报告导出
-- [ ] 增加 `rgsite` 子集导出（按书籍筛选）
-- [ ] 增加导入导出自动化回归脚本
+- [x] 增加 `rgbook` 导入失败诊断报告导出
+- [x] 增加 `rgsite` 子集导出（按书籍筛选）
+- [x] 增加导入导出自动化回归脚本
+- **Status:** complete
+
+### Phase 7: 文档同步与 checkpoint
+- [x] 同步 `task_plan.md` / `findings.md` / `progress.md`
+- [ ] 提交 checkpoint commit
+- [ ] 推送 `origin/master`
 - **Status:** in_progress
 
 ## Key Questions
-1. `rgsite` 导出是否需要增加“仅当前选中书籍”子集打包模式？
-2. `rgbook` 导入校验失败时是否要提供可下载的诊断报告？
-3. 发布包是否需要附带 EdgeOne 缓存策略模板（如 HTML no-cache）？
+1. `rgsite subset` 是否需要进一步按资源引用最小化打包体积？
+2. 诊断报告是否需要附带“可脱敏分享”模式（隐藏本地路径/项目名）？
+3. 回归脚本是否升级为 CI 可直接执行的门禁任务？
 
 ## Decisions Made
 | Decision | Rationale |

@@ -125,6 +125,9 @@
 | 合并策略检查 | `ImportMergeService` smoke test | rename 生成新 id | 通过（`wave-imported-1`） | ✓ |
 | Sprint4 语法检查 | `node --check` on `pack-utils/book-pack/site-pack/app/dashboard` | 无语法错误 | 通过 | ✓ |
 | rgsite 流程接入检查 | 审查 `dashboard.js` + `app.js` 事件链路 | 可触发导出并回传反馈 | 已接入 `onExportSite` | ✓ |
+| 编辑器回归脚本 | `./scripts/editor-regression.sh` | 语法 + 关键逻辑检查通过 | 通过 | ✓ |
+| rgsite 子集参数链路 | 审查 `dashboard -> app -> sitePackService` | scope/selectedBookIds 可传递 | 已接入 | ✓ |
+| rgbook 诊断下载链路 | 审查 `import catch -> state -> download` | 失败后可导出 JSON 报告 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -200,12 +203,50 @@
   - `progress.md` (updated)
 
 ### Phase 11: Sprint 4 文档收口（post-push）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 将计划状态切换到“checkpoint 已完成”
-  - 准备提交 docs-only 同步记录，确保断电恢复时状态一致
+  - 创建 docs-only commit：`ae83f90`（同步 checkpoint 状态）
+  - 推送到远端 `origin/master`
 - Files created/modified:
   - `task_plan.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 12: Sprint 4 增量能力（subset + 诊断 + 回归）
+- **Status:** complete
+- Actions taken:
+  - `site-pack-service.js` 增加 `selectedBookIds` 子集导出
+  - subset 模式下重写导出包内 `data/books.json`
+  - 新增 `rgbook` 导入失败诊断对象与下载能力
+  - Dashboard 增加：
+    - `rgsite` 导出范围（full/subset）与书籍多选
+    - 诊断报告下载按钮
+  - 新增回归脚本：
+    - `scripts/editor-regression.sh`
+    - `scripts/editor-regression.mjs`
+  - 更新 `README.md` / `reading-garden-editor/README.md`
+- Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `scripts/editor-regression.sh` (created)
+  - `scripts/editor-regression.mjs` (created)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 13: Sprint 4 checkpoint（增量）
+- **Status:** in_progress
+- Actions taken:
+  - 完成语法检查与回归脚本执行
+  - 准备提交并推送本轮增量
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -216,8 +257,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 11 |
-| Where am I going? | Phase 11 -> 下一迭代开发 |
+| Where am I? | Phase 13 |
+| Where am I going? | Phase 13 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 Sprint 4 核心实现并完成 checkpoint 推送 |
+| What have I done? | 已完成 subset 导出、诊断下载与回归脚本，等待增量 checkpoint |
