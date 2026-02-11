@@ -674,6 +674,73 @@ async function resetRecoveryHistoryPolicyFlow() {
   }
 }
 
+function exportRecoveryHistoryPolicyFlow() {
+  const payload = readRecoveryHistoryPolicyPayloadFromStorage();
+  const filename = `recovery-history-policy-${buildTimestampToken()}.json`;
+  downloadJsonFile(filename, {
+    format: "rg-recovery-history-policy",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    policy: payload,
+  });
+  setState({
+    recoveryFeedback: {
+      type: "ok",
+      message: `会话快照策略已导出：${filename}`,
+    },
+  });
+  setStatus("Recovery policy exported");
+}
+
+async function importRecoveryHistoryPolicyFlow(file) {
+  if (!file) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "未选择会话快照策略文件。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, recoveryFeedback: null });
+  setStatus("Importing recovery policy...");
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const normalized = normalizeRecoveryHistoryPolicyPayload(parsed?.policy || parsed);
+    writeRecoveryHistoryPolicyPayloadToStorage(normalized);
+    const state = getState();
+    const projectName = String(state.projectName || "").trim();
+    const applied = applyRecoveryHistoryPolicyForProject(projectName, normalized);
+    const patch = {
+      recoveryHistoryMaxAgeDays: applied.maxAgeDays,
+      recoveryHistoryPolicyScope: applied.scope,
+      recoveryFeedback: {
+        type: "ok",
+        message: projectName
+          ? `会话快照策略已导入并应用到项目：${projectName}`
+          : "会话快照策略已导入。",
+      },
+    };
+    if (projectName) {
+      const history = await recoveryStore.loadProjectHistory(projectName);
+      patch.recoveryHistory = Array.isArray(history) ? history : [];
+    }
+    setState(patch);
+    setStatus("Recovery policy imported");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `导入会话快照策略失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Recovery policy import failed");
+  }
+  setState({ busy: false });
+}
+
 async function removeRecoveryHistorySnapshotFlow(savedAt = "") {
   const state = getState();
   const stamp = String(savedAt || "").trim();
@@ -811,6 +878,8 @@ function render() {
       onRemoveRecoverySnapshot: removeRecoveryHistorySnapshotFlow,
       onUpdateRecoveryHistoryPolicy: updateRecoveryHistoryPolicyFlow,
       onResetRecoveryHistoryPolicy: resetRecoveryHistoryPolicyFlow,
+      onExportRecoveryHistoryPolicy: exportRecoveryHistoryPolicyFlow,
+      onImportRecoveryHistoryPolicy: importRecoveryHistoryPolicyFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,

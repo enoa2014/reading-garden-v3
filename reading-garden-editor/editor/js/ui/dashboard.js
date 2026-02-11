@@ -719,6 +719,9 @@ function renderPreviewPanel(state) {
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>
+          <button class="btn btn-secondary preview-export-recovery-policy-btn" type="button" ${busy}>Export Policy</button>
+          <button class="btn btn-secondary preview-import-recovery-policy-btn" type="button" ${busy}>Import Policy</button>
+          <input class="preview-import-recovery-policy-input" type="file" accept=".json,application/json" hidden ${busy} />
         </div>
         <label class="full">
           恢复历史快照（最近 5 条）
@@ -1333,6 +1336,9 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");
   const previewResetRecoveryPolicyBtn = root.querySelector(".preview-reset-recovery-policy-btn");
+  const previewExportRecoveryPolicyBtn = root.querySelector(".preview-export-recovery-policy-btn");
+  const previewImportRecoveryPolicyBtn = root.querySelector(".preview-import-recovery-policy-btn");
+  const previewImportRecoveryPolicyInput = root.querySelector(".preview-import-recovery-policy-input");
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
@@ -1359,6 +1365,21 @@ export function renderDashboard(root, state, handlers = {}) {
   previewResetRecoveryPolicyBtn?.addEventListener("click", () => {
     if (handlers.onResetRecoveryHistoryPolicy) {
       handlers.onResetRecoveryHistoryPolicy();
+    }
+  });
+  previewExportRecoveryPolicyBtn?.addEventListener("click", () => {
+    if (handlers.onExportRecoveryHistoryPolicy) {
+      handlers.onExportRecoveryHistoryPolicy();
+    }
+  });
+  previewImportRecoveryPolicyBtn?.addEventListener("click", () => {
+    previewImportRecoveryPolicyInput?.click();
+  });
+  previewImportRecoveryPolicyInput?.addEventListener("change", () => {
+    const file = previewImportRecoveryPolicyInput.files?.[0];
+    if (previewImportRecoveryPolicyInput) previewImportRecoveryPolicyInput.value = "";
+    if (handlers.onImportRecoveryHistoryPolicy) {
+      handlers.onImportRecoveryHistoryPolicy(file || null);
     }
   });
 

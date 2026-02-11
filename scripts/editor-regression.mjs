@@ -541,6 +541,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("onRemoveRecoverySnapshot"), "app should wire recovery history remove handler");
   assert(appSource.includes("onUpdateRecoveryHistoryPolicy"), "app should wire recovery history policy handler");
   assert(appSource.includes("onResetRecoveryHistoryPolicy"), "app should wire recovery history policy reset handler");
+  assert(appSource.includes("onExportRecoveryHistoryPolicy"), "app should wire recovery history policy export handler");
+  assert(appSource.includes("onImportRecoveryHistoryPolicy"), "app should wire recovery history policy import handler");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
   assert(appSource.includes("PREVIEW_AUTO_REFRESH_STORAGE_KEY"), "app should persist preview auto-refresh preference key");
@@ -550,6 +552,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
   assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");
+  assert(appSource.includes("exportRecoveryHistoryPolicyFlow"), "app should support exporting recovery history policy");
+  assert(appSource.includes("importRecoveryHistoryPolicyFlow"), "app should support importing recovery history policy");
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
@@ -590,6 +594,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
   assert(dashboardSource.includes("preview-remove-recovery-btn"), "dashboard should expose recovery remove action");
   assert(dashboardSource.includes("preview-reset-recovery-policy-btn"), "dashboard should expose recovery policy reset action");
+  assert(dashboardSource.includes("preview-export-recovery-policy-btn"), "dashboard should expose recovery policy export action");
+  assert(dashboardSource.includes("preview-import-recovery-policy-btn"), "dashboard should expose recovery policy import action");
   assert(dashboardSource.includes("recoveryHistoryMaxAgeDays"), "dashboard should expose recovery history max-age selector");
   assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
   assert(dashboardSource.includes("当前来源："), "dashboard should show recovery policy source");
@@ -607,6 +613,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("onRestoreRecoverySnapshot"), "dashboard should wire recovery restore handler");
   assert(dashboardSource.includes("onRemoveRecoverySnapshot"), "dashboard should wire recovery remove handler");
   assert(dashboardSource.includes("onResetRecoveryHistoryPolicy"), "dashboard should wire recovery policy reset handler");
+  assert(dashboardSource.includes("onExportRecoveryHistoryPolicy"), "dashboard should wire recovery policy export handler");
+  assert(dashboardSource.includes("onImportRecoveryHistoryPolicy"), "dashboard should wire recovery policy import handler");
   assert(dashboardSource.includes("Live Preview"), "dashboard should expose live preview title");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
