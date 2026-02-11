@@ -795,10 +795,18 @@ function renderPackPanel(state) {
 
 function renderErrorsPanel(state) {
   if (!state.errors?.length) return "";
+  const busy = state.busy ? "disabled" : "";
+  const feedback = state.validationFeedback
+    ? `<p class="${state.validationFeedback.type === "error" ? "error-text" : "ok-text"}">${escapeHtml(state.validationFeedback.message)}</p>`
+    : "";
   return `
     <section class="panel">
       <h3>Validation Issues</h3>
       <ul class="error-list">${state.errors.map((e) => `<li>${e}</li>`).join("")}</ul>
+      <div class="actions-row">
+        <button class="btn btn-secondary download-validation-report-btn" type="button" ${busy}>Download Validation Report</button>
+      </div>
+      ${feedback}
     </section>
   `;
 }
@@ -1003,6 +1011,13 @@ export function renderDashboard(root, state, handlers = {}) {
       });
     });
   }
+
+  const downloadValidationReportBtn = root.querySelector(".download-validation-report-btn");
+  downloadValidationReportBtn?.addEventListener("click", () => {
+    if (handlers.onDownloadValidationReport) {
+      handlers.onDownloadValidationReport();
+    }
+  });
 
   const reportButtons = root.querySelectorAll(".download-report-btn");
   if (reportButtons.length && handlers.onDownloadImportReport) {

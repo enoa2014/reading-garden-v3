@@ -390,6 +390,7 @@ function render() {
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,
+      onDownloadValidationReport: downloadValidationReportFlow,
       onExportSite: exportSiteFlow,
       onDownloadImportReport: downloadImportReportFlow,
       onClearRedactionTemplates: clearRedactionTemplatesFlow,
@@ -667,6 +668,7 @@ async function openProjectFlow() {
     packFeedback: null,
     packDiagnostic: null,
     packManualPlan: null,
+    validationFeedback: null,
     aiFeedback: null,
     recoveryFeedback: null,
     analysisFeedback: null,
@@ -703,6 +705,7 @@ async function openProjectFlow() {
       setState({
         books: [],
         bookHealth: [],
+        validationFeedback: null,
         aiSettings: buildDefaultAiSettings(),
         recoveryFeedback: null,
         previewBookId: "",
@@ -730,6 +733,7 @@ async function openProjectFlow() {
       books: [],
       bookHealth: [],
       errors: [msg],
+      validationFeedback: null,
       aiSettings: buildDefaultAiSettings(),
       aiFeedback: null,
       recoveryFeedback: null,
@@ -759,6 +763,56 @@ function buildAnalysisFilename(report = {}) {
     .slice(0, 40);
   const suffix = safeBookId || "draft";
   return `analysis-suggestion-${suffix}-${buildTimestampToken()}.json`;
+}
+
+function buildValidationReportFilename(projectName = "") {
+  const safeProject = String(projectName || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+  const suffix = safeProject || "project";
+  return `validation-report-${suffix}-${buildTimestampToken()}.json`;
+}
+
+function buildValidationReport(state) {
+  const safeState = state && typeof state === "object" ? state : {};
+  return {
+    type: "rg-validation-report",
+    version: 1,
+    generatedAt: new Date().toISOString(),
+    project: {
+      name: String(safeState.projectName || ""),
+      mode: String(safeState.mode || ""),
+    },
+    structure: safeState.structure && typeof safeState.structure === "object"
+      ? safeState.structure
+      : { ok: false, missing: [] },
+    summary: {
+      errorCount: Array.isArray(safeState.errors) ? safeState.errors.length : 0,
+      books: Array.isArray(safeState.books) ? safeState.books.length : 0,
+      unhealthyBooks: Array.isArray(safeState.bookHealth)
+        ? safeState.bookHealth.filter((item) => !item?.registryExists || (item?.moduleIssues || []).length).length
+        : 0,
+    },
+    errors: Array.isArray(safeState.errors) ? safeState.errors : [],
+    bookHealth: Array.isArray(safeState.bookHealth) ? safeState.bookHealth : [],
+  };
+}
+
+function downloadValidationReportFlow() {
+  const state = getState();
+  const report = buildValidationReport(state);
+  const filename = buildValidationReportFilename(state.projectName);
+  downloadJsonFile(filename, report);
+  setState({
+    validationFeedback: {
+      type: "ok",
+      message: `校验报告已下载：${filename}`,
+    },
+  });
+  setStatus("Validation report downloaded");
 }
 
 async function analyzeBookTextFlow(input = {}) {

@@ -164,6 +164,7 @@
 | Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
 | Live Preview 自动刷新检查 | 审查 `touchPreviewAfterWrite` 与开关链路 | 导入/建书/覆盖写入后按设置自动刷新 iframe | 已接入 | ✓ |
 | 路径级校验检查 | 审查 `validator(validateBooksData/validateRegistryData)` | 输出 JSON 路径 + 原因 + 修复建议 | 已接入 | ✓ |
+| 校验报告导出检查 | 审查 `downloadValidationReportFlow` | Validation Issues 可下载结构化校验报告 | 已接入 | ✓ |
 | 会话快照恢复检查 | 审查 `recovery-store(indexedDB) -> app(save/restore)` | 支持防抖+周期快照并在同项目重开恢复 | 已接入 | ✓ |
 | 会话快照清理检查 | 审查 `clearRecoverySnapshotFlow -> recoveryStore.clearLatest` | 支持手动清理 latest 快照且避免立即回写 | 已接入 | ✓ |
 | 项目快照匹配检查 | 审查 `loadByProject -> loadLatest(fallback)` | 会话恢复优先匹配当前项目，避免跨项目干扰 | 已接入 | ✓ |
@@ -1804,6 +1805,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 105: Sprint 4 Validation 报告下载
+- **Status:** complete
+- Actions taken:
+  - `state.js` 增加 `validationFeedback`
+  - `app.js` 新增 `buildValidationReport/downloadValidationReportFlow`
+  - `dashboard.js` Validation Issues 面板新增下载按钮与反馈
+  - 回归脚本增加 validation report 关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1813,8 +1833,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 104 |
-| Where am I going? | Phase 104 -> checkpoint commit -> push |
+| Where am I? | Phase 105 |
+| Where am I going? | Phase 105 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | manual 策略需要“预览 + 执行”闭环，才能真正提升导入效率 |
-| What have I done? | 已完成新建书模块扩展，并继续补齐 manual 推荐导入闭环 |
+| What have I learned? | 校验信息需要可导出，才能支持线下协作排障与归档 |
+| What have I done? | 已完成 manual 推荐导入闭环，并继续补齐校验报告下载能力 |

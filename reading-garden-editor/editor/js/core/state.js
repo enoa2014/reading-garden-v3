@@ -11,6 +11,7 @@ const state = {
   books: [],
   bookHealth: [],
   errors: [],
+  validationFeedback: null,
   currentView: "dashboard",
   busy: false,
   newBookFeedback: null,

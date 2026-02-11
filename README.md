@@ -37,6 +37,7 @@ python3 -m http.server 8080
 - 已实现：会话快照按项目优先恢复（同名项目优先匹配）
 - 已实现：新建书模板支持可选 `timeline/interactive` 模块脚手架
 - 已实现：`manual` 导入预检查支持一键应用推荐策略
+- 已实现：Validation Issues 支持下载结构化校验报告（JSON）
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 
 配套文档：

@@ -49,6 +49,7 @@
   - 会话快照恢复按项目优先匹配（避免跨项目误恢复）
   - 新建书模板支持可选 `timeline` / `interactive` 模块与对应数据模板文件
   - `manual` 导入预检查支持一键应用推荐策略（减少重复选择）
+  - Validation Issues 面板支持下载结构化校验报告（JSON）
   - 新建书流程支持图片策略基础落地：
     - `emoji`：生成 emoji 风格封面
     - `none`：生成 no-image 占位封面

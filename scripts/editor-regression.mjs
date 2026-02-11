@@ -524,6 +524,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("Manual merge plan ready"), "app should set status for manual merge preview");
   assert(appSource.includes("applyManualMergeSuggestionFlow"), "app should support applying recommended manual merge strategy");
   assert(appSource.includes("onApplyManualMergeSuggestion"), "app should wire manual merge apply handler");
+  assert(appSource.includes("downloadValidationReportFlow"), "app should support validation report download");
+  assert(appSource.includes("buildValidationReport"), "app should build validation report payload");
   assert(appSource.includes("validateRegistryData"), "app should validate registry with structured rules");
   assert(appSource.includes("createRecoveryStore"), "app should initialize recovery store");
   assert(appSource.includes("scheduleRecoverySnapshot"), "app should schedule recovery snapshots");
@@ -578,6 +580,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("manual (preview plan only)"), "dashboard should expose manual merge strategy");
   assert(dashboardSource.includes("Manual Merge Preview"), "dashboard should expose manual merge preview section");
   assert(dashboardSource.includes("apply-manual-plan-btn"), "dashboard should expose manual plan apply action");
+  assert(dashboardSource.includes("download-validation-report-btn"), "dashboard should expose validation report download action");
+  assert(dashboardSource.includes("Download Validation Report"), "dashboard should render validation report button label");
   assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
   assert(dashboardSource.includes("当前图片策略"), "dashboard should surface current image mode for new book flow");
   assert(dashboardSource.includes("includeTimeline"), "dashboard should expose timeline template option");
@@ -589,6 +593,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("previewDevice"), "state should track preview device");
   assert(stateSource.includes("previewAutoRefresh"), "state should track preview auto refresh setting");
   assert(stateSource.includes("packManualPlan"), "state should track manual merge plan");
+  assert(stateSource.includes("validationFeedback"), "state should track validation feedback");
   assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
