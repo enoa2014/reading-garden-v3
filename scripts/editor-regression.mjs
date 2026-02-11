@@ -516,6 +516,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("refreshPreviewFlow"), "app should support refreshing preview");
   assert(appSource.includes("touchPreviewAfterWrite"), "app should support auto refreshing preview after writes");
   assert(appSource.includes("buildPreviewUrl"), "app should build preview urls");
+  assert(appSource.includes("manual 预检查"), "app should support manual merge preview feedback");
+  assert(appSource.includes("Manual merge plan ready"), "app should set status for manual merge preview");
   assert(appSource.includes("validateRegistryData"), "app should validate registry with structured rules");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
@@ -557,6 +559,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-redaction-templates-btn"), "dashboard should expose preview-template action");
   assert(dashboardSource.includes("import-redaction-templates-btn"), "dashboard should expose import-template action");
   assert(dashboardSource.includes("export-redaction-templates-btn"), "dashboard should expose export-template action");
+  assert(dashboardSource.includes("manual (preview plan only)"), "dashboard should expose manual merge strategy");
   assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
   assert(dashboardSource.includes("当前图片策略"), "dashboard should surface current image mode for new book flow");
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");

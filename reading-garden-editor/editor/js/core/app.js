@@ -1215,6 +1215,45 @@ async function importPackFlow(file, strategy) {
 
   try {
     const state = getState();
+    if (strategy === "manual") {
+      const inspected = await bookPackService.inspectBookPack(file);
+      const incomingBookId = sanitizeBookId(
+        inspected?.book?.id || inspected?.manifest?.book?.id || ""
+      );
+      if (!incomingBookId) throw new Error("PACK_BOOK_ID_INVALID");
+      const plan = mergeService.planMerge({
+        incomingBookId,
+        existingBooks: state.books,
+      });
+
+      if (!plan.hasConflict) {
+        setState({
+          packFeedback: {
+            type: "ok",
+            message: `manual 预检查：未发现冲突（bookId=${incomingBookId}），可直接使用 rename/overwrite 导入。`,
+          },
+        });
+      } else {
+        const renameDecision = mergeService.applyMergePlan({
+          plan,
+          existingBooks: state.books,
+          strategy: "rename",
+        });
+        const options = Array.isArray(plan?.conflicts?.[0]?.options)
+          ? plan.conflicts[0].options.join("/")
+          : "overwrite/rename/skip";
+        setState({
+          packFeedback: {
+            type: "ok",
+            message: `manual 预检查：检测到 bookId 冲突（${incomingBookId}），可选策略 ${options}；推荐 rename -> ${renameDecision.targetBookId}`,
+          },
+        });
+      }
+      setStatus("Manual merge plan ready");
+      setState({ busy: false });
+      return;
+    }
+
     const result = await bookPackService.importBookPack({
       file,
       existingBooks: state.books,

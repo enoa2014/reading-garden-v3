@@ -707,6 +707,7 @@ function renderPackPanel(state) {
             <option value="rename">rename (recommended)</option>
             <option value="overwrite">overwrite</option>
             <option value="skip">skip</option>
+            <option value="manual">manual (preview plan only)</option>
           </select>
         </label>
         <div class="actions-row">

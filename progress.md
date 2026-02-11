@@ -169,6 +169,7 @@
 | 覆盖确认检查 | 审查 `confirmOverwriteAnalysis -> confirmOverwrite` 参数链路 | overwrite 未确认时阻断写入 | 已接入 | ✓ |
 | 分析建议覆盖检查 | 审查 `analysisApplyMode=overwrite` 写入链路 | 支持覆盖 `registry.json` 且返回备份路径 | 已接入 | ✓ |
 | 覆盖补齐数据检查 | 审查 `ensureSuggestedModuleDataFiles` | 覆盖模式自动补齐新增模块 data 文件 | 已接入 | ✓ |
+| 手动合并预检查 | 审查 `importPackFlow(strategy=manual)` | 先输出冲突计划与推荐策略，不直接导入 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
@@ -1681,6 +1682,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 99: Sprint 4 rgbook manual 冲突预检查
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 导入策略新增 `manual (preview plan only)`
+  - `app.js` 在 `strategy=manual` 时执行包检查与冲突计划分析，不写盘
+  - 冲突时输出推荐 rename 目标 ID，便于用户二次选择导入策略
+  - 回归脚本增加 manual 策略关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1690,8 +1709,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 98 |
-| Where am I going? | Phase 98 -> checkpoint commit -> push |
+| Where am I? | Phase 99 |
+| Where am I going? | Phase 99 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 错误提示必须同时给出路径和修复建议，非技术用户才能快速定位 |
-| What have I done? | 已完成 Live Preview 自动刷新控制，并继续增强校验可诊断性 |
+| What have I learned? | `manual` 策略不能只抛异常，必须给出可执行的冲突决策信息 |
+| What have I done? | 已完成路径级校验增强，并继续补齐导入冲突手工决策能力 |

@@ -104,6 +104,7 @@
     - 新增 Live Preview 面板：支持书籍预览、设备视口切换（desktop/tablet/mobile）与刷新
     - Live Preview 支持自动刷新开关，导入/建书/覆盖写入后可自动更新 iframe
     - 校验层增强：`books.json` 与 `registry.json` 提供路径级错误与修复建议
+    - `rgbook` 导入新增 `manual` 预检查策略：先评估冲突计划与推荐策略
     - 诊断脱敏策略：隐藏项目名与原始文件名，保留错误码/策略/大小用于排障
     - 诊断支持自定义脱敏字段（按路径，如 `project.name,input.fileName`）
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）
