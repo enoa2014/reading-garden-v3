@@ -118,6 +118,10 @@ EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 - 严格模式下会校验抽样 ID 格式（仅允许 `a-z0-9-`）
 
+5. EdgeOne 手动发布验收与回滚清单：
+
+- `docs/edgeone-手动部署验收与回滚清单.md`
+
 ## 回滚策略（第一版）
 
 1. 关键开发节点采用小步提交（checkpoint commit）。

@@ -60,6 +60,7 @@ python3 -m http.server 8080
 - 需求文档：`docs/reading-garden-editor-需求文档.md`
 - 详细设计：`docs/reading-garden-editor-详细设计文档.md`
 - 规划评审：`docs/reading-garden-v3-新规划翻译与评审.md`
+- 发布验收与回滚：`docs/edgeone-手动部署验收与回滚清单.md`
 
 回滚策略（开发中）：
 

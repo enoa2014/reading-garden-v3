@@ -2194,6 +2194,22 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 125: Sprint 4 EdgeOne 发布验收与回滚清单文档化
+- **Status:** complete
+- Actions taken:
+  - 新增 `docs/edgeone-手动部署验收与回滚清单.md`
+  - 固化发布输入物、发布前门禁、本地冒烟、上线后验收与回滚触发条件
+  - 增加发布记录模板，确保手动上传场景可追溯
+  - `README.md` 与 `reading-garden-editor/README.md` 接入清单文档入口
+  - `task_plan.md` / `findings.md` 同步新增“清单文档化”决策
+- Files created/modified:
+  - `docs/edgeone-手动部署验收与回滚清单.md` (created)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2203,8 +2219,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 124 |
-| Where am I going? | Phase 124 -> checkpoint commit -> push |
+| Where am I? | Phase 125 |
+| Where am I going? | Phase 125 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | `merge` 行为需要“可切换 + 明确反馈”两者同时具备，才能兼顾安全默认和全量迁移 |
-| What have I done? | 已完成 merge 导入可选覆盖默认值闭环，并接入 UI、回归与文档同步 |
+| What have I learned? | 手动上传发布场景必须把“验收/回滚”流程固化成清单，才能降低临场遗漏概率 |
+| What have I done? | 已完成 EdgeOne 发布验收与回滚清单文档化，并接入项目文档入口 |
