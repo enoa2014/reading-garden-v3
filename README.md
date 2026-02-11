@@ -48,6 +48,7 @@ CI 门禁：
 - CI 会上传 `editor-regression-report` artifact（报告文件：`tmp/editor-regression-report.json`）
 - 报告新增 `packStats`：`full/subset-balanced/subset-minimal` 包体与体积占比对比
 - CI 固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`，确保分支间报告可比
+- `workflow_dispatch` 可通过 `pack_stats_selected_books` 覆盖抽样书籍
 
 ## 项目概览
 

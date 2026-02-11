@@ -141,6 +141,7 @@
 | 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
 | 回归样本配置检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"wave,totto-chan\" ./scripts/editor-regression.sh` | packStats 按指定书籍抽样 | 通过（mode=env） | ✓ |
 | CI 固定抽样检查 | 审查 workflow 回归步骤 env | PR/Push 采用固定 packStats 抽样 | 已接入（totto-chan,wave） | ✓ |
+| workflow_dispatch 抽样覆盖检查 | 审查 workflow_dispatch inputs 与 env 表达式 | 手动触发可覆盖 packStats 抽样书籍 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -756,6 +757,35 @@
   - `progress.md` (updated)
 
 ### Phase 46: Sprint 4 checkpoint（ci-pack-sample 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`842da3b`（fix packStats sample in workflow）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 47: Sprint 4 workflow_dispatch 抽样覆盖
+- **Status:** complete
+- Actions taken:
+  - workflow 增加 `pack_stats_selected_books` 输入
+  - 回归步骤环境变量按事件类型切换（dispatch 可覆盖，PR/Push 保持固定值）
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 48: Sprint 4 checkpoint（dispatch-pack-sample 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -773,8 +803,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 46 |
-| Where am I going? | Phase 46 -> checkpoint commit -> push |
+| Where am I? | Phase 48 |
+| Where am I going? | Phase 48 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 CI 固定 packStats 抽样并等待增量 checkpoint |
+| What have I done? | 已完成 workflow_dispatch 抽样覆盖并等待增量 checkpoint |
