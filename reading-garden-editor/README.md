@@ -52,6 +52,8 @@ python3 -m http.server 8080
 ./scripts/editor-regression.sh
 # 可选：指定 packStats 的 subset 样本书籍
 EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.sh
+# 可选：要求样本书籍 ID 全部有效（有缺失即失败）
+EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 ```
 
 4. CI 门禁：
@@ -63,6 +65,7 @@ EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.s
 - CI 固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave` 用于稳定对比
 - `workflow_dispatch` 支持输入 `pack_stats_selected_books` 覆盖抽样
 - CI Job Summary 会输出 `packStats` 摘要（含 missing requested IDs）
+- CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 
 ## 回滚策略（第一版）
 

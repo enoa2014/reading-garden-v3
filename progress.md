@@ -143,6 +143,8 @@
 | CI 固定抽样检查 | 审查 workflow 回归步骤 env | PR/Push 采用固定 packStats 抽样 | 已接入（totto-chan,wave） | ✓ |
 | workflow_dispatch 抽样覆盖检查 | 审查 workflow_dispatch inputs 与 env 表达式 | 手动触发可覆盖 packStats 抽样书籍 | 已接入 | ✓ |
 | CI 摘要输出检查 | `GITHUB_STEP_SUMMARY=/tmp/pack-summary.md node ...` | 输出 packStats 关键指标与 missing IDs | 已接入 | ✓ |
+| 严格抽样失败检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"__missing__\" EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true node scripts/editor-regression.mjs` | 无效抽样 ID 时回归失败 | 已接入 | ✓ |
+| 严格模式常规回归检查 | `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh` | 默认抽样在严格模式下可通过 | 通过 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -816,6 +818,39 @@
   - `progress.md` (updated)
 
 ### Phase 50: Sprint 4 checkpoint（ci-pack-summary 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`aacb621`（packStats summary in workflow）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 51: Sprint 4 严格抽样失败策略
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION` 开关
+  - 严格模式下检测到无效抽样 ID 时直接失败
+  - 回归新增 `pack-size-strict-selection` 检查
+  - workflow 默认开启严格抽样校验
+  - summary 增加 `require valid selection` 字段
+  - 本地验证严格失败与严格通过两种路径
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 52: Sprint 4 checkpoint（strict-pack-selection 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -833,8 +868,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 50 |
-| Where am I going? | Phase 50 -> checkpoint commit -> push |
+| Where am I? | Phase 52 |
+| Where am I going? | Phase 52 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 CI packStats 摘要并等待增量 checkpoint |
+| What have I done? | 已完成严格抽样失败策略并等待增量 checkpoint |

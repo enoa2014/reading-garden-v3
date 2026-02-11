@@ -69,10 +69,11 @@ Phase 9
 - [x] CI 固定 `packStats` 样本（`totto-chan,wave`）
 - [x] `workflow_dispatch` 支持输入覆盖 `packStats` 抽样
 - [x] CI Job Summary 输出 `packStats` 摘要
+- [x] 无效 `packStats` 抽样 ID 支持严格失败策略
 - **Status:** in_progress
 
 ## Key Questions
-1. 当 `workflow_dispatch` 输入无效书籍 ID 时，是否应让 CI 直接失败？
+1. 严格失败策略是否只针对 `workflow_dispatch`，还是保持全流程启用？
 2. 缺失资源分组标签是否需要进一步收敛为“模块级固定枚举”？
 3. 最近模板是否需要“导入/导出模板配置”能力？
 
@@ -90,3 +91,4 @@ Phase 9
 | CI 默认固定 `packStats` 抽样为 `totto-chan,wave` | 提升跨分支、跨时间段报告对比稳定性 |
 | 手动触发回归支持输入覆盖抽样书籍 | 方便在不改代码情况下做针对性对比分析 |
 | CI summary 固定输出 packStats 关键指标与 missing IDs | 降低排查成本，提升输入错误可见性 |
+| CI 默认启用严格抽样校验（invalid ID fail） | 尽早暴露输入错误，避免产出误导性对比结果 |

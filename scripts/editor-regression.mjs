@@ -31,6 +31,11 @@ function assert(condition, message) {
   }
 }
 
+function isTruthyEnv(rawValue) {
+  const value = String(rawValue || "").trim().toLowerCase();
+  return value === "1" || value === "true" || value === "yes" || value === "on";
+}
+
 function normalizePathValue(input) {
   const raw = String(input || "").replaceAll("\\", "/");
   const out = [];
@@ -466,6 +471,13 @@ async function estimateSitePackStats() {
     selectedBooks = selectedFromEnv;
   }
 
+  const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
+  if (requireValidSelection && selectionMeta.missingBookIds.length) {
+    throw new Error(
+      `ASSERT_FAILED: pack stats selected books not found -> ${selectionMeta.missingBookIds.join(", ")}`
+    );
+  }
+
   const selectedBookIds = selectedBooks
     .map((item) => String(item?.id || "").trim())
     .filter(Boolean);
@@ -542,6 +554,7 @@ async function estimateSitePackStats() {
   return {
     sampleSelectedBookIds: selectedBookIds,
     selection: selectionMeta,
+    requireValidSelection,
     full: fullStats,
     subsetBalanced: subsetBalancedStats,
     subsetMinimal: subsetMinimalStats,
@@ -562,6 +575,33 @@ async function testPackSizeStats() {
   return stats;
 }
 
+async function testPackStatsStrictSelection() {
+  const prevSelected = process.env.EDITOR_PACK_STATS_SELECTED_BOOKS;
+  const prevStrict = process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION;
+  process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = "__missing_book_for_strict_test__";
+  process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION = "1";
+
+  let failed = false;
+  try {
+    await estimateSitePackStats();
+  } catch (err) {
+    failed = String(err?.message || "").includes("selected books not found");
+  } finally {
+    if (typeof prevSelected === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_SELECTED_BOOKS;
+    } else {
+      process.env.EDITOR_PACK_STATS_SELECTED_BOOKS = prevSelected;
+    }
+    if (typeof prevStrict === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION;
+    } else {
+      process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION = prevStrict;
+    }
+  }
+
+  assert(failed, "strict pack stats should fail when selected books are missing");
+}
+
 async function writeReport(report) {
   await mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -573,6 +613,7 @@ async function runChecks() {
     { name: "merge-service", run: testMergeService },
     { name: "site-pack-markers", run: testSitePackSourceMarkers },
     { name: "diagnostic-markers", run: testDiagnosticSourceMarkers },
+    { name: "pack-size-strict-selection", run: testPackStatsStrictSelection },
     { name: "pack-size-stats", run: testPackSizeStats },
   ];
 
