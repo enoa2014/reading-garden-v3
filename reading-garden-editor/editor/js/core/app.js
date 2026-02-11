@@ -66,6 +66,32 @@ const MODULE_TEMPLATE_MAP = {
     data: "scenarios.json",
   },
 };
+const CREATE_BOOK_TEMPLATE_PRESETS = {
+  minimal: {
+    includeCharacters: false,
+    includeThemes: false,
+    includeTimeline: false,
+    includeInteractive: false,
+  },
+  standard: {
+    includeCharacters: true,
+    includeThemes: true,
+    includeTimeline: false,
+    includeInteractive: false,
+  },
+  teaching: {
+    includeCharacters: true,
+    includeThemes: true,
+    includeTimeline: true,
+    includeInteractive: true,
+  },
+};
+const CREATE_BOOK_TEMPLATE_PRESET_LABELS = {
+  minimal: "minimal（仅阅读）",
+  standard: "standard（阅读+人物+主题）",
+  teaching: "teaching（全模块）",
+  custom: "custom（手动）",
+};
 
 function buildSuggestedModuleDataSeed(moduleId, bookId) {
   if (moduleId === "reading") {
@@ -188,6 +214,39 @@ function buildDefaultAiSettings() {
       promptFilePath: "",
     },
   };
+}
+
+function normalizeTemplatePreset(rawPreset = "") {
+  const preset = String(rawPreset || "").trim().toLowerCase();
+  if (!preset) return "";
+  if (preset === "custom") return "custom";
+  if (Object.prototype.hasOwnProperty.call(CREATE_BOOK_TEMPLATE_PRESETS, preset)) return preset;
+  return "custom";
+}
+
+function resolveCreateBookModuleIncludes(rawInput = {}) {
+  const templatePreset = normalizeTemplatePreset(rawInput?.templatePreset);
+  const customFlags = {
+    includeCharacters: rawInput?.includeCharacters !== false,
+    includeThemes: rawInput?.includeThemes !== false,
+    includeTimeline: rawInput?.includeTimeline === true,
+    includeInteractive: rawInput?.includeInteractive === true,
+  };
+  if (!templatePreset || templatePreset === "custom") {
+    return {
+      templatePreset: templatePreset || "custom",
+      ...customFlags,
+    };
+  }
+  return {
+    templatePreset,
+    ...CREATE_BOOK_TEMPLATE_PRESETS[templatePreset],
+  };
+}
+
+function formatTemplatePresetForFeedback(preset = "custom") {
+  const normalized = normalizeTemplatePreset(preset) || "custom";
+  return CREATE_BOOK_TEMPLATE_PRESET_LABELS[normalized] || CREATE_BOOK_TEMPLATE_PRESET_LABELS.custom;
 }
 
 function sanitizeAiSettings(raw) {
@@ -1012,6 +1071,7 @@ function buildAutoCreateBookInputFromSuggestion(state, suggestion) {
     includeThemes: resolveSuggestionInclude(suggestion, "themes"),
     includeTimeline: resolveSuggestionInclude(suggestion, "timeline"),
     includeInteractive: resolveSuggestionInclude(suggestion, "interactive"),
+    templatePreset: "custom",
   };
 }
 
@@ -1271,8 +1331,10 @@ async function createBookFlow(rawInput) {
   const state = getState();
   if (!state.projectHandle || !state.structure?.ok) return;
 
+  const includeInput = resolveCreateBookModuleIncludes(rawInput);
   const normalizedInput = {
     ...rawInput,
+    ...includeInput,
     id: sanitizeBookId(rawInput?.id || rawInput?.title),
     imageMode: String(state.aiSettings?.image?.mode || "disabled"),
   };
@@ -1367,12 +1429,13 @@ async function createBookFlow(rawInput) {
       previewRefreshToken: Date.now(),
     });
     setState(previewPatch);
+    const presetText = `，模板：${formatTemplatePresetForFeedback(normalizedInput.templatePreset)}`;
     const promptText = artifacts.promptTemplateText ? "，已生成 prompts/image-prompts.md" : "";
 
     setState({
       newBookFeedback: {
         type: "ok",
-        message: `书籍已创建：${artifacts.bookId}${promptText}`,
+        message: `书籍已创建：${artifacts.bookId}${presetText}${promptText}`,
       },
     });
 

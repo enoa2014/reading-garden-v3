@@ -137,11 +137,15 @@ export function validateNewBookInput(input, existingBooks = []) {
   const errors = [];
   const id = String(input?.id || "").trim();
   const title = String(input?.title || "").trim();
+  const templatePreset = String(input?.templatePreset || "").trim().toLowerCase();
 
   if (!title) errors.push("书名不能为空");
   if (!id) errors.push("书籍 ID 不能为空");
   if (id && !/^[a-z0-9-]+$/.test(id)) {
     errors.push("书籍 ID 仅允许小写字母、数字和连字符");
+  }
+  if (templatePreset && !["minimal", "standard", "teaching", "custom"].includes(templatePreset)) {
+    errors.push(`模板级别无效：${templatePreset}`);
   }
 
   const exists = existingBooks.some((book) => String(book?.id || "") === id);

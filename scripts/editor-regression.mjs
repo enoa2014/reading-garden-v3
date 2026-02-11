@@ -537,6 +537,9 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("onRestoreRecoverySnapshot"), "app should wire recovery history restore handler");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
+  assert(appSource.includes("resolveCreateBookModuleIncludes"), "app should normalize create-book module includes");
+  assert(appSource.includes("formatTemplatePresetForFeedback"), "app should format template preset feedback");
+  assert(appSource.includes("templatePreset"), "app should track template preset in create-book flow");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
   assert(appSource.includes("includeTimeline: resolveSuggestionInclude"), "app should include timeline suggestion in auto create");
@@ -578,6 +581,10 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("download-analysis-btn"), "dashboard should expose analysis download action");
   assert(dashboardSource.includes("apply-analysis-btn"), "dashboard should expose analysis apply action");
   assert(dashboardSource.includes("analysisApplyMode"), "dashboard should expose analysis apply mode selector");
+  assert(dashboardSource.includes("templatePreset"), "dashboard should expose template preset selector");
+  assert(dashboardSource.includes("standard（阅读+人物+主题）"), "dashboard should expose standard preset label");
+  assert(dashboardSource.includes("custom（手动勾选）"), "dashboard should expose custom preset label");
+  assert(dashboardSource.includes("applyNewBookTemplatePreset"), "dashboard should support applying new-book preset");
   assert(dashboardSource.includes("AI Settings (Local)"), "dashboard should render ai settings panel");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
   assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");
@@ -609,6 +616,7 @@ async function testDiagnosticSourceMarkers() {
   assert(validatorSource.includes("validateRegistryData"), "validator should expose registry validation");
   assert(validatorSource.includes("$.books"), "validator should emit path-based books errors");
   assert(validatorSource.includes("$.modules"), "validator should emit path-based registry errors");
+  assert(validatorSource.includes("模板级别无效"), "validator should reject unsupported template presets");
   assert(recoveryStoreSource.includes("indexedDB"), "recovery store should use indexedDB");
   assert(recoveryStoreSource.includes("saveLatest"), "recovery store should support snapshot save");
   assert(recoveryStoreSource.includes("loadLatest"), "recovery store should support snapshot load");

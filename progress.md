@@ -1846,6 +1846,27 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 107: Sprint 4 新建书模板级别（minimal/standard/teaching/custom）
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 新建书表单新增模板级别下拉（`minimal/standard/teaching/custom`）
+  - 选择预设时自动套用模块勾选；手动调整模块时自动切回 `custom`
+  - `app.js` 新增模板级别解析与统一归一化（`resolveCreateBookModuleIncludes`）
+  - 新建成功反馈增加模板级别提示，便于回溯本次建书配置
+  - `validator.js` 增加模板级别合法性校验
+  - 回归脚本补充模板级别相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/core/validator.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1855,8 +1876,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 106 |
-| Where am I going? | Phase 106 -> checkpoint commit -> push |
+| Where am I? | Phase 107 |
+| Where am I going? | Phase 107 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 会话恢复需要“项目隔离 + 历史回退”组合，才能覆盖断电恢复与误操作修复 |
-| What have I done? | 已完成历史快照（最近 5 条）选择恢复闭环，并补齐回归与文档同步 |
+| What have I learned? | 建书场景需要“预设效率 + 手动自由”并存，才能兼顾新手与进阶用户 |
+| What have I done? | 已完成模板级别一键套用与 custom 回退机制，并补齐校验、回归与文档同步 |

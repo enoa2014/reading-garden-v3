@@ -3,6 +3,26 @@ import { sanitizeBookId } from "../core/path-resolver.js";
 const DEFAULT_CUSTOM_REDACTION_FIELDS = "project.name,input.fileName";
 const CUSTOM_REDACTION_TEMPLATES_KEY = "rg.editor.customRedactionTemplates";
 const MAX_CUSTOM_REDACTION_TEMPLATES = 5;
+const NEW_BOOK_TEMPLATE_PRESETS = {
+  minimal: {
+    includeCharacters: false,
+    includeThemes: false,
+    includeTimeline: false,
+    includeInteractive: false,
+  },
+  standard: {
+    includeCharacters: true,
+    includeThemes: true,
+    includeTimeline: false,
+    includeInteractive: false,
+  },
+  teaching: {
+    includeCharacters: true,
+    includeThemes: true,
+    includeTimeline: true,
+    includeInteractive: true,
+  },
+};
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -24,6 +44,46 @@ function normalizeCustomRedactionFields(rawValue) {
       return true;
     });
   return fields.join(",");
+}
+
+function normalizeNewBookTemplatePreset(rawValue = "standard") {
+  const preset = String(rawValue || "standard").trim().toLowerCase();
+  if (preset === "custom") return "custom";
+  if (Object.prototype.hasOwnProperty.call(NEW_BOOK_TEMPLATE_PRESETS, preset)) {
+    return preset;
+  }
+  return "standard";
+}
+
+function applyNewBookTemplatePreset(form, rawPreset = "standard") {
+  const preset = normalizeNewBookTemplatePreset(rawPreset);
+  if (preset === "custom") return;
+  const flags = NEW_BOOK_TEMPLATE_PRESETS[preset];
+  if (!flags) return;
+  const includeCharacters = form.querySelector('input[name="includeCharacters"]');
+  const includeThemes = form.querySelector('input[name="includeThemes"]');
+  const includeTimeline = form.querySelector('input[name="includeTimeline"]');
+  const includeInteractive = form.querySelector('input[name="includeInteractive"]');
+  if (includeCharacters) includeCharacters.checked = Boolean(flags.includeCharacters);
+  if (includeThemes) includeThemes.checked = Boolean(flags.includeThemes);
+  if (includeTimeline) includeTimeline.checked = Boolean(flags.includeTimeline);
+  if (includeInteractive) includeInteractive.checked = Boolean(flags.includeInteractive);
+}
+
+function matchesNewBookTemplatePreset(form, rawPreset = "standard") {
+  const preset = normalizeNewBookTemplatePreset(rawPreset);
+  const flags = NEW_BOOK_TEMPLATE_PRESETS[preset];
+  if (!flags) return false;
+  const includeCharacters = form.querySelector('input[name="includeCharacters"]');
+  const includeThemes = form.querySelector('input[name="includeThemes"]');
+  const includeTimeline = form.querySelector('input[name="includeTimeline"]');
+  const includeInteractive = form.querySelector('input[name="includeInteractive"]');
+  return (
+    Boolean(includeCharacters?.checked) === Boolean(flags.includeCharacters)
+    && Boolean(includeThemes?.checked) === Boolean(flags.includeThemes)
+    && Boolean(includeTimeline?.checked) === Boolean(flags.includeTimeline)
+    && Boolean(includeInteractive?.checked) === Boolean(flags.includeInteractive)
+  );
 }
 
 function readCustomRedactionTemplates() {
@@ -615,10 +675,20 @@ function renderNewBookPanel(state) {
           作者
           <input name="author" type="text" placeholder="作者名" ${busy} />
         </label>
+        <label>
+          模板级别
+          <select name="templatePreset" ${busy}>
+            <option value="standard" selected>standard（阅读+人物+主题）</option>
+            <option value="minimal">minimal（仅阅读）</option>
+            <option value="teaching">teaching（全模块）</option>
+            <option value="custom">custom（手动勾选）</option>
+          </select>
+        </label>
         <label class="full">
           简介
           <textarea name="description" rows="3" placeholder="简要介绍这本书" ${busy}></textarea>
         </label>
+        <p class="muted full">选择模板级别会自动勾选模块；手动调整模块后会自动切换为 custom。</p>
         <label class="checkbox-inline">
           <input name="includeCharacters" type="checkbox" checked ${busy} />
           包含人物模块模板
@@ -866,10 +936,37 @@ export function renderDashboard(root, state, handlers = {}) {
         title: String(fd.get("title") || ""),
         author: String(fd.get("author") || ""),
         description: String(fd.get("description") || ""),
+        templatePreset: String(fd.get("templatePreset") || "standard"),
         includeCharacters: fd.get("includeCharacters") === "on",
         includeThemes: fd.get("includeThemes") === "on",
         includeTimeline: fd.get("includeTimeline") === "on",
         includeInteractive: fd.get("includeInteractive") === "on",
+      });
+    });
+    const presetSelect = form.querySelector('select[name="templatePreset"]');
+    const moduleCheckboxes = [
+      form.querySelector('input[name="includeCharacters"]'),
+      form.querySelector('input[name="includeThemes"]'),
+      form.querySelector('input[name="includeTimeline"]'),
+      form.querySelector('input[name="includeInteractive"]'),
+    ].filter(Boolean);
+    if (presetSelect) {
+      applyNewBookTemplatePreset(form, presetSelect.value || "standard");
+      presetSelect.addEventListener("change", () => {
+        const preset = normalizeNewBookTemplatePreset(presetSelect.value || "standard");
+        if (preset !== "custom") {
+          applyNewBookTemplatePreset(form, preset);
+        }
+      });
+    }
+    moduleCheckboxes.forEach((checkbox) => {
+      checkbox.addEventListener("change", () => {
+        if (!presetSelect) return;
+        const preset = normalizeNewBookTemplatePreset(presetSelect.value || "standard");
+        if (preset === "custom") return;
+        if (!matchesNewBookTemplatePreset(form, preset)) {
+          presetSelect.value = "custom";
+        }
       });
     });
   }

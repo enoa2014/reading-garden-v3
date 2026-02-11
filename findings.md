@@ -109,6 +109,7 @@
     - 新增会话快照手动清理入口：支持主动清除 latest 快照，避免误恢复
     - 会话恢复升级为“按项目优先匹配”，减少跨项目恢复污染
     - 会话快照支持最近 5 条历史记录，并可按时间点恢复指定快照
+    - 新建书支持模板级别（minimal/standard/teaching/custom）并支持手动切换 custom
     - 新建书模板扩展：支持 `timeline/interactive` 可选模块与数据脚手架
     - `manual` 导入预检查新增“一键应用推荐策略”入口
     - Validation Issues 支持导出结构化校验报告（JSON）
