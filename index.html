@@ -4,26 +4,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Garden | 阅 读 花 园</title>
-  <meta name="description" content="Immersive reading experience. Deep dive into stories and themes.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-    rel="stylesheet">
+  <title>Reading Garden | 阅读花园</title>
+  <meta name="description" content="A botanical sanctuary for deep, immersive reading experiences.">
   <link rel="stylesheet" href="css/bookshelf.css">
 </head>
 
 <body>
+  <!-- Navigation -->
+  <nav class="garden-nav" id="gardenNav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">
+        <span class="nav-brand__mark">RG</span>
+        <span>Reading Garden</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="#start-reading">Featured</a>
+        <a class="nav-link" href="#library">Library</a>
+      </div>
+    </div>
+  </nav>
+
   <div class="garden-container">
     <header class="garden-hero" id="top">
       <div class="hero-inner">
         <p class="hero-pretitle">The Reading Garden</p>
-        <h1 class="hero-title">阅 读<br>花 园</h1>
+        <h1 class="hero-title">阅读<br><span class="title-accent">花园</span></h1>
         <p class="hero-subtitle">
-          Planting seeds of thought using interactive stories.
-          <br>
           在故事中播种思考，在互动中收获感悟。
+          <br>
+          Planting seeds of thought through interactive stories.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#start-reading">Start Journey</a>
@@ -31,8 +40,12 @@
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
-        <!-- Abstract nature shape or simple gradient circle -->
-        <div class="garden-circle"></div>
+        <div class="garden-circle">
+          <div class="circle-inner"></div>
+          <div class="circle-dot"></div>
+          <div class="circle-dot"></div>
+          <div class="circle-dot"></div>
+        </div>
       </div>
     </header>
 
@@ -62,8 +75,9 @@
 
     <footer class="garden-footer">
       <div class="footer-content">
-        <p>&copy; 2026 Reading Garden. Designed for Deep Reading.</p>
+        <div class="footer-leaf"></div>
         <p class="footer-quote">"Reading is a discount ticket to everywhere."</p>
+        <p>&copy; 2026 Reading Garden. Designed for Deep Reading.</p>
       </div>
     </footer>
   </div>

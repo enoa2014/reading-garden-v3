@@ -1,30 +1,31 @@
 :root {
   color-scheme: light;
 
-  /* Backgrounds */
-  --bg-primary: #fffbf5;
-  --bg-secondary: #fff8e8;
+  /* Backgrounds — aged parchment, warm linen */
+  --bg-primary: #f6f1ea;
+  --bg-secondary: #ede4d8;
 
-  /* Text */
-  --text-primary: #4a3728;
-  --text-secondary: #7d6b5d;
+  /* Text — deep ink */
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6156;
 
-  /* Accents */
-  --accent-warm: #ffd93d;
-  --accent-sky: #87ceeb;
-  --accent-sage: #8fbc8f;
-  --accent-coral: #f08080;
+  /* Accents — botanical palette */
+  --accent-warm: #c8a45a;
+  --accent-sky: #5a8a7a;
+  --accent-sage: #7a9e7e;
+  --accent-coral: #c4735b;
+  --accent-forest: #2d4a3e;
+  --accent-ink: #1a1a1a;
 
   /* Cards */
-  --card-bg: #ffffff;
-  --card-shadow: rgba(74, 55, 40, 0.1);
-  --card-border: #f0e6d8;
+  --card-bg: #faf7f2;
+  --card-shadow: rgba(26, 26, 26, 0.08);
+  --card-border: rgba(26, 26, 26, 0.08);
 
-  /* Typography */
-  --font-display: "Cormorant Garamond", "Libre Baskerville", "Noto Serif SC", serif;
-  --font-heading: "Libre Baskerville", "Cormorant Garamond", "Noto Serif SC", serif;
-  --font-body: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", sans-serif;
+  /* Typography — Playfair Display + Source Serif 4 */
+  --font-display: "Playfair Display", "Noto Serif SC", Georgia, serif;
+  --font-heading: "Playfair Display", "Noto Serif SC", Georgia, serif;
+  --font-body: "Source Serif 4", "Noto Serif SC", Georgia, serif;
 
   /* Sizing */
   --container: 1120px;
@@ -38,73 +39,74 @@
   --space-6: 48px;
 
   /* Radius */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
 
-  /* Shadows */
-  --shadow-1: 0 10px 30px rgba(74, 55, 40, 0.08);
-  --shadow-2: 0 18px 60px rgba(74, 55, 40, 0.12);
+  /* Shadows — layered, organic */
+  --shadow-1: 0 2px 8px rgba(26, 26, 26, 0.04), 0 12px 40px rgba(26, 26, 26, 0.06);
+  --shadow-2: 0 4px 16px rgba(26, 26, 26, 0.06), 0 24px 64px rgba(26, 26, 26, 0.1);
 
   /* Motion */
   --duration-fast: 120ms;
-  --duration-med: 240ms;
-  --duration-slow: 320ms;
-  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-med: 280ms;
+  --duration-slow: 480ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
 
   /* Book theme defaults */
   --book-primary: var(--accent-warm);
-  --book-secondary: #8b4513;
+  --book-secondary: var(--accent-forest);
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-primary: #2d2a26;
-  --bg-secondary: #3d3830;
-  --text-primary: #f5ede6;
-  --text-secondary: #bdb0a3;
-  --card-bg: #3d3830;
-  --card-shadow: rgba(0, 0, 0, 0.3);
-  --card-border: rgba(245, 237, 230, 0.12);
+  --bg-primary: #181612;
+  --bg-secondary: #22201b;
+  --text-primary: #e8e0d4;
+  --text-secondary: #9e9488;
+  --card-bg: #252219;
+  --card-shadow: rgba(0, 0, 0, 0.35);
+  --card-border: rgba(232, 224, 212, 0.08);
 
-  --shadow-1: 0 14px 40px rgba(0, 0, 0, 0.22);
-  --shadow-2: 0 22px 80px rgba(0, 0, 0, 0.32);
+  --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.15), 0 12px 40px rgba(0, 0, 0, 0.2);
+  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.2), 0 24px 64px rgba(0, 0, 0, 0.35);
 }
 
-/* Per-book theme colors (tokens only; components use --book-primary/secondary) */
+/* Per-book theme colors */
 body[data-book="totto-chan"],
 [data-book="totto-chan"] {
-  --book-primary: #ffd93d;
-  --book-secondary: #8b4513;
+  --book-primary: #d4a843;
+  --book-secondary: #7a5c2e;
 }
 
 body[data-book="wave"],
 [data-book="wave"] {
-  --book-primary: #2e86ab;
-  --book-secondary: #a82c41;
+  --book-primary: #2a6f8a;
+  --book-secondary: #8a3a3a;
 }
 
 body[data-book="story-of-your-life"],
 [data-book="story-of-your-life"] {
-  --book-primary: #4a2c6e;
-  --book-secondary: #b8860b;
+  --book-primary: #4a3a6e;
+  --book-secondary: #9e7e2e;
 }
 
 body[data-book="wonder"],
 [data-book="wonder"] {
-  --book-primary: #5dade2;
-  --book-secondary: #f4d03f;
+  --book-primary: #4a8eb0;
+  --book-secondary: #c4a032;
 }
 
 body[data-book="a-man-called-ove"],
 [data-book="a-man-called-ove"] {
-  --book-primary: #607b5c;
-  --book-secondary: #c75b39;
+  --book-primary: #4e6a4a;
+  --book-secondary: #b06a3a;
 }
 
 body[data-book="lord-of-the-flies"],
 [data-book="lord-of-the-flies"] {
-  --book-primary: #2d5016;
-  --book-secondary: #d4880f;
+  --book-primary: #2a4a1a;
+  --book-secondary: #b08020;
 }

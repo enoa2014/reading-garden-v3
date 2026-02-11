@@ -1,7 +1,25 @@
-// Minimal interactions for Reading Garden
+// Reading Garden — Botanical Journal Edition
 document.addEventListener('DOMContentLoaded', () => {
+    initNav();
     loadLibrary();
 });
+
+// Sticky nav with scroll detection
+function initNav() {
+    const nav = document.getElementById('gardenNav');
+    if (!nav) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                nav.classList.toggle('is-scrolled', window.scrollY > 40);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+}
 
 async function loadLibrary() {
     const entryGrid = document.getElementById('quickEntryGrid');
@@ -32,7 +50,6 @@ async function loadLibrary() {
 
 function renderFeatured(container, books) {
     container.innerHTML = '';
-    // Show top 3 books or all if fewer
     books.forEach(book => {
         container.appendChild(createFeaturedCard(book));
     });
@@ -50,7 +67,6 @@ function createFeaturedCard(book) {
     card.className = 'entry-card';
     const pageUrl = safeText(book.page || book.link, '#');
     card.href = pageUrl;
-    // Ensure book.cover is handled safely when missing
     const coverUrl = safeText(book.cover, `https://placehold.co/600x400?text=${book.id}`);
 
     card.innerHTML = `
@@ -59,10 +75,13 @@ function createFeaturedCard(book) {
             <img src="${coverUrl}" alt="${safeText(book.title)} Cover" loading="lazy">
         </div>
         <div class="entry-body">
+            <div class="entry-meta">
+                <span>${safeText(book.author, '')}</span>
+            </div>
             <h3 class="entry-title">${safeText(book.title, 'Untitled Book')}</h3>
             <p class="entry-desc">${safeText(book.description, 'Explore this interactive journey.')}</p>
             <div class="entry-tags">
-                ${(book.tags || ['Read']).map(t => `<span class="entry-tag">#${safeText(t)}</span>`).join('')}
+                ${(book.tags || ['Read']).map(t => `<span class="entry-tag">${safeText(t)}</span>`).join('')}
             </div>
         </div>
     `;
@@ -98,5 +117,5 @@ function renderErrorState(grid, shelf) {
 }
 
 function safeText(str, fallback = '') {
-    return (str || fallback).toString().replace(/[<>"']/g, ''); // Basic sanitization
+    return (str || fallback).toString().replace(/[<>"']/g, '');
 }
