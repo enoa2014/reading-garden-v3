@@ -58,6 +58,15 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 5: 交付与 checkpoint 提交
+- **Status:** complete
+- Actions taken:
+  - 创建 checkpoint commit：`f9d631d`（Sprint 1 骨架 + 回滚备份机制）
+  - 创建 checkpoint commit：`107cb6b`（首页编辑器入口 + 子应用 README）
+  - 推送到远端 `origin/master`，确保断电后可远端恢复
+- Files created/modified:
+  - Git commits and remote sync
+
 ## Test Results
 | Test | Input | Expected | Actual | Status |
 |------|-------|----------|--------|--------|
@@ -65,6 +74,7 @@
 | JS 语法检查 | `node --check` 对编辑器核心文件 | 无语法错误 | 通过 | ✓ |
 | 回滚机制检查 | `filesystem.js` 写流程审查 | 写前备份可用 | 已实现 `backupFileIfExists` | ✓ |
 | 文档入口检查 | README 编辑器章节 | 可定位入口、文档、回滚策略 | 已补充 | ✓ |
+| 远端备份检查 | `git push origin master` | checkpoint 可远端恢复 | 已推送 | ✓ |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
@@ -75,7 +85,7 @@
 | Question | Answer |
 |----------|--------|
 | Where am I? | Phase 4 |
-| Where am I going? | Phase 5 |
+| Where am I going? | 下一轮 Sprint 开发 |
 | What's the goal? | 打通编辑器最小可运行闭环 |
 | What have I learned? | 回滚策略需要内置在写路径中，而非只依赖 git |
-| What have I done? | 已完成骨架编码并通过语法自检 |
+| What have I done? | 已完成骨架开发、文档同步、checkpoint 提交与远端备份 |

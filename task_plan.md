@@ -4,7 +4,7 @@
 按 `docs/reading-garden-editor-需求文档.md` 与 `docs/reading-garden-editor-详细设计文档.md` 启动开发，先落地离线可运行的编辑器基础骨架（项目接入、结构校验、状态管理、路径处理、基础仪表盘）。
 
 ## Current Phase
-Phase 4
+Phase 5
 
 ## Phases
 ### Phase 1: 开发基线与结构初始化
@@ -33,9 +33,9 @@ Phase 4
 - **Status:** complete
 
 ### Phase 5: 交付与提交
-- [ ] 输出改动摘要与下一步计划
-- [ ] checkpoint 提交（用于回滚）
-- **Status:** in_progress
+- [x] 输出改动摘要与下一步计划
+- [x] checkpoint 提交（用于回滚）
+- **Status:** complete
 
 ## Key Questions
 1. 在不引入构建链的前提下，如何保证模块化代码可持续扩展？
