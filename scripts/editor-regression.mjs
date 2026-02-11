@@ -526,6 +526,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("createRecoveryStore"), "app should initialize recovery store");
   assert(appSource.includes("scheduleRecoverySnapshot"), "app should schedule recovery snapshots");
   assert(appSource.includes("restoreRecoverySnapshotForProject"), "app should restore recovery snapshot");
+  assert(appSource.includes("clearRecoverySnapshotFlow"), "app should support clearing recovery snapshot");
+  assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
@@ -553,6 +555,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("previewForm"), "dashboard should expose preview form");
   assert(dashboardSource.includes("preview-refresh-btn"), "dashboard should expose preview refresh action");
   assert(dashboardSource.includes("previewAutoRefresh"), "dashboard should expose preview auto refresh toggle");
+  assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
+  assert(dashboardSource.includes("onClearRecoverySnapshot"), "dashboard should wire recovery clear handler");
   assert(dashboardSource.includes("Live Preview"), "dashboard should expose live preview title");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
@@ -575,6 +579,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("previewBookId"), "state should track preview book");
   assert(stateSource.includes("previewDevice"), "state should track preview device");
   assert(stateSource.includes("previewAutoRefresh"), "state should track preview auto refresh setting");
+  assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
@@ -584,6 +589,7 @@ async function testDiagnosticSourceMarkers() {
   assert(recoveryStoreSource.includes("indexedDB"), "recovery store should use indexedDB");
   assert(recoveryStoreSource.includes("saveLatest"), "recovery store should support snapshot save");
   assert(recoveryStoreSource.includes("loadLatest"), "recovery store should support snapshot load");
+  assert(recoveryStoreSource.includes("clearLatest"), "recovery store should support snapshot clear");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
   assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");

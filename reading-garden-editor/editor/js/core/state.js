@@ -18,6 +18,7 @@ const state = {
   packDiagnostic: null,
   aiSettings: null,
   aiFeedback: null,
+  recoveryFeedback: null,
   analysisFeedback: null,
   analysisSuggestion: null,
   previewBookId: "",

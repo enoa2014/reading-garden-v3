@@ -27,6 +27,7 @@ const RECOVERY_SNAPSHOT_INTERVAL_MS = 30_000;
 let recoverySnapshotDebounceTimer = null;
 let recoverySnapshotIntervalId = null;
 let recoverySnapshotSaving = false;
+let suppressRecoverySnapshotBeforeTs = 0;
 const MODULE_TEMPLATE_MAP = {
   reading: {
     id: "reading",
@@ -266,6 +267,7 @@ async function saveRecoverySnapshotFlow() {
 }
 
 function scheduleRecoverySnapshot() {
+  if (Date.now() < suppressRecoverySnapshotBeforeTs) return;
   if (recoverySnapshotDebounceTimer) {
     clearTimeout(recoverySnapshotDebounceTimer);
   }
@@ -298,18 +300,43 @@ async function restoreRecoverySnapshotForProject(books = []) {
     const patch = {
       ...previewPatch,
       previewAutoRefresh: ui.previewAutoRefresh !== false,
+      recoveryFeedback: {
+        type: "ok",
+        message: `已恢复会话快照：${String(snapshot.savedAt || "unknown")}`,
+      },
     };
     if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
       patch.analysisSuggestion = snapshot.analysisSuggestion;
-      patch.analysisFeedback = {
-        type: "ok",
-        message: `已恢复会话快照：${String(snapshot.savedAt || "unknown")}`,
-      };
     }
     setState(patch);
   } catch {
     // recovery storage is best-effort only
   }
+}
+
+async function clearRecoverySnapshotFlow() {
+  setState({ busy: true, recoveryFeedback: null });
+  setStatus("Clearing recovery snapshot...");
+  try {
+    await recoveryStore.clearLatest();
+    suppressRecoverySnapshotBeforeTs = Date.now() + 1500;
+    setState({
+      recoveryFeedback: {
+        type: "ok",
+        message: "会话快照已清理。",
+      },
+    });
+    setStatus("Recovery snapshot cleared");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `清理会话快照失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Clear recovery snapshot failed");
+  }
+  setState({ busy: false });
 }
 
 function qs(sel) {
@@ -350,6 +377,7 @@ function render() {
       onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
       onUpdatePreviewState: updatePreviewStateFlow,
       onRefreshPreview: refreshPreviewFlow,
+      onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -629,6 +657,7 @@ async function openProjectFlow() {
     packFeedback: null,
     packDiagnostic: null,
     aiFeedback: null,
+    recoveryFeedback: null,
     analysisFeedback: null,
     analysisSuggestion: null,
   });
@@ -664,6 +693,7 @@ async function openProjectFlow() {
         books: [],
         bookHealth: [],
         aiSettings: buildDefaultAiSettings(),
+        recoveryFeedback: null,
         previewBookId: "",
         previewDevice: "desktop",
         previewRefreshToken: 0,
@@ -691,6 +721,7 @@ async function openProjectFlow() {
       errors: [msg],
       aiSettings: buildDefaultAiSettings(),
       aiFeedback: null,
+      recoveryFeedback: null,
       analysisFeedback: null,
       analysisSuggestion: null,
       previewBookId: "",

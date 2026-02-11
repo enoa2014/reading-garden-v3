@@ -45,6 +45,7 @@
   - 数据校验增强：`books.json` 与 `registry.json` 输出路径级错误与修复建议
   - `rgbook` 导入支持 `manual` 预检查：先输出冲突与推荐策略，不直接导入
   - IndexedDB 会话快照：500ms 防抖 + 30s 周期写入，重开项目自动恢复最近建议与预览偏好
+  - 支持手动清理会话快照（Preview 面板按钮）
   - 新建书流程支持图片策略基础落地：
     - `emoji`：生成 emoji 风格封面
     - `none`：生成 no-image 占位封面

@@ -407,6 +407,9 @@ function renderPreviewPanel(state) {
     ? String(state.previewDevice || "desktop")
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
+  const recoveryFeedback = state.recoveryFeedback
+    ? `<p class="${state.recoveryFeedback.type === "error" ? "error-text" : "ok-text"}">${escapeHtml(state.recoveryFeedback.message)}</p>`
+    : "";
   const previewUrl = String(state.previewUrl || "");
   const options = books
     .map((book) => {
@@ -449,9 +452,11 @@ function renderPreviewPanel(state) {
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-refresh-btn" type="button" ${busy}>Refresh Preview</button>
+          <button class="btn btn-secondary preview-clear-recovery-btn" type="button" ${busy}>Clear Recovery Snapshot</button>
           ${openLink}
         </div>
       </form>
+      ${recoveryFeedback}
       <div class="preview-stage preview-${previewDevice}">
         <iframe class="preview-frame" src="${escapeHtml(previewUrl)}" title="Reading Garden Live Preview" loading="lazy"></iframe>
       </div>
@@ -859,9 +864,15 @@ export function renderDashboard(root, state, handlers = {}) {
     });
   }
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
+  const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
       handlers.onRefreshPreview();
+    }
+  });
+  previewClearRecoveryBtn?.addEventListener("click", () => {
+    if (handlers.onClearRecoverySnapshot) {
+      handlers.onClearRecoverySnapshot();
     }
   });
 

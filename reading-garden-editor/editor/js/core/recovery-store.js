@@ -36,6 +36,16 @@ function writeValue(db, storeName, key, value) {
   });
 }
 
+function deleteValue(db, storeName, key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    const req = store.delete(key);
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => reject(req.error || new Error("RECOVERY_DB_DELETE_FAILED"));
+  });
+}
+
 export function createRecoveryStore({
   dbName = DEFAULT_DB_NAME,
   storeName = DEFAULT_STORE_NAME,
@@ -65,6 +75,11 @@ export function createRecoveryStore({
       };
       await writeValue(db, storeName, LATEST_KEY, payload);
       return payload;
+    },
+    async clearLatest() {
+      const db = await getDb();
+      await deleteValue(db, storeName, LATEST_KEY);
+      return true;
     },
   };
 }
