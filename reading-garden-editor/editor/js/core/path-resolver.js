@@ -23,7 +23,8 @@ export function normalizePath(inputPath) {
   }
 
   const nextPath = `${isAbs ? "/" : ""}${out.join("/")}`;
-  return nextPath || (isAbs ? "/" : ".") + query;
+  const base = nextPath || (isAbs ? "/" : ".");
+  return `${base}${query}`;
 }
 
 export function joinPath(...segments) {

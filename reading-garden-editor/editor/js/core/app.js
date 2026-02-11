@@ -6,7 +6,7 @@ import {
   validateErrorList,
   validateNewBookInput,
 } from "./validator.js";
-import { sanitizeBookId } from "./path-resolver.js";
+import { normalizePath, sanitizeBookId } from "./path-resolver.js";
 import { buildNewBookArtifacts } from "./book-template.js";
 import { renderDashboard } from "../ui/dashboard.js";
 
@@ -76,24 +76,59 @@ function setNavEnabled(enabled) {
   });
 }
 
-async function collectBookHealth(books) {
-  const health = [];
+function resolveFromBookDir(bookId, relativePath) {
+  return normalizePath(`data/${bookId}/${String(relativePath || "")}`);
+}
 
-  for (const book of books) {
-    const bookId = String(book?.id || "").trim();
-    if (!bookId) continue;
+async function inspectBookHealth(book) {
+  const id = String(book?.id || "").trim();
+  const registryPath = `data/${id}/registry.json`;
+  const registryExists = await fs.exists(registryPath);
+  const moduleIssues = [];
 
-    const registryPath = `data/${bookId}/registry.json`;
-    // eslint-disable-next-line no-await-in-loop
-    const registryExists = await fs.exists(registryPath);
+  if (registryExists) {
+    try {
+      const registry = await fs.readJson(registryPath);
+      const modules = Array.isArray(registry?.modules) ? registry.modules : [];
 
-    health.push({
-      id: bookId,
-      registryPath,
-      registryExists,
-    });
+      if (!modules.length) {
+        moduleIssues.push("registry.modules 为空");
+      }
+
+      for (const mod of modules) {
+        const modId = String(mod?.id || "(unknown)");
+        const entryPath = resolveFromBookDir(id, mod?.entry);
+        const dataPath = resolveFromBookDir(id, mod?.data);
+
+        // eslint-disable-next-line no-await-in-loop
+        const entryExists = await fs.exists(entryPath);
+        // eslint-disable-next-line no-await-in-loop
+        const dataExists = await fs.exists(dataPath);
+
+        if (!entryExists) moduleIssues.push(`模块 ${modId} 缺失 entry: ${entryPath}`);
+        if (!dataExists) moduleIssues.push(`模块 ${modId} 缺失 data: ${dataPath}`);
+      }
+    } catch (err) {
+      moduleIssues.push(`registry 解析失败：${err?.message || String(err)}`);
+    }
   }
 
+  return {
+    id,
+    registryPath,
+    registryExists,
+    moduleIssues,
+  };
+}
+
+async function collectBookHealth(books) {
+  const health = [];
+  for (const book of books) {
+    const id = String(book?.id || "").trim();
+    if (!id) continue;
+    // eslint-disable-next-line no-await-in-loop
+    health.push(await inspectBookHealth(book));
+  }
   return health;
 }
 
@@ -104,11 +139,14 @@ async function loadBooksAndHealth() {
     const books = Array.isArray(booksData?.books) ? booksData.books : [];
     const health = await collectBookHealth(books);
 
-    health
-      .filter((item) => !item.registryExists)
-      .forEach((item) => {
+    health.forEach((item) => {
+      if (!item.registryExists) {
         check.errors.push(`书籍 ${item.id} 缺失 ${item.registryPath}`);
+      }
+      item.moduleIssues.forEach((msg) => {
+        check.errors.push(`书籍 ${item.id} -> ${msg}`);
       });
+    });
 
     return {
       books,
@@ -215,6 +253,7 @@ async function createBookFlow(rawInput) {
   const nextBooks = [...state.books, artifacts.booksItem];
 
   const createdPaths = [];
+  let booksWriteResult = null;
 
   const ensureDirWithTrack = async (path) => {
     const exists = await fs.exists(path);
@@ -246,7 +285,21 @@ async function createBookFlow(rawInput) {
     await writeFileWithTrack(`data/${artifacts.bookId}/chapters.json`, artifacts.chapters, true);
     await writeFileWithTrack(`assets/images/${artifacts.bookId}/covers/cover.svg`, artifacts.coverSvg, false);
 
-    await fs.writeJson("data/books.json", { books: nextBooks });
+    if (artifacts.includeCharacters) {
+      await ensureDirWithTrack(`assets/images/${artifacts.bookId}/characters`);
+      await writeFileWithTrack(`data/${artifacts.bookId}/characters.json`, artifacts.characters, true);
+      await writeFileWithTrack(
+        `assets/images/${artifacts.bookId}/characters/protagonist.svg`,
+        artifacts.protagonistSvg,
+        false
+      );
+    }
+
+    if (artifacts.includeThemes) {
+      await writeFileWithTrack(`data/${artifacts.bookId}/themes.json`, artifacts.themes, true);
+    }
+
+    booksWriteResult = await fs.writeJson("data/books.json", { books: nextBooks });
 
     await refreshProjectData();
 
@@ -259,6 +312,15 @@ async function createBookFlow(rawInput) {
 
     setStatus("Book created");
   } catch (err) {
+    if (booksWriteResult?.backupPath) {
+      try {
+        const backupText = await fs.readText(booksWriteResult.backupPath);
+        await fs.writeText("data/books.json", backupText, { skipBackup: true });
+      } catch {
+        // best-effort restore
+      }
+    }
+
     for (let i = createdPaths.length - 1; i >= 0; i -= 1) {
       const item = createdPaths[i];
       try {

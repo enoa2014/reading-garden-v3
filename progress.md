@@ -91,14 +91,24 @@
   - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (created)
 
 ### Phase 7: Sprint 2 自检与文档同步
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 对编辑器全部 JS 文件执行 `node --check` 语法检查并通过
   - 将计划文档切换到 Sprint 2
+  - 扩展新建书模板：人物/主题模块可选
+  - 扩展健康检查：`registry.modules[].entry/data` 可达性检测
+  - 修复 `normalizePath` query 保留问题
+  - 更新 `reading-garden-editor/README.md` 的 Sprint 2 能力说明
 - Files created/modified:
   - `task_plan.md` (rewritten)
   - `findings.md` (updated)
   - `progress.md` (updated)
+  - `reading-garden-editor/editor/js/core/path-resolver.js` (updated)
+  - `reading-garden-editor/editor/js/core/book-template.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `reading-garden-editor/README.md` (updated)
 
 ## Test Results
 | Test | Input | Expected | Actual | Status |
@@ -109,6 +119,8 @@
 | 文档入口检查 | README 编辑器章节 | 可定位入口、文档、回滚策略 | 已补充 | ✓ |
 | 远端备份检查 | `git push origin master` | checkpoint 可远端恢复 | 已推送 | ✓ |
 | Sprint2 语法检查 | `node --check` on editor js files | 全部通过 | 通过 | ✓ |
+| 模板模块化检查 | `buildNewBookArtifacts` smoke test | 按选项输出模块与模板文件 | 通过 | ✓ |
+| 路径归一化检查 | `normalizePath` smoke test | 保留 `?v=` query | 通过 | ✓ |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
@@ -118,8 +130,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 4 |
-| Where am I going? | Phase 7 -> checkpoint 提交 |
+| Where am I? | Phase 5 |
+| Where am I going? | Sprint 3 交换包落地 |
 | What's the goal? | 打通编辑器最小可运行闭环 |
 | What have I learned? | 新建书能力可先落地，交换包可先骨架化并逐轮填充 |
-| What have I done? | 已完成 Sprint2 功能扩展并完成语法自检 |
+| What have I done? | 已完成 Sprint2 扩展、自检与文档同步 |

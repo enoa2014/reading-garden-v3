@@ -76,12 +76,15 @@ function renderBooksPanel(state) {
 function renderBookHealthPanel(state) {
   if (!state.projectHandle || !state.bookHealth?.length) return "";
 
-  const broken = state.bookHealth.filter((item) => !item.registryExists);
+  const broken = state.bookHealth.filter(
+    (item) => !item.registryExists || (item.moduleIssues && item.moduleIssues.length)
+  );
+
   if (!broken.length) {
     return `
       <section class="panel">
         <h3>Book Registry Health</h3>
-        <p>所有书籍已检测到 <code>registry.json</code>。</p>
+        <p>所有书籍已通过基础健康检查。</p>
       </section>
     `;
   }
@@ -89,10 +92,16 @@ function renderBookHealthPanel(state) {
   return `
     <section class="panel">
       <h3>Book Registry Health</h3>
-      <p>以下书籍缺少配置文件：</p>
+      <p>发现以下配置问题：</p>
       <ul class="error-list">
         ${broken
-          .map((item) => `<li>${item.id} -> ${item.registryPath}</li>`)
+          .map((item) => {
+            const registryIssue = item.registryExists ? "" : `<li>${item.id} -> 缺失 ${item.registryPath}</li>`;
+            const moduleIssues = (item.moduleIssues || [])
+              .map((msg) => `<li>${item.id} -> ${msg}</li>`)
+              .join("");
+            return `${registryIssue}${moduleIssues}`;
+          })
           .join("")}
       </ul>
     </section>
@@ -110,7 +119,7 @@ function renderNewBookPanel(state) {
   return `
     <section class="panel">
       <h3>Create New Book</h3>
-      <p class="muted">创建一本最小可运行新书（含默认阅读模块与占位封面）。</p>
+      <p class="muted">创建最小可运行新书（支持阅读/人物/主题模块模板）。</p>
       <form id="newBookForm" class="form-grid">
         <label>
           书名
@@ -127,6 +136,14 @@ function renderNewBookPanel(state) {
         <label class="full">
           简介
           <textarea name="description" rows="3" placeholder="简要介绍这本书" ${busy}></textarea>
+        </label>
+        <label class="checkbox-inline">
+          <input name="includeCharacters" type="checkbox" checked ${busy} />
+          包含人物模块模板
+        </label>
+        <label class="checkbox-inline">
+          <input name="includeThemes" type="checkbox" checked ${busy} />
+          包含主题模块模板
         </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>${state.busy ? "Creating..." : "Create Book"}</button>
@@ -181,6 +198,8 @@ export function renderDashboard(root, state, handlers = {}) {
         title: String(fd.get("title") || ""),
         author: String(fd.get("author") || ""),
         description: String(fd.get("description") || ""),
+        includeCharacters: fd.get("includeCharacters") === "on",
+        includeThemes: fd.get("includeThemes") === "on",
       });
     });
   }

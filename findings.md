@@ -52,6 +52,9 @@
   - 扩展 `editor/js/core/filesystem.js`：新增 `exists` 与 `deletePath`
   - 扩展 `editor/js/core/validator.js`：新增新建书输入校验
   - 扩展 `editor/js/core/app.js`：新建书流程、书架健康检查、失败回滚
+    - 新建书支持可选模板：阅读 + 人物 + 主题模块
+    - 健康检查扩展到 `registry.modules[].entry/data` 可达性
+    - 失败回滚扩展：尝试恢复 `data/books.json` 备份
   - 扩展 `editor/js/ui/dashboard.js`：新建书表单、创建反馈、健康面板
   - 新增交换包骨架模块：
     - `editor/js/packaging/book-pack-service.js`
@@ -64,6 +67,11 @@
 - 状态管理若无订阅机制，后续 UI 扩展会快速失控。
 - 新建书回滚当前仅处理“本次新建路径”删除，尚未实现“基于备份自动恢复覆盖文件”流程。
 - 交换包服务目前是接口骨架，导入导出真实链路需在 Sprint 3 落地。
+
+## Sprint 3 预规划
+- 目标 1：将 `rgbook` 从骨架接口升级为可导出/可导入链路（先 JSON bundle，再接 ZIP）。
+- 目标 2：落地 `ImportMergeService.applyMergePlan` 事务化合并。
+- 目标 3：补充导入安全检查（路径穿越/文件大小）与失败回滚日志。
 
 ## Resources
 - `reading-garden-v3/`

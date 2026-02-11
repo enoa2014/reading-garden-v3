@@ -6,6 +6,9 @@ export function buildNewBookArtifacts(input) {
   const author = String(input?.author || "").trim();
   const description = String(input?.description || "").trim();
 
+  const includeCharacters = input?.includeCharacters !== false;
+  const includeThemes = input?.includeThemes !== false;
+
   const bookId = sanitizeBookId(rawId || title);
   const coverPath = `assets/images/${bookId}/covers/cover.svg`;
 
@@ -20,6 +23,37 @@ export function buildNewBookArtifacts(input) {
     tags: ["new-book"],
   };
 
+  const modules = [
+    {
+      id: "reading",
+      title: "阅读",
+      icon: "📖",
+      entry: "../../js/modules/reading-module.js",
+      data: "chapters.json",
+      active: true,
+    },
+  ];
+
+  if (includeCharacters) {
+    modules.push({
+      id: "characters",
+      title: "人物",
+      icon: "👥",
+      entry: "../../js/modules/characters-module.js",
+      data: "characters.json",
+    });
+  }
+
+  if (includeThemes) {
+    modules.push({
+      id: "themes",
+      title: "主题",
+      icon: "🎯",
+      entry: "../../js/modules/themes-module.js",
+      data: "themes.json",
+    });
+  }
+
   const registry = {
     book: {
       id: bookId,
@@ -30,16 +64,7 @@ export function buildNewBookArtifacts(input) {
       themeClass: "",
       defaultTheme: "light",
     },
-    modules: [
-      {
-        id: "reading",
-        title: "阅读",
-        icon: "📖",
-        entry: "../../js/modules/reading-module.js",
-        data: "chapters.json",
-        active: true,
-      },
-    ],
+    modules,
   };
 
   const chapters = {
@@ -48,6 +73,33 @@ export function buildNewBookArtifacts(input) {
         id: 1,
         title: "第一章",
         content: ["请在编辑器中编辑章节内容。"],
+      },
+    ],
+  };
+
+  const characters = {
+    nodes: [
+      {
+        data: {
+          id: "protagonist",
+          name: "主角",
+          role: "protagonist",
+          description: "请补充人物信息",
+          avatar: `../assets/images/${bookId}/characters/protagonist.svg`,
+          traits: [],
+          quote: "",
+        },
+      },
+    ],
+    edges: [],
+  };
+
+  const themes = {
+    themes: [
+      {
+        id: "theme-1",
+        title: "核心主题",
+        description: "请补充主题解读",
       },
     ],
   };
@@ -70,12 +122,23 @@ export function buildNewBookArtifacts(input) {
   <text x="400" y="980" text-anchor="middle" fill="#7e705d" font-size="22" font-family="Georgia,serif">Created by Reading Garden Editor</text>
 </svg>\n`;
 
+  const protagonistSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="40" fill="#ece2cf"/>
+  <circle cx="256" cy="190" r="96" fill="#8f7a56"/>
+  <rect x="132" y="300" width="248" height="150" rx="72" fill="#8f7a56"/>
+</svg>\n`;
+
   return {
     bookId,
     booksItem,
     registry,
     chapters,
+    characters,
+    themes,
     coverSvg,
+    protagonistSvg,
+    includeCharacters,
+    includeThemes,
   };
 }
 

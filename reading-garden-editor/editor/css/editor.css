@@ -224,6 +224,17 @@ body {
   box-shadow: 0 0 0 2px rgba(47, 111, 89, 0.12);
 }
 
+.checkbox-inline {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-inline input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
 .actions-row {
   display: flex;
   justify-content: flex-start;

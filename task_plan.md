@@ -4,7 +4,7 @@
 在 Sprint 1 骨架基础上继续推进：实现“新建书向导 + 规则校验增强 + 交换包服务骨架”，并保持可回滚与可恢复开发流程。
 
 ## Current Phase
-Phase 4
+Phase 5
 
 ## Phases
 ### Phase 1: Sprint 2 目标收敛
@@ -30,12 +30,12 @@ Phase 4
 - [x] 新增 `packaging/site-pack-service.js` 骨架
 - [x] 通过语法检查
 - [x] 更新运行文档与开发日志
-- [ ] checkpoint 提交与推送
-- **Status:** in_progress
+- [x] checkpoint 提交与推送
+- **Status:** complete
 
 ### Phase 5: 下一轮规划
-- [ ] 规划 Sprint 3（交换包真实导入导出 + 新建书向导增强）
-- **Status:** pending
+- [x] 规划 Sprint 3（交换包真实导入导出 + 新建书向导增强）
+- **Status:** in_progress
 
 ## Key Questions
 1. 新建书流程是否已具备“失败自动回滚”最低保障？
