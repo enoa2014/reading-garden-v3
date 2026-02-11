@@ -387,6 +387,63 @@ function renderBooksPanel(state) {
   `;
 }
 
+function renderAnalysisPanel(state) {
+  if (!state.structure?.ok) return "";
+  const busy = state.busy ? "disabled" : "";
+  const options = state.books
+    .map((book) => `<option value="${escapeHtml(book.id)}">${escapeHtml(book.title || book.id)} (${escapeHtml(book.id)})</option>`)
+    .join("");
+  const feedback = state.analysisFeedback
+    ? `<p class="${state.analysisFeedback.type === "error" ? "error-text" : "ok-text"}">${state.analysisFeedback.message}</p>`
+    : "";
+
+  const suggestion = state.analysisSuggestion && Array.isArray(state.analysisSuggestion.moduleSuggestions)
+    ? state.analysisSuggestion.moduleSuggestions
+    : [];
+  const suggestionList = suggestion.length
+    ? `
+      <div class="diag-box">
+        <div class="diag-title">最近分析结果（${escapeHtml(String(state.analysisSuggestion.mode || "heuristic"))}）</div>
+        <ul class="error-list">
+          ${suggestion
+            .map((item) => `<li>${escapeHtml(item.id)}: ${item.include ? "include" : "skip"}（${Math.round(Number(item.confidence || 0) * 100)}%）</li>`)
+            .join("")}
+        </ul>
+      </div>
+    `
+    : "";
+
+  return `
+    <section class="panel">
+      <h3>Text Analysis Assistant</h3>
+      <p class="muted">导入书本原文（txt/md）后生成模块建议，支持 LLM（可选）与本地回退。</p>
+      <form id="analysisForm" class="form-grid">
+        <label class="full">
+          原文文件
+          <input name="sourceFile" type="file" accept=".txt,.md,text/plain,text/markdown" ${busy} />
+        </label>
+        <label>
+          书名（可选）
+          <input name="bookTitle" type="text" placeholder="用于建议报告标题" ${busy} />
+        </label>
+        <label>
+          目标书籍（可选）
+          <select name="targetBookId" ${busy}>
+            <option value="">(new book)</option>
+            ${options}
+          </select>
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-primary" type="submit" ${busy}>Analyze Text</button>
+          <button class="btn btn-secondary download-analysis-btn" type="button" ${busy}>Download Suggestion</button>
+        </div>
+      </form>
+      ${feedback}
+      ${suggestionList}
+    </section>
+  `;
+}
+
 function renderBookHealthPanel(state) {
   if (!state.projectHandle || !state.bookHealth?.length) return "";
 
@@ -627,6 +684,7 @@ export function renderDashboard(root, state, handlers = {}) {
   root.innerHTML = `
     ${renderStructurePanel(state)}
     ${renderAiSettingsPanel(state)}
+    ${renderAnalysisPanel(state)}
     ${renderNewBookPanel(state)}
     ${renderPackPanel(state)}
     ${renderBookHealthPanel(state)}
@@ -661,6 +719,29 @@ export function renderDashboard(root, state, handlers = {}) {
         includeCharacters: fd.get("includeCharacters") === "on",
         includeThemes: fd.get("includeThemes") === "on",
       });
+    });
+  }
+
+  const analysisForm = root.querySelector("#analysisForm");
+  if (analysisForm && handlers.onAnalyzeBookText) {
+    analysisForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const fileInput = analysisForm.querySelector('input[name="sourceFile"]');
+      const fd = new FormData(analysisForm);
+      const file = fileInput?.files?.[0] || null;
+      handlers.onAnalyzeBookText({
+        file,
+        title: String(fd.get("bookTitle") || ""),
+        bookId: String(fd.get("targetBookId") || ""),
+      });
+    });
+  }
+  if (analysisForm) {
+    const downloadAnalysisBtn = analysisForm.querySelector(".download-analysis-btn");
+    downloadAnalysisBtn?.addEventListener("click", () => {
+      if (handlers.onDownloadAnalysisSuggestion) {
+        handlers.onDownloadAnalysisSuggestion();
+      }
     });
   }
 

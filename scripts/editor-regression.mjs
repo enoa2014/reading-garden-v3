@@ -485,10 +485,16 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/js/ui/dashboard.js"),
     "utf8"
   );
+  const analysisSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/analysis-assistant.js"),
+    "utf8"
+  );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(appSource.includes("saveAiSettingsFlow"), "app should support saving ai settings");
   assert(appSource.includes("exportAiSettingsFlow"), "app should support exporting ai settings");
   assert(appSource.includes("importAiSettingsFlow"), "app should support importing ai settings");
+  assert(appSource.includes("analyzeBookTextFlow"), "app should support text analysis flow");
+  assert(appSource.includes("downloadAnalysisSuggestionFlow"), "app should support analysis suggestion download");
   assert(appSource.includes("AI_SETTINGS_PATH"), "app should define ai settings path");
   assert(appSource.includes("clearRedactionTemplatesFlow"), "app should support clearing redaction templates");
   assert(appSource.includes("previewRedactionTemplatesFlow"), "app should support previewing redaction templates");
@@ -501,6 +507,9 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("aiSettingsForm"), "dashboard should expose ai settings form");
   assert(dashboardSource.includes("export-ai-settings-btn"), "dashboard should expose ai settings export action");
   assert(dashboardSource.includes("import-ai-settings-btn"), "dashboard should expose ai settings import action");
+  assert(dashboardSource.includes("analysisForm"), "dashboard should expose text analysis form");
+  assert(dashboardSource.includes("Analyze Text"), "dashboard should expose text analysis action");
+  assert(dashboardSource.includes("download-analysis-btn"), "dashboard should expose analysis download action");
   assert(dashboardSource.includes("AI Settings (Local)"), "dashboard should render ai settings panel");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
   assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");
@@ -511,6 +520,9 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
+  assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
+  assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
+  assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {

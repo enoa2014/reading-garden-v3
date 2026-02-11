@@ -8,6 +8,7 @@ import {
 } from "./validator.js";
 import { normalizePath, sanitizeBookId } from "./path-resolver.js";
 import { buildNewBookArtifacts } from "./book-template.js";
+import { analyzeBookText, buildAnalysisSuggestionReport } from "./analysis-assistant.js";
 import { renderDashboard } from "../ui/dashboard.js";
 import { ImportMergeService } from "../packaging/import-merge-service.js";
 import { BookPackService } from "../packaging/book-pack-service.js";
@@ -117,6 +118,8 @@ function render() {
       onSaveAiSettings: saveAiSettingsFlow,
       onExportAiSettings: exportAiSettingsFlow,
       onImportAiSettings: importAiSettingsFlow,
+      onAnalyzeBookText: analyzeBookTextFlow,
+      onDownloadAnalysisSuggestion: downloadAnalysisSuggestionFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -293,7 +296,15 @@ async function refreshProjectData() {
 
 async function openProjectFlow() {
   setStatus("Opening project...");
-  setState({ busy: true, newBookFeedback: null, packFeedback: null, packDiagnostic: null, aiFeedback: null });
+  setState({
+    busy: true,
+    newBookFeedback: null,
+    packFeedback: null,
+    packDiagnostic: null,
+    aiFeedback: null,
+    analysisFeedback: null,
+    analysisSuggestion: null,
+  });
 
   try {
     const handle = await fs.openProject();
@@ -342,6 +353,8 @@ async function openProjectFlow() {
       errors: [msg],
       aiSettings: buildDefaultAiSettings(),
       aiFeedback: null,
+      analysisFeedback: null,
+      analysisSuggestion: null,
     });
 
     setNavEnabled(false);
@@ -350,6 +363,113 @@ async function openProjectFlow() {
 
   setState({ busy: false });
   render();
+}
+
+function buildAnalysisFilename(report = {}) {
+  const safeBookId = String(report?.source?.bookId || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+  const suffix = safeBookId || "draft";
+  return `analysis-suggestion-${suffix}-${buildTimestampToken()}.json`;
+}
+
+async function analyzeBookTextFlow(input = {}) {
+  const file = input?.file || null;
+  if (!file) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "请选择要分析的原文文件（txt/md）。",
+      },
+    });
+    return;
+  }
+
+  const state = getState();
+  if (!state.projectHandle || !state.structure?.ok) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "请先打开项目目录后再执行原文分析。",
+      },
+    });
+    return;
+  }
+
+  setState({
+    busy: true,
+    analysisFeedback: null,
+    packFeedback: null,
+    newBookFeedback: null,
+  });
+  setStatus("Analyzing source text...");
+
+  try {
+    const text = await file.text();
+    const result = await analyzeBookText({
+      text,
+      aiSettings: state.aiSettings || buildDefaultAiSettings(),
+      title: String(input?.title || "").trim(),
+      bookId: String(input?.bookId || "").trim(),
+    });
+
+    setState({
+      analysisSuggestion: {
+        sourceFileName: file.name,
+        ...result,
+      },
+      analysisFeedback: {
+        type: "ok",
+        message: `分析完成：mode ${result.mode}，建议模块 ${Array.isArray(result.moduleSuggestions) ? result.moduleSuggestions.length : 0} 个。`,
+      },
+    });
+    setStatus("Text analyzed");
+  } catch (err) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: `原文分析失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Analyze failed");
+  }
+
+  setState({ busy: false });
+}
+
+function downloadAnalysisSuggestionFlow() {
+  const state = getState();
+  const suggestion = state.analysisSuggestion;
+  if (!suggestion) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "当前没有可下载的分析结果，请先执行 Analyze Text。",
+      },
+    });
+    return;
+  }
+
+  const report = buildAnalysisSuggestionReport({
+    analysis: suggestion,
+    source: {
+      fileName: suggestion.sourceFileName || "",
+      title: suggestion.titleCandidate || "",
+      bookId: suggestion.bookIdSuggestion || "",
+    },
+    aiSettings: state.aiSettings || buildDefaultAiSettings(),
+  });
+  const filename = buildAnalysisFilename(report);
+  downloadJsonFile(filename, report);
+  setState({
+    analysisFeedback: {
+      type: "ok",
+      message: `分析建议已下载：${filename}`,
+    },
+  });
 }
 
 async function saveAiSettingsFlow(rawSettings) {

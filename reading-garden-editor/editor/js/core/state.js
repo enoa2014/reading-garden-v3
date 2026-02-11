@@ -18,6 +18,8 @@ const state = {
   packDiagnostic: null,
   aiSettings: null,
   aiFeedback: null,
+  analysisFeedback: null,
+  analysisSuggestion: null,
 };
 
 function emit(key) {

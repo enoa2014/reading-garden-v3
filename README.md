@@ -22,6 +22,7 @@ python3 -m http.server 8080
 - 已实现：`rgbook` 导入失败诊断报告下载（完整/脱敏/自定义 + 最近模板复用/清空/导入导出/预览差异/merge导入）、编辑器回归脚本
 - 已实现：本地 AI 配置面板（LLM 与图片接口参数）与配置文件落盘（`reading-garden-editor/config/ai-settings.json`）
 - 已实现：AI 配置导入/导出（JSON）以便跨设备迁移
+- 已实现：原文文本分析助手（LLM 可选 + 本地启发式回退）与模块建议 JSON 导出
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 
 配套文档：
