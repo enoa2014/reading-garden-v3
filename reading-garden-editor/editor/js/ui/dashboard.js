@@ -170,7 +170,10 @@ function renderPackPanel(state) {
       <div class="diag-box">
         <div class="diag-title">导入失败诊断可用</div>
         <p class="muted">包含错误码、文件信息与建议，可用于问题复现与排查。</p>
-        <button id="downloadImportReportBtn" class="btn btn-secondary" type="button" ${busy}>Download Report</button>
+        <div class="actions-row">
+          <button class="btn btn-secondary download-report-btn" data-mode="full" type="button" ${busy}>Download Report</button>
+          <button class="btn btn-secondary download-report-btn" data-mode="redacted" type="button" ${busy}>Download Redacted</button>
+        </div>
       </div>
     `
     : "";
@@ -328,10 +331,12 @@ export function renderDashboard(root, state, handlers = {}) {
     });
   }
 
-  const reportBtn = root.querySelector("#downloadImportReportBtn");
-  if (reportBtn && handlers.onDownloadImportReport) {
-    reportBtn.addEventListener("click", () => {
-      handlers.onDownloadImportReport();
+  const reportButtons = root.querySelectorAll(".download-report-btn");
+  if (reportButtons.length && handlers.onDownloadImportReport) {
+    reportButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        handlers.onDownloadImportReport(btn.dataset.mode || "full");
+      });
     });
   }
 }

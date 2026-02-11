@@ -256,6 +256,8 @@ body {
 .actions-row {
   display: flex;
   justify-content: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .ok-text {

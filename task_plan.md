@@ -53,14 +53,14 @@ Phase 8
 
 ### Phase 8: 下一迭代规划
 - [ ] 为 subset 导出增加“最小资源集”模式
-- [ ] 为诊断报告增加脱敏导出选项
+- [x] 为诊断报告增加脱敏导出选项
 - [x] 规划并接入 CI 门禁（回归脚本接入）
 - **Status:** in_progress
 
 ## Key Questions
 1. `rgsite subset` 是否需要进一步按资源引用最小化打包体积？
-2. 诊断报告是否需要附带“可脱敏分享”模式（隐藏本地路径/项目名）？
-3. 回归脚本是否升级为 CI 可直接执行的门禁任务？
+2. 诊断报告是否需要支持“自定义脱敏字段”而非固定策略？
+3. CI 门禁是否需要增加 artifacts（回归报告 JSON）上传？
 
 ## Decisions Made
 | Decision | Rationale |

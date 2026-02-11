@@ -507,11 +507,30 @@ function buildPackImportDiagnostic({ file, strategy, error, mode, projectName })
   };
 }
 
-function downloadDiagnosticReport(report) {
+function buildRedactedDiagnostic(report) {
+  if (!report) return null;
+  return {
+    ...report,
+    project: {
+      name: "***REDACTED***",
+      mode: report?.project?.mode || "",
+    },
+    input: {
+      ...report.input,
+      fileName: "***REDACTED***",
+      fileSize: Number(report?.input?.fileSize || 0),
+      strategy: report?.input?.strategy || "rename",
+    },
+  };
+}
+
+function downloadDiagnosticReport(report, mode = "full") {
   if (!report) return;
   const stamp = String(report.generatedAt || new Date().toISOString()).replace(/[:.]/g, "-");
-  const filename = `rgbook-import-diagnostic-${stamp}.json`;
-  const text = `${JSON.stringify(report, null, 2)}\n`;
+  const output = mode === "redacted" ? buildRedactedDiagnostic(report) : report;
+  const suffix = mode === "redacted" ? "redacted" : "full";
+  const filename = `rgbook-import-diagnostic-${suffix}-${stamp}.json`;
+  const text = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([text], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -521,7 +540,7 @@ function downloadDiagnosticReport(report) {
   URL.revokeObjectURL(url);
 }
 
-function downloadImportReportFlow() {
+function downloadImportReportFlow(mode = "full") {
   const state = getState();
   if (!state.packDiagnostic) {
     setState({
@@ -533,11 +552,12 @@ function downloadImportReportFlow() {
     return;
   }
 
-  downloadDiagnosticReport(state.packDiagnostic);
+  downloadDiagnosticReport(state.packDiagnostic, mode);
+  const label = mode === "redacted" ? "脱敏诊断报告" : "完整诊断报告";
   setState({
     packFeedback: {
       type: "ok",
-      message: "诊断报告已下载。",
+      message: `${label}已下载。`,
     },
   });
 }

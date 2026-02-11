@@ -26,7 +26,7 @@
   - 新增 `rgsite` 子集导出（按选中书籍过滤 `books.json` 与书籍目录）
   - 导出包附带 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
   - Dashboard 增加 `Export rgsite` 入口（可选包含编辑器子应用）
-  - `rgbook` 导入失败可下载诊断报告（JSON）
+  - `rgbook` 导入失败可下载诊断报告（完整/脱敏 JSON）
 
 ## 运行方式
 
