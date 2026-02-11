@@ -625,6 +625,39 @@ function normalizeAnalysisApplyMode(rawMode = "safe") {
   return mode === "overwrite" ? "overwrite" : "safe";
 }
 
+function resolveSuggestionInclude(suggestion, moduleId) {
+  const list = Array.isArray(suggestion?.moduleSuggestions) ? suggestion.moduleSuggestions : [];
+  const found = list.find((item) => String(item?.id || "").trim() === moduleId);
+  return Boolean(found?.include);
+}
+
+function resolveUniqueBookId(baseId, books = []) {
+  const normalized = sanitizeBookId(baseId || "new-book") || "new-book";
+  const used = new Set(
+    (Array.isArray(books) ? books : [])
+      .map((item) => String(item?.id || "").trim())
+      .filter(Boolean)
+  );
+  if (!used.has(normalized)) return normalized;
+  let idx = 1;
+  while (used.has(`${normalized}-${idx}`)) idx += 1;
+  return `${normalized}-${idx}`;
+}
+
+function buildAutoCreateBookInputFromSuggestion(state, suggestion) {
+  const baseTitle = String(suggestion?.titleCandidate || "").trim() || "分析草稿书籍";
+  const preferredId = String(suggestion?.bookIdSuggestion || "").trim() || baseTitle;
+  const id = resolveUniqueBookId(preferredId, state?.books || []);
+  return {
+    id,
+    title: baseTitle,
+    author: "",
+    description: "由文本分析助手自动生成的初始书籍草稿。",
+    includeCharacters: resolveSuggestionInclude(suggestion, "characters"),
+    includeThemes: resolveSuggestionInclude(suggestion, "themes"),
+  };
+}
+
 function buildSuggestedRegistry(registry, suggestion) {
   const safeRegistry = registry && typeof registry === "object" ? registry : {};
   const currentModules = Array.isArray(safeRegistry.modules) ? safeRegistry.modules : [];
@@ -682,26 +715,35 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
     return;
   }
 
-  const targetBookId = resolveTargetBookForSuggestion(bookId);
+  let targetBookId = resolveTargetBookForSuggestion(bookId);
+  let autoCreatedBookId = "";
   if (!targetBookId) {
-    setState({
-      analysisFeedback: {
-        type: "error",
-        message: "请选择目标书籍后再应用建议。",
-      },
-    });
-    return;
-  }
-
-  const bookExists = state.books.some((book) => String(book?.id || "").trim() === targetBookId);
-  if (!bookExists) {
-    setState({
-      analysisFeedback: {
-        type: "error",
-        message: `未找到目标书籍：${targetBookId}`,
-      },
-    });
-    return;
+    const draftInput = buildAutoCreateBookInputFromSuggestion(state, suggestion);
+    await createBookFlow(draftInput);
+    const latest = getState();
+    const created = latest.books.some((book) => String(book?.id || "").trim() === draftInput.id);
+    if (!created) {
+      setState({
+        analysisFeedback: {
+          type: "error",
+          message: `自动创建目标书籍失败：${draftInput.id}`,
+        },
+      });
+      return;
+    }
+    targetBookId = draftInput.id;
+    autoCreatedBookId = draftInput.id;
+  } else {
+    const bookExists = state.books.some((book) => String(book?.id || "").trim() === targetBookId);
+    if (!bookExists) {
+      setState({
+        analysisFeedback: {
+          type: "error",
+          message: `未找到目标书籍：${targetBookId}`,
+        },
+      });
+      return;
+    }
   }
 
   const mode = normalizeAnalysisApplyMode(applyMode);
@@ -718,6 +760,7 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
     const skippedText = next.skippedUnknown.length
       ? `，未识别模块 ${next.skippedUnknown.join(", ")}`
       : "";
+    const autoCreateText = autoCreatedBookId ? `（已自动创建书籍 ${autoCreatedBookId}）` : "";
     if (mode === "overwrite") {
       const writeResult = await fs.writeJson(registryPath, next.registry);
       const seedResult = await ensureSuggestedModuleDataFiles(targetBookId, next.addedModuleIds);
@@ -726,7 +769,7 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
       setState({
         analysisFeedback: {
           type: "ok",
-          message: `建议已覆盖写入：${registryPath}（新增 ${next.added}）${seedText}${skippedText}${backupText}`,
+          message: `建议已覆盖写入：${registryPath}（新增 ${next.added}）${seedText}${skippedText}${backupText}${autoCreateText}`,
         },
       });
       setStatus("Suggestion applied (overwrite)");
@@ -735,7 +778,7 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
       setState({
         analysisFeedback: {
           type: "ok",
-          message: `建议已安全写入：${suggestedPath}（新增 ${next.added}）${skippedText}`,
+          message: `建议已安全写入：${suggestedPath}（新增 ${next.added}）${skippedText}${autoCreateText}`,
         },
       });
       setStatus("Suggestion applied");

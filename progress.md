@@ -162,6 +162,7 @@
 | 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
+| 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
 | 分析建议覆盖检查 | 审查 `analysisApplyMode=overwrite` 写入链路 | 支持覆盖 `registry.json` 且返回备份路径 | 已接入 | ✓ |
 | 覆盖补齐数据检查 | 审查 `ensureSuggestedModuleDataFiles` | 覆盖模式自动补齐新增模块 data 文件 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
@@ -1579,6 +1580,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 94: Sprint 4 分析建议自动建书闭环
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `buildAutoCreateBookInputFromSuggestion`
+  - `applyAnalysisSuggestionFlow` 在未选目标书籍时自动触发 `createBookFlow`
+  - 自动建书后继续执行 safe/overwrite 应用路径并反馈自动创建信息
+  - `dashboard.js` 更新目标书籍默认选项说明
+  - 回归脚本增加自动建书关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1588,8 +1608,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 93 |
-| Where am I going? | Phase 93 -> checkpoint commit -> push |
+| Where am I? | Phase 94 |
+| Where am I going? | Phase 94 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 图片策略需要先提供离线兜底路径，避免绑定在线生图接口 |
-| What have I done? | 已完成覆盖建议回滚链路，并继续把图片策略接入新建书流程 |
+| What have I learned? | 自动配置建议要减少前置操作，才能真正降低教师/家长使用门槛 |
+| What have I done? | 已完成图片策略基础落地，并继续补齐分析建议自动建书闭环 |

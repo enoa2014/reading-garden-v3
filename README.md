@@ -25,6 +25,7 @@ python3 -m http.server 8080
 - 已实现：原文文本分析助手（LLM 可选 + 本地启发式回退）与模块建议 JSON 导出
 - 已实现：分析建议安全落盘（`registry.suggested.json`，不覆盖现有 `registry.json`）
 - 已实现：分析建议可直接覆盖 `registry.json`（自动备份 + 自动补齐新增模块数据模板）
+- 已实现：分析建议可在未选目标书籍时自动创建草稿书并完成应用
 - 已实现：新建书支持图片策略基础落地（`emoji`/`none` 封面与 `prompt-file` 提示词模板输出）
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 

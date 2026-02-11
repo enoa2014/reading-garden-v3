@@ -501,6 +501,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("downloadAnalysisSuggestionFlow"), "app should support analysis suggestion download");
   assert(appSource.includes("applyAnalysisSuggestionFlow"), "app should support applying analysis suggestion");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
+  assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
+  assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
   assert(appSource.includes("ensureSuggestedModuleDataFiles"), "app should support seeding suggested module data");
   assert(appSource.includes("buildSuggestedModuleDataSeed"), "app should define default data seeds for suggested modules");
   assert(appSource.includes("registry.suggested.json"), "app should write safe suggested registry file");
@@ -519,6 +521,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("export-ai-settings-btn"), "dashboard should expose ai settings export action");
   assert(dashboardSource.includes("import-ai-settings-btn"), "dashboard should expose ai settings import action");
   assert(dashboardSource.includes("analysisForm"), "dashboard should expose text analysis form");
+  assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("Analyze Text"), "dashboard should expose text analysis action");
   assert(dashboardSource.includes("download-analysis-btn"), "dashboard should expose analysis download action");
   assert(dashboardSource.includes("apply-analysis-btn"), "dashboard should expose analysis apply action");
