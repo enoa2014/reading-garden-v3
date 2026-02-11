@@ -389,6 +389,7 @@ function render() {
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
+      onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,
       onExportSite: exportSiteFlow,
       onDownloadImportReport: downloadImportReportFlow,
       onClearRedactionTemplates: clearRedactionTemplatesFlow,
@@ -665,6 +666,7 @@ async function openProjectFlow() {
     newBookFeedback: null,
     packFeedback: null,
     packDiagnostic: null,
+    packManualPlan: null,
     aiFeedback: null,
     recoveryFeedback: null,
     analysisFeedback: null,
@@ -733,6 +735,7 @@ async function openProjectFlow() {
       recoveryFeedback: null,
       analysisFeedback: null,
       analysisSuggestion: null,
+      packManualPlan: null,
       previewBookId: "",
       previewDevice: "desktop",
       previewRefreshToken: 0,
@@ -1347,7 +1350,7 @@ async function importPackFlow(file, strategy) {
     return;
   }
 
-  setState({ busy: true, packFeedback: null, packDiagnostic: null });
+  setState({ busy: true, packFeedback: null, packDiagnostic: null, packManualPlan: null });
   setStatus("Importing rgbook...");
 
   try {
@@ -1365,6 +1368,14 @@ async function importPackFlow(file, strategy) {
 
       if (!plan.hasConflict) {
         setState({
+          packManualPlan: {
+            file,
+            incomingBookId,
+            hasConflict: false,
+            recommendedStrategy: "overwrite",
+            recommendedTargetBookId: incomingBookId,
+            options: "overwrite/rename",
+          },
           packFeedback: {
             type: "ok",
             message: `manual 预检查：未发现冲突（bookId=${incomingBookId}），可直接使用 rename/overwrite 导入。`,
@@ -1380,6 +1391,14 @@ async function importPackFlow(file, strategy) {
           ? plan.conflicts[0].options.join("/")
           : "overwrite/rename/skip";
         setState({
+          packManualPlan: {
+            file,
+            incomingBookId,
+            hasConflict: true,
+            recommendedStrategy: "rename",
+            recommendedTargetBookId: renameDecision.targetBookId,
+            options,
+          },
           packFeedback: {
             type: "ok",
             message: `manual 预检查：检测到 bookId 冲突（${incomingBookId}），可选策略 ${options}；推荐 rename -> ${renameDecision.targetBookId}`,
@@ -1406,6 +1425,7 @@ async function importPackFlow(file, strategy) {
           message: "导入已跳过（skip 策略）。",
         },
         packDiagnostic: null,
+        packManualPlan: null,
       });
       setStatus("Import skipped");
     } else {
@@ -1416,6 +1436,7 @@ async function importPackFlow(file, strategy) {
           message: `导入成功：${result.targetBookId}（${result.strategy}）`,
         },
         packDiagnostic: null,
+        packManualPlan: null,
       });
       setStatus("rgbook imported");
     }
@@ -1433,11 +1454,27 @@ async function importPackFlow(file, strategy) {
         message: `导入失败：${err?.message || String(err)}（可下载诊断报告）`,
       },
       packDiagnostic: diagnostic,
+      packManualPlan: null,
     });
     setStatus("Import failed");
   }
 
   setState({ busy: false });
+}
+
+async function applyManualMergeSuggestionFlow() {
+  const state = getState();
+  const plan = state.packManualPlan;
+  if (!plan?.file) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: "当前没有可应用的 manual 预检查结果。",
+      },
+    });
+    return;
+  }
+  await importPackFlow(plan.file, String(plan.recommendedStrategy || "rename"));
 }
 
 function inferErrorCode(err) {

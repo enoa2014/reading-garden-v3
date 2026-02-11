@@ -16,6 +16,7 @@ const state = {
   newBookFeedback: null,
   packFeedback: null,
   packDiagnostic: null,
+  packManualPlan: null,
   aiSettings: null,
   aiFeedback: null,
   recoveryFeedback: null,

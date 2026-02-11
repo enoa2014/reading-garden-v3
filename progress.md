@@ -174,6 +174,7 @@
 | 分析建议覆盖检查 | 审查 `analysisApplyMode=overwrite` 写入链路 | 支持覆盖 `registry.json` 且返回备份路径 | 已接入 | ✓ |
 | 覆盖补齐数据检查 | 审查 `ensureSuggestedModuleDataFiles` | 覆盖模式自动补齐新增模块 data 文件 | 已接入 | ✓ |
 | 手动合并预检查 | 审查 `importPackFlow(strategy=manual)` | 先输出冲突计划与推荐策略，不直接导入 | 已接入 | ✓ |
+| 手动合并推荐应用 | 审查 `applyManualMergeSuggestionFlow` | 支持一键应用 manual 预检查推荐策略 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
@@ -1783,6 +1784,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 104: Sprint 4 manual 预检查一键推荐导入
+- **Status:** complete
+- Actions taken:
+  - `state.js` 增加 `packManualPlan` 状态
+  - `importPackFlow(strategy=manual)` 保存推荐策略与目标 ID
+  - `app.js` 新增 `applyManualMergeSuggestionFlow` 复用预检查结果执行导入
+  - `dashboard.js` 新增 Manual Merge Preview 区块与 Apply Recommended 按钮
+  - 回归脚本增加 manual 推荐导入关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1792,8 +1813,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 103 |
-| Where am I going? | Phase 103 -> checkpoint commit -> push |
+| Where am I? | Phase 104 |
+| Where am I going? | Phase 104 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 常见教学模块应在建书阶段直接可选，降低后续手工补文件成本 |
-| What have I done? | 已完成项目级快照隔离，并继续补齐新建书模块模板能力 |
+| What have I learned? | manual 策略需要“预览 + 执行”闭环，才能真正提升导入效率 |
+| What have I done? | 已完成新建书模块扩展，并继续补齐 manual 推荐导入闭环 |

@@ -696,6 +696,26 @@ function renderPackPanel(state) {
     `
     : "";
 
+  const manualPlan = state.packManualPlan && typeof state.packManualPlan === "object"
+    ? state.packManualPlan
+    : null;
+  const manualPlanBox = manualPlan
+    ? `
+      <div class="diag-box">
+        <div class="diag-title">Manual Merge Preview</div>
+        <p class="muted">
+          incoming bookId: <code>${escapeHtml(String(manualPlan.incomingBookId || ""))}</code>；
+          recommended: <code>${escapeHtml(String(manualPlan.recommendedStrategy || "rename"))}</code>
+          -> <code>${escapeHtml(String(manualPlan.recommendedTargetBookId || ""))}</code>
+        </p>
+        <p class="muted">options: ${escapeHtml(String(manualPlan.options || "overwrite/rename/skip"))}</p>
+        <div class="actions-row">
+          <button class="btn btn-secondary apply-manual-plan-btn" type="button" ${busy}>Apply Recommended Import</button>
+        </div>
+      </div>
+    `
+    : "";
+
   return `
     <section class="panel">
       <h3>Book Pack Exchange (rgbook)</h3>
@@ -727,6 +747,7 @@ function renderPackPanel(state) {
           <button class="btn btn-primary" type="submit" ${busy}>Import rgbook</button>
         </div>
       </form>
+      ${manualPlanBox}
       <hr />
       <h3>Site Publish Pack (rgsite)</h3>
       <p class="muted">导出可上传到 EdgeOne 的整站发布包 <code>.rgsite.zip</code>。</p>
@@ -957,6 +978,12 @@ export function renderDashboard(root, state, handlers = {}) {
       handlers.onImportPack(file, strategy);
     });
   }
+  const applyManualPlanBtn = root.querySelector(".apply-manual-plan-btn");
+  applyManualPlanBtn?.addEventListener("click", () => {
+    if (handlers.onApplyManualMergeSuggestion) {
+      handlers.onApplyManualMergeSuggestion();
+    }
+  });
 
   const exportSiteForm = root.querySelector("#exportSiteForm");
   if (exportSiteForm && handlers.onExportSite) {
