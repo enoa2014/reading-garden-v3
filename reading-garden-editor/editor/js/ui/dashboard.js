@@ -539,6 +539,9 @@ function renderPreviewPanel(state) {
             ${recoveryHistoryMaxAgeOptions}
           </select>
         </label>
+        <div class="full actions-row">
+          <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>
+        </div>
         <label class="full">
           恢复历史快照（最近 5 条）
           <select name="recoverySavedAt" ${busy} ${historyOptions ? "" : "disabled"}>
@@ -1045,6 +1048,7 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");
+  const previewResetRecoveryPolicyBtn = root.querySelector(".preview-reset-recovery-policy-btn");
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
@@ -1066,6 +1070,11 @@ export function renderDashboard(root, state, handlers = {}) {
     if (handlers.onRemoveRecoverySnapshot) {
       const recoverySelect = root.querySelector('select[name="recoverySavedAt"]');
       handlers.onRemoveRecoverySnapshot(String(recoverySelect?.value || ""));
+    }
+  });
+  previewResetRecoveryPolicyBtn?.addEventListener("click", () => {
+    if (handlers.onResetRecoveryHistoryPolicy) {
+      handlers.onResetRecoveryHistoryPolicy();
     }
   });
 

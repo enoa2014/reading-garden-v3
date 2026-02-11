@@ -333,6 +333,20 @@ function writeRecoveryHistoryPolicyToStorage(
   };
 }
 
+function clearProjectRecoveryHistoryPolicyInStorage(projectName = "") {
+  const safeProjectName = String(projectName || "").trim();
+  const payload = readRecoveryHistoryPolicyPayloadFromStorage();
+  const existed = safeProjectName && Object.prototype.hasOwnProperty.call(payload.projects, safeProjectName);
+  if (safeProjectName && existed) {
+    delete payload.projects[safeProjectName];
+    writeRecoveryHistoryPolicyPayloadToStorage(payload);
+  }
+  return {
+    existed: Boolean(existed),
+    policyPayload: payload,
+  };
+}
+
 function normalizeTemplatePreset(rawPreset = "") {
   const preset = String(rawPreset || "").trim().toLowerCase();
   if (!preset) return "";
@@ -580,6 +594,45 @@ async function updateRecoveryHistoryPolicyFlow(maxAgeDays = DEFAULT_RECOVERY_HIS
   }
 }
 
+async function resetRecoveryHistoryPolicyFlow() {
+  try {
+    const state = getState();
+    const projectName = String(state.projectName || "").trim();
+    if (!projectName) {
+      setState({
+        recoveryFeedback: {
+          type: "error",
+          message: "当前未打开项目，无法重置为全局默认策略。",
+        },
+      });
+      return;
+    }
+    const cleared = clearProjectRecoveryHistoryPolicyInStorage(projectName);
+    const defaultDays = resolveRecoveryHistoryMaxAgeDaysForProject("", cleared.policyPayload);
+    const normalizedDays = applyRecoveryHistoryPolicy(defaultDays);
+    const history = await recoveryStore.loadProjectHistory(projectName);
+    setState({
+      recoveryHistoryMaxAgeDays: normalizedDays,
+      recoveryHistory: Array.isArray(history) ? history : [],
+      recoveryFeedback: {
+        type: "ok",
+        message: cleared.existed
+          ? `已恢复项目默认策略：${projectName}（全局 ${normalizedDays} 天）`
+          : `当前项目未设置覆盖策略，保持全局默认：${normalizedDays} 天`,
+      },
+    });
+    setStatus("Recovery policy reset");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `重置项目快照策略失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Recovery policy reset failed");
+  }
+}
+
 async function removeRecoveryHistorySnapshotFlow(savedAt = "") {
   const state = getState();
   const stamp = String(savedAt || "").trim();
@@ -716,6 +769,7 @@ function render() {
       onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
       onRemoveRecoverySnapshot: removeRecoveryHistorySnapshotFlow,
       onUpdateRecoveryHistoryPolicy: updateRecoveryHistoryPolicyFlow,
+      onResetRecoveryHistoryPolicy: resetRecoveryHistoryPolicyFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,

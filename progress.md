@@ -1945,6 +1945,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 112: Sprint 4 项目快照策略一键回退全局默认
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `clearProjectRecoveryHistoryPolicyInStorage` 与 `resetRecoveryHistoryPolicyFlow`
+  - 支持当前项目一键移除覆盖策略，并立即回退全局默认阈值
+  - `dashboard.js` Preview 面板新增 `Use Global Default` 操作按钮
+  - 回归脚本新增策略回退相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1954,8 +1972,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 111 |
-| Where am I going? | Phase 111 -> checkpoint commit -> push |
+| Where am I? | Phase 112 |
+| Where am I going? | Phase 112 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 同机多项目场景需要“全局默认 + 项目覆盖”双层策略，才能贴合真实教学使用 |
-| What have I done? | 已完成会话快照阈值项目级配置，并保持向后兼容、回归通过与文档同步 |
+| What have I learned? | 项目级策略上线后必须提供“回退全局默认”捷径，才能避免配置残留 |
+| What have I done? | 已完成项目策略一键回退全局默认，并接入 UI、回归与文档同步 |
