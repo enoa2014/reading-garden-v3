@@ -73,12 +73,13 @@ Phase 9
 - [x] `workflow_dispatch` 支持输入覆盖 `packStats` 抽样
 - [x] CI Job Summary 输出 `packStats` 摘要
 - [x] 无效 `packStats` 抽样 ID 支持严格失败策略
+- [x] `workflow_dispatch` 支持输入覆盖严格校验开关
 - **Status:** in_progress
 
 ## Key Questions
-1. 严格失败策略是否只针对 `workflow_dispatch`，还是保持全流程启用？
-2. 缺失资源分类统计是否需要用于 CI 阈值告警？
-3. 最近模板导入模式是否需要支持“预览差异”？
+1. 缺失资源分类统计是否需要用于 CI 阈值告警？
+2. 最近模板导入模式是否需要支持“预览差异”？
+3. `workflow_dispatch` 是否需要限制非法输入格式（如空格/分号）？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -97,3 +98,4 @@ Phase 9
 | 手动触发回归支持输入覆盖抽样书籍 | 方便在不改代码情况下做针对性对比分析 |
 | CI summary 固定输出 packStats 关键指标与 missing IDs | 降低排查成本，提升输入错误可见性 |
 | CI 默认启用严格抽样校验（invalid ID fail） | 尽早暴露输入错误，避免产出误导性对比结果 |
+| workflow_dispatch 允许按需关闭严格校验 | 兼容探索性分析场景，默认仍保持严格 |

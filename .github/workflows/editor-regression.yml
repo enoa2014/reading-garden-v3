@@ -21,6 +21,10 @@ on:
         description: "Optional subset books for packStats, comma-separated (e.g. totto-chan,wave)"
         required: false
         default: "totto-chan,wave"
+      pack_stats_require_valid_selection:
+        description: "Fail when selected book IDs are invalid (true/false)"
+        required: false
+        default: "true"
 
 jobs:
   editor-regression:
@@ -39,7 +43,7 @@ jobs:
         env:
           EDITOR_REGRESSION_REPORT: tmp/editor-regression-report.json
           EDITOR_PACK_STATS_SELECTED_BOOKS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_selected_books || 'totto-chan,wave' }}
-          EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION: "true"
+          EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_require_valid_selection || 'true' }}
         run: ./scripts/editor-regression.sh
 
       - name: Summarize packStats
