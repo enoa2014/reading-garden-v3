@@ -11,3 +11,41 @@
 - Replaced header book logo emoji with SVG mark (avoid emoji icons).
 - Added module CSS for new modules; added `README.md` with local run instructions.
 - Note: sandbox blocks local HTTP requests, so only filesystem-level validation was performed here.
+
+## 2026-02-11
+- Switched planning context from implementation task to project analysis task.
+- Reframed `task_plan.md` into 4 analysis phases and started repository discovery.
+- Completed full scan of:
+  - Entry pages (`index.html`, `book.html`)
+  - Runtime/core (`js/app/*`, `js/core/*`)
+  - All modules (`js/modules/*.js`)
+  - Data contracts (`data/books.json`, all `data/*/registry*.json`, representative content files)
+  - CSS architecture and file usage
+- Performed validation checks:
+  - Registry `entry`/`data` path existence (all primary registries valid)
+  - JS syntax check via `node --check` (pass)
+  - Asset reference existence scan (no missing local asset files detected)
+- Identified key risks:
+  - Reading module listener accumulation
+  - Potential body scroll lock persistence when leaving reading drawer
+  - Stale legacy registries and unreferenced files causing maintenance drift
+- Implemented targeted runtime fixes in `js/modules/reading-module.js`:
+  - Added tracked `onChange` / `onInput` handlers and cleanup in `destroy`.
+  - Fixed swipe listener cleanup by tracking the real binding target (`swipeTargetEl`).
+  - Added `document.body.style.overflow = \"\"` safeguard in `destroy`.
+- Validation after fix:
+  - `node --check js/modules/reading-module.js` passed.
+  - Full `node --check` across all JS files passed.
+- Cleanup pass completed:
+  - Removed stale/unused files:
+    - `data/wonder/registry.legacy.json`
+    - `data/wonder/registry.modular.json`
+    - `js/app/home.js`
+    - `js/book-template-app.js`
+    - `js/modules/shared/mobile-swipe.js`
+    - `js/modules/shared/story-modal.js`
+  - Updated `README.md` stats and tree:
+    - JavaScript lines: 5171
+    - CSS lines: 13673
+    - Total code lines: 18844
+    - Image assets: 194

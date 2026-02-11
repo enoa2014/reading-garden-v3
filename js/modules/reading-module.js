@@ -177,8 +177,11 @@ export default {
       font: "m",
       notes: {},
       onClick: null,
+      onChange: null,
+      onInput: null,
       onPointerDown: null,
       onPointerUp: null,
+      swipeTargetEl: null,
       pointerStart: null,
       saveTimer: null,
     };
@@ -340,24 +343,42 @@ export default {
       ctx.panelEl?.removeEventListener("click", ctx.state.onClick);
       ctx.state.onClick = null;
     }
+    if (typeof ctx.state?.onChange === "function") {
+      ctx.panelEl?.removeEventListener("change", ctx.state.onChange);
+      ctx.state.onChange = null;
+    }
+    if (typeof ctx.state?.onInput === "function") {
+      ctx.panelEl?.removeEventListener("input", ctx.state.onInput);
+      ctx.state.onInput = null;
+    }
+    const swipeTarget = ctx.state?.swipeTargetEl;
     if (typeof ctx.state?.onPointerDown === "function") {
-      ctx.panelEl?.removeEventListener("pointerdown", ctx.state.onPointerDown);
+      swipeTarget?.removeEventListener("pointerdown", ctx.state.onPointerDown);
       ctx.state.onPointerDown = null;
     }
     if (typeof ctx.state?.onPointerUp === "function") {
-      ctx.panelEl?.removeEventListener("pointerup", ctx.state.onPointerUp);
+      swipeTarget?.removeEventListener("pointerup", ctx.state.onPointerUp);
       ctx.state.onPointerUp = null;
     }
+    ctx.state.swipeTargetEl = null;
     if (ctx.state?.saveTimer) {
       window.clearTimeout(ctx.state.saveTimer);
       ctx.state.saveTimer = null;
     }
+    // Ensure module switches do not leave page scroll locked (e.g. drawer left open).
+    document.body.style.overflow = "";
   },
 
   _bindEvents(ctx) {
     const bookId = String(ctx.book?.id || "").trim() || "book";
     if (typeof ctx.state.onClick === "function") {
       ctx.panelEl.removeEventListener("click", ctx.state.onClick);
+    }
+    if (typeof ctx.state.onChange === "function") {
+      ctx.panelEl.removeEventListener("change", ctx.state.onChange);
+    }
+    if (typeof ctx.state.onInput === "function") {
+      ctx.panelEl.removeEventListener("input", ctx.state.onInput);
     }
 
     const updateFont = (font) => {
@@ -502,7 +523,7 @@ export default {
     ctx.panelEl.addEventListener("click", ctx.state.onClick);
 
     // Delegated change events for select/textarea.
-    ctx.panelEl.addEventListener("change", async (event) => {
+    ctx.state.onChange = async (event) => {
       const t = event.target;
       if (!(t instanceof HTMLElement)) return;
 
@@ -510,7 +531,8 @@ export default {
       if (action === "pov" && t instanceof HTMLSelectElement) {
         await setPov(t.value);
       }
-    });
+    };
+    ctx.panelEl.addEventListener("change", ctx.state.onChange);
 
     const scheduleSave = () => {
       if (ctx.state.saveTimer) window.clearTimeout(ctx.state.saveTimer);
@@ -519,7 +541,7 @@ export default {
       }, 250);
     };
 
-    ctx.panelEl.addEventListener("input", (event) => {
+    ctx.state.onInput = (event) => {
       const t = event.target;
       if (!(t instanceof HTMLElement)) return;
 
@@ -548,7 +570,8 @@ export default {
           scheduleSave();
         }
       }
-    });
+    };
+    ctx.panelEl.addEventListener("input", ctx.state.onInput);
   },
 
   _renderToc(ctx) {
@@ -706,14 +729,16 @@ export default {
       }
     };
 
-    if (typeof ctx.state.onPointerDown === "function") {
-      content.removeEventListener("pointerdown", ctx.state.onPointerDown);
+    const prevTarget = ctx.state.swipeTargetEl;
+    if (prevTarget && typeof ctx.state.onPointerDown === "function") {
+      prevTarget.removeEventListener("pointerdown", ctx.state.onPointerDown);
     }
-    if (typeof ctx.state.onPointerUp === "function") {
-      content.removeEventListener("pointerup", ctx.state.onPointerUp);
+    if (prevTarget && typeof ctx.state.onPointerUp === "function") {
+      prevTarget.removeEventListener("pointerup", ctx.state.onPointerUp);
     }
     ctx.state.onPointerDown = onPointerDown;
     ctx.state.onPointerUp = onPointerUp;
+    ctx.state.swipeTargetEl = content;
     content.addEventListener("pointerdown", onPointerDown, { passive: true });
     content.addEventListener("pointerup", onPointerUp, { passive: true });
   },
