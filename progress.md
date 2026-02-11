@@ -2336,6 +2336,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 132: Sprint 4 EdgeOne 自测报告 artifact 化
+- **Status:** complete
+- Actions taken:
+  - `scripts/edgeone-preflight-selftest.sh` 支持环境变量 `EDGEONE_PREFLIGHT_SELFTEST_REPORT`
+  - 自测脚本新增 `record_case` 与 `write_selftest_report`，输出结构化用例结果（`status + cases`）
+  - `.github/workflows/editor-regression.yml` 为 EdgeOne 自测步骤注入 `EDGEONE_PREFLIGHT_SELFTEST_REPORT=tmp/edgeone-preflight-selftest-report.json`
+  - CI artifact 上传路径扩展：除 `editor-regression-report.json` 外，新增 `edgeone-preflight-selftest-report.json`
+  - `scripts/editor-regression.mjs` 新增自测报告相关关键标记断言
+  - 运行 `node --check scripts/editor-regression.mjs`、`bash -n scripts/edgeone-preflight-selftest.sh`、`EDGEONE_PREFLIGHT_SELFTEST_REPORT=tmp/edgeone-preflight-selftest-report.json ./scripts/edgeone-preflight-selftest.sh`、`./scripts/editor-regression.sh` 均通过
+  - 同步 `README.md` / `reading-garden-editor/README.md` / `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `scripts/edgeone-preflight-selftest.sh` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2347,8 +2367,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 131 |
-| Where am I going? | Phase 131 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
+| Where am I? | Phase 132 |
+| Where am I going? | Phase 132 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 手动发布链路需要结构化报告沉淀证据，纯终端输出不利于追踪与复盘 |
-| What have I done? | 已完成 `--report` 能力、包装器透传、自测断言与文档同步，可进入提交推送阶段 |
+| What have I learned? | 自测结果若不落盘，CI 历史难以审计；artifact 化能显著提升排障与回归追踪效率 |
+| What have I done? | 已完成自测报告输出、CI 注入与 artifact 上传，并通过本地验证 |

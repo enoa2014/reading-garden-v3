@@ -5,7 +5,45 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
 WORK_DIR="$(mktemp -d /tmp/rg-edgeone-selftest-XXXXXX)"
+SELFTEST_REPORT_PATH="${EDGEONE_PREFLIGHT_SELFTEST_REPORT:-}"
+SELFTEST_CASES=()
+OVERALL_STATUS="running"
+
+record_case() {
+  local case_name="$1"
+  SELFTEST_CASES+=("$case_name")
+}
+
+write_selftest_report() {
+  local exit_code="$1"
+  local report_path="$SELFTEST_REPORT_PATH"
+  if [ -z "$report_path" ]; then
+    return
+  fi
+  local status="fail"
+  if [ "$exit_code" -eq 0 ] && [ "$OVERALL_STATUS" = "ok" ]; then
+    status="ok"
+  fi
+  node - "$report_path" "$status" "${SELFTEST_CASES[@]}" <<'NODE'
+const fs = require("node:fs");
+const path = require("node:path");
+
+const targetPath = path.resolve(process.argv[2]);
+const status = String(process.argv[3] || "fail");
+const cases = process.argv.slice(4);
+const payload = {
+  status,
+  generatedAt: new Date().toISOString(),
+  cases,
+};
+fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+fs.writeFileSync(targetPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+NODE
+}
+
 cleanup() {
+  local exit_code=$?
+  write_selftest_report "$exit_code"
   rm -rf "$WORK_DIR"
 }
 trap cleanup EXIT
@@ -222,15 +260,19 @@ MINIMAL_REPORT_OK="$WORK_DIR/minimal-preflight-ok.json"
 MINIMAL_REPORT_FAIL="$WORK_DIR/minimal-preflight-fail.json"
 build_minimal_sample "$MINIMAL_ROOT"
 run_preflight_zip "$MINIMAL_ROOT" "$MINIMAL_ZIP"
+record_case "minimal-ok"
 ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP" --report "$MINIMAL_REPORT_OK"
 assert_report_status "$MINIMAL_REPORT_OK" "ok"
+record_case "minimal-report-ok"
 
 echo "[edgeone-selftest] tamper checksum sample (expected fail)"
 printf 'tamper\n' >> "$MINIMAL_ROOT/index.html"
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "checksum mismatch:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+record_case "tamper-fail-asserted"
 assert_failure_contains "checksum mismatch:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP" --report "$MINIMAL_REPORT_FAIL"
 assert_report_status "$MINIMAL_REPORT_FAIL" "fail"
+record_case "tamper-report-fail-asserted"
 
 echo "[edgeone-selftest] unsafe checksum path sample (expected fail)"
 build_minimal_sample "$MINIMAL_ROOT"
@@ -246,6 +288,7 @@ fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
 NODE
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "invalid checksum target path:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+record_case "unsafe-path-fail-asserted"
 
 echo "[edgeone-selftest] missing required checksum entry sample (expected fail)"
 build_minimal_sample "$MINIMAL_ROOT"
@@ -260,6 +303,7 @@ fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
 NODE
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "checksum missing for required file: index.html" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+record_case "missing-required-fail-asserted"
 
 echo "[edgeone-selftest] invalid checksum format sample (expected fail)"
 build_minimal_sample "$MINIMAL_ROOT"
@@ -274,11 +318,14 @@ fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8")
 NODE
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "invalid checksum format: index.html" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+record_case "invalid-format-fail-asserted"
 
 echo "[edgeone-selftest] real-asset sample"
 REAL_ROOT="$WORK_DIR/real-site"
 REAL_ZIP="$WORK_DIR/real.rgsite.zip"
 build_real_asset_sample "$REAL_ROOT"
 run_preflight_zip "$REAL_ROOT" "$REAL_ZIP"
+record_case "real-asset-ok"
 
+OVERALL_STATUS="ok"
 echo "[edgeone-selftest] ok"

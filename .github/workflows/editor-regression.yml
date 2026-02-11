@@ -93,6 +93,8 @@ jobs:
         run: ./scripts/editor-regression.sh
 
       - name: Run EdgeOne Preflight Self-Test
+        env:
+          EDGEONE_PREFLIGHT_SELFTEST_REPORT: tmp/edgeone-preflight-selftest-report.json
         run: ./scripts/edgeone-preflight-selftest.sh
 
       - name: Summarize packStats
@@ -184,5 +186,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: editor-regression-report
-          path: tmp/editor-regression-report.json
+          path: |
+            tmp/editor-regression-report.json
+            tmp/edgeone-preflight-selftest-report.json
           if-no-files-found: warn

@@ -108,6 +108,7 @@ Phase 9
 - [x] EdgeOne 预检自测扩展为“最小样例 + 真实资产样例 + 失败断言”
 - [x] EdgeOne 预检脚本校验 required checksums 与 hash 格式（`sha256`）
 - [x] EdgeOne 预检脚本支持 `--report` 输出结构化 JSON 报告
+- [x] EdgeOne 预检自测支持结构化报告并上传 CI artifact
 - [x] 校验层支持路径级错误提示（books/registry）
 - [x] `rgbook` 导入支持 manual 预检查策略
 - [x] IndexedDB 会话快照与重开恢复
@@ -208,6 +209,7 @@ Phase 9
 | EdgeOne 预检自测扩展到真实资产样例并增加失败断言 | 提升与真实发布包一致性，防止“仅最小样例通过”带来的漏检 |
 | EdgeOne 预检在 `sha256` 模式强制 required checksums 与哈希格式校验 | 防止“部分文件未校验”或“伪造哈希格式”绕过完整性检查 |
 | EdgeOne 预检支持 `--report` 输出结构化结果 | 为手动发布提供可留档证据，便于回滚追踪与发布复盘 |
+| EdgeOne 预检自测输出结构化报告并进入 CI artifact | 提升自测可审计性，便于跨会话追踪历史稳定性 |
 | 新建书模板扩展到 timeline/interactive 可选项 | 缩短常见教学模块的初始化步骤，减少手工补配置成本 |
 | manual 预检查增加“一键应用推荐策略” | 保留人工确认同时减少重复操作，提升导入效率 |
 | Validation Issues 增加报告下载能力 | 支持排障留档、跨角色协作与离线问题复现 |

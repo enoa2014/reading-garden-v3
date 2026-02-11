@@ -754,6 +754,8 @@ async function testDiagnosticSourceMarkers() {
   assert(edgeonePreflightSelftestSource.includes("real-asset sample"), "edgeone preflight selftest should include real-asset sample flow");
   assert(edgeonePreflightSelftestSource.includes("assert_report_status"), "edgeone preflight selftest should validate report file status");
   assert(edgeonePreflightSelftestSource.includes("--report"), "edgeone preflight selftest should cover report output option");
+  assert(edgeonePreflightSelftestSource.includes("EDGEONE_PREFLIGHT_SELFTEST_REPORT"), "edgeone preflight selftest should support external selftest report output");
+  assert(edgeonePreflightSelftestSource.includes("write_selftest_report"), "edgeone preflight selftest should persist structured selftest report");
   assert(edgeonePreflightSelftestSource.includes("checksum mismatch"), "edgeone preflight selftest should validate checksum mismatch failures");
   assert(edgeonePreflightSelftestSource.includes("checksum missing for required file"), "edgeone preflight selftest should validate missing required checksum entry failures");
   assert(edgeonePreflightSelftestSource.includes("invalid checksum format"), "edgeone preflight selftest should validate invalid checksum format failures");

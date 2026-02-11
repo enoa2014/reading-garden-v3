@@ -108,6 +108,7 @@ EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 - 已接入 GitHub Actions：`.github/workflows/editor-regression.yml`
 - 当 `reading-garden-editor/**` 或回归脚本变更时，PR/Push 会自动执行回归检查
 - CI 会上传 `editor-regression-report` artifact（来源 `tmp/editor-regression-report.json`）
+- CI 会额外上传 EdgeOne 预检自测报告（来源 `tmp/edgeone-preflight-selftest-report.json`）
 - 回归报告含 `packStats`（`full/subset-balanced/subset-minimal` 体积对比）
 - CI 固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave` 用于稳定对比
 - `workflow_dispatch` 支持输入 `pack_stats_selected_books` 覆盖抽样
