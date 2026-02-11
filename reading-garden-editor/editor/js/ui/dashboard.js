@@ -649,6 +649,9 @@ function renderPreviewPanel(state) {
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
   const recoveryHistoryMaxAgeDays = String(state.recoveryHistoryMaxAgeDays ?? 30);
+  const recoveryPolicyImportMode = String(state.recoveryPolicyImportMode || "replace") === "merge"
+    ? "merge"
+    : "replace";
   const recoveryPolicyScope = String(state.recoveryHistoryPolicyScope || "global") === "project"
     ? "项目覆盖"
     : "全局默认";
@@ -716,6 +719,13 @@ function renderPreviewPanel(state) {
             ${recoveryHistoryMaxAgeOptions}
           </select>
           <small class="muted">当前来源：${recoveryPolicyScope}</small>
+        </label>
+        <label>
+          策略导入模式
+          <select name="recoveryPolicyImportMode" ${busy}>
+            <option value="replace" ${recoveryPolicyImportMode === "replace" ? "selected" : ""}>replace（覆盖策略文件）</option>
+            <option value="merge" ${recoveryPolicyImportMode === "merge" ? "selected" : ""}>merge（合并项目策略）</option>
+          </select>
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>
@@ -1339,6 +1349,7 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewExportRecoveryPolicyBtn = root.querySelector(".preview-export-recovery-policy-btn");
   const previewImportRecoveryPolicyBtn = root.querySelector(".preview-import-recovery-policy-btn");
   const previewImportRecoveryPolicyInput = root.querySelector(".preview-import-recovery-policy-input");
+  const recoveryPolicyImportModeEl = root.querySelector('select[name="recoveryPolicyImportMode"]');
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
@@ -1377,9 +1388,10 @@ export function renderDashboard(root, state, handlers = {}) {
   });
   previewImportRecoveryPolicyInput?.addEventListener("change", () => {
     const file = previewImportRecoveryPolicyInput.files?.[0];
+    const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
     if (previewImportRecoveryPolicyInput) previewImportRecoveryPolicyInput.value = "";
     if (handlers.onImportRecoveryHistoryPolicy) {
-      handlers.onImportRecoveryHistoryPolicy(file || null);
+      handlers.onImportRecoveryHistoryPolicy(file || null, importRecoveryPolicyMode);
     }
   });
 

@@ -554,6 +554,9 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");
   assert(appSource.includes("exportRecoveryHistoryPolicyFlow"), "app should support exporting recovery history policy");
   assert(appSource.includes("importRecoveryHistoryPolicyFlow"), "app should support importing recovery history policy");
+  assert(appSource.includes("normalizeRecoveryPolicyImportMode"), "app should normalize recovery policy import mode");
+  assert(appSource.includes("mergeRecoveryHistoryPolicyPayload"), "app should support merging recovery policy payloads");
+  assert(appSource.includes("mode=${merged.mode}"), "app should surface recovery policy import mode in feedback");
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
@@ -596,6 +599,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-reset-recovery-policy-btn"), "dashboard should expose recovery policy reset action");
   assert(dashboardSource.includes("preview-export-recovery-policy-btn"), "dashboard should expose recovery policy export action");
   assert(dashboardSource.includes("preview-import-recovery-policy-btn"), "dashboard should expose recovery policy import action");
+  assert(dashboardSource.includes("recoveryPolicyImportMode"), "dashboard should expose recovery policy import mode selector");
+  assert(dashboardSource.includes("importRecoveryPolicyMode"), "dashboard should pass recovery policy import mode");
   assert(dashboardSource.includes("recoveryHistoryMaxAgeDays"), "dashboard should expose recovery history max-age selector");
   assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
   assert(dashboardSource.includes("当前来源："), "dashboard should show recovery policy source");

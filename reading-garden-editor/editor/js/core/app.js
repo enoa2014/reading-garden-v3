@@ -692,7 +692,34 @@ function exportRecoveryHistoryPolicyFlow() {
   setStatus("Recovery policy exported");
 }
 
-async function importRecoveryHistoryPolicyFlow(file) {
+function normalizeRecoveryPolicyImportMode(rawMode = "replace") {
+  const mode = String(rawMode || "replace").trim().toLowerCase();
+  return mode === "merge" ? "merge" : "replace";
+}
+
+function mergeRecoveryHistoryPolicyPayload(basePayload, importedPayload, mode = "replace") {
+  const normalizedMode = normalizeRecoveryPolicyImportMode(mode);
+  const base = normalizeRecoveryHistoryPolicyPayload(basePayload);
+  const incoming = normalizeRecoveryHistoryPolicyPayload(importedPayload);
+  if (normalizedMode === "replace") {
+    return {
+      mode: normalizedMode,
+      payload: incoming,
+    };
+  }
+  return {
+    mode: normalizedMode,
+    payload: {
+      defaultMaxAgeDays: base.defaultMaxAgeDays,
+      projects: {
+        ...base.projects,
+        ...incoming.projects,
+      },
+    },
+  };
+}
+
+async function importRecoveryHistoryPolicyFlow(file, mode = "replace") {
   if (!file) {
     setState({
       recoveryFeedback: {
@@ -708,19 +735,22 @@ async function importRecoveryHistoryPolicyFlow(file) {
   try {
     const text = await file.text();
     const parsed = JSON.parse(text);
-    const normalized = normalizeRecoveryHistoryPolicyPayload(parsed?.policy || parsed);
-    writeRecoveryHistoryPolicyPayloadToStorage(normalized);
+    const current = readRecoveryHistoryPolicyPayloadFromStorage();
+    const incoming = normalizeRecoveryHistoryPolicyPayload(parsed?.policy || parsed);
+    const merged = mergeRecoveryHistoryPolicyPayload(current, incoming, mode);
+    writeRecoveryHistoryPolicyPayloadToStorage(merged.payload);
     const state = getState();
     const projectName = String(state.projectName || "").trim();
-    const applied = applyRecoveryHistoryPolicyForProject(projectName, normalized);
+    const applied = applyRecoveryHistoryPolicyForProject(projectName, merged.payload);
+    const importedProjects = Object.keys(incoming.projects || {}).length;
     const patch = {
       recoveryHistoryMaxAgeDays: applied.maxAgeDays,
       recoveryHistoryPolicyScope: applied.scope,
       recoveryFeedback: {
         type: "ok",
         message: projectName
-          ? `会话快照策略已导入并应用到项目：${projectName}`
-          : "会话快照策略已导入。",
+          ? `会话快照策略已导入（mode=${merged.mode}, projects=${importedProjects}）并应用到项目：${projectName}`
+          : `会话快照策略已导入（mode=${merged.mode}, projects=${importedProjects}）。`,
       },
     };
     if (projectName) {

@@ -2037,6 +2037,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 117: Sprint 4 会话快照策略导入模式增强（replace/merge）
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `normalizeRecoveryPolicyImportMode/mergeRecoveryHistoryPolicyPayload`
+  - `importRecoveryHistoryPolicyFlow` 支持 `mode` 参数（`replace/merge`）并在反馈中输出 mode + imported projects
+  - `dashboard.js` Preview 面板新增“策略导入模式”下拉，并在导入时透传到 `onImportRecoveryHistoryPolicy(file, mode)`
+  - 回归脚本新增恢复策略导入模式相关关键标记断言
+  - 运行 `node --check`（`app.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2046,8 +2065,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 116 |
-| Where am I going? | Phase 116 -> checkpoint commit -> push |
+| Where am I? | Phase 117 |
+| Where am I going? | Phase 117 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 策略配置做成文件级导入导出后，跨设备迁移与团队复用效率明显更高 |
-| What have I done? | 已完成会话快照策略导入导出闭环，并接入 UI、兼容解析、回归与文档同步 |
+| What have I learned? | 会话策略迁移需要显式导入模式，才能兼顾“全量替换”和“增量合并”两类场景 |
+| What have I done? | 已完成会话快照策略 `replace/merge` 导入模式闭环，并接入 UI、回归与文档同步 |
