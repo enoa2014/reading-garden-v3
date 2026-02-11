@@ -518,6 +518,11 @@ function resolveTargetBookForSuggestion(inputBookId = "") {
   return String(state.analysisSuggestion?.bookIdSuggestion || "").trim();
 }
 
+function normalizeAnalysisApplyMode(rawMode = "safe") {
+  const mode = String(rawMode || "safe").trim().toLowerCase();
+  return mode === "overwrite" ? "overwrite" : "safe";
+}
+
 function buildSuggestedRegistry(registry, suggestion) {
   const safeRegistry = registry && typeof registry === "object" ? registry : {};
   const currentModules = Array.isArray(safeRegistry.modules) ? safeRegistry.modules : [];
@@ -559,7 +564,7 @@ function buildSuggestedRegistry(registry, suggestion) {
   };
 }
 
-async function applyAnalysisSuggestionFlow({ bookId = "" } = {}) {
+async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } = {}) {
   const state = getState();
   const suggestion = state.analysisSuggestion;
   if (!suggestion) {
@@ -594,25 +599,40 @@ async function applyAnalysisSuggestionFlow({ bookId = "" } = {}) {
     return;
   }
 
+  const mode = normalizeAnalysisApplyMode(applyMode);
   setState({ busy: true, analysisFeedback: null });
-  setStatus("Applying analysis suggestion...");
+  setStatus(mode === "overwrite"
+    ? "Applying analysis suggestion (overwrite)..."
+    : "Applying analysis suggestion...");
 
   try {
     const registryPath = `data/${targetBookId}/registry.json`;
     const suggestedPath = `data/${targetBookId}/registry.suggested.json`;
     const registry = await fs.readJson(registryPath);
     const next = buildSuggestedRegistry(registry, suggestion);
-    await fs.writeJson(suggestedPath, next.registry);
     const skippedText = next.skippedUnknown.length
       ? `，未识别模块 ${next.skippedUnknown.join(", ")}`
       : "";
-    setState({
-      analysisFeedback: {
-        type: "ok",
-        message: `建议已安全写入：${suggestedPath}（新增 ${next.added}）${skippedText}`,
-      },
-    });
-    setStatus("Suggestion applied");
+    if (mode === "overwrite") {
+      const writeResult = await fs.writeJson(registryPath, next.registry);
+      const backupText = writeResult?.backupPath ? `，备份：${writeResult.backupPath}` : "";
+      setState({
+        analysisFeedback: {
+          type: "ok",
+          message: `建议已覆盖写入：${registryPath}（新增 ${next.added}）${skippedText}${backupText}`,
+        },
+      });
+      setStatus("Suggestion applied (overwrite)");
+    } else {
+      await fs.writeJson(suggestedPath, next.registry);
+      setState({
+        analysisFeedback: {
+          type: "ok",
+          message: `建议已安全写入：${suggestedPath}（新增 ${next.added}）${skippedText}`,
+        },
+      });
+      setStatus("Suggestion applied");
+    }
   } catch (err) {
     setState({
       analysisFeedback: {

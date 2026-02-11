@@ -418,6 +418,7 @@ function renderAnalysisPanel(state) {
       <h3>Text Analysis Assistant</h3>
       <p class="muted">导入书本原文（txt/md）后生成模块建议，支持 LLM（可选）与本地回退。</p>
       <p class="muted">可将建议安全落盘为 <code>registry.suggested.json</code>，不会覆盖现有配置。</p>
+      <p class="muted">也支持覆盖 <code>registry.json</code>，会自动生成备份用于回滚。</p>
       <form id="analysisForm" class="form-grid">
         <label class="full">
           原文文件
@@ -434,10 +435,17 @@ function renderAnalysisPanel(state) {
             ${options}
           </select>
         </label>
+        <label>
+          应用模式
+          <select name="analysisApplyMode" ${busy}>
+            <option value="safe">safe（写入 registry.suggested.json）</option>
+            <option value="overwrite">overwrite（覆盖 registry.json + 自动备份）</option>
+          </select>
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Analyze Text</button>
           <button class="btn btn-secondary download-analysis-btn" type="button" ${busy}>Download Suggestion</button>
-          <button class="btn btn-secondary apply-analysis-btn" type="button" ${busy}>Apply Suggestion (Safe)</button>
+          <button class="btn btn-secondary apply-analysis-btn" type="button" ${busy}>Apply Suggestion</button>
         </div>
       </form>
       ${feedback}
@@ -751,6 +759,7 @@ export function renderDashboard(root, state, handlers = {}) {
       if (handlers.onApplyAnalysisSuggestion) {
         handlers.onApplyAnalysisSuggestion({
           bookId: String(fd.get("targetBookId") || ""),
+          applyMode: String(fd.get("analysisApplyMode") || "safe"),
         });
       }
     });
