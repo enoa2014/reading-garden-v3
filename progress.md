@@ -152,6 +152,7 @@
 | missing-assets 阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_ASSETS=0 ./scripts/editor-regression.sh` | 超阈值时回归失败 | 已接入 | ✓ |
 | summary 分类统计检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 分类统计 | 已接入 | ✓ |
 | 分类阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE=0 ./scripts/editor-regression.sh` | 模块缺失分类按阈值校验 | 已接入 | ✓ |
+| 分类阈值扩展检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER=1 EDITOR_PACK_STATS_MAX_MISSING_FILE_REF=1 ./scripts/editor-regression.sh` | 封面/文件引用分类支持独立阈值 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 
@@ -1153,11 +1154,48 @@
   - `progress.md` (updated)
 
 ### Phase 70: Sprint 4 checkpoint（category-threshold 增量）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 完成功能、回归与文档同步
-  - 准备提交并推送本轮增量
+  - 创建 checkpoint commit：`a2a7f22`（book-module category threshold）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 71: Sprint 4 分类阈值扩展（book-cover/file-ref）
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 将分类阈值读取改为映射驱动（module/cover/file-ref）
+  - 新增 `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER` / `EDITOR_PACK_STATS_MAX_MISSING_FILE_REF`
+  - workflow_dispatch 增加对应输入，并向回归步骤注入环境变量
+  - workflow summary 增加 cover/file-ref 阈值与缺失告警输出
+  - 回归测试增加分类阈值解析与 env-name 错误提示校验
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 72: Sprint 4 checkpoint（category-threshold-extension 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 已完成功能实现，待跑最终回归
+  - 待创建 checkpoint commit 并推送
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
   - `progress.md` (updated)
@@ -1166,12 +1204,13 @@
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
 | 2026-02-11 | `apply_patch` 上下文不匹配（`progress.md` 片段更新失败） | 1 | 使用 `nl -ba progress.md` 定位准确行后重试补丁成功 |
+| 2026-02-11 | `git commit` 在并行执行中先于 `git add` 触发“no changes added” | 1 | 改为顺序执行 `git add && git commit` 并成功提交 |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 70 |
-| Where am I going? | Phase 70 -> checkpoint commit -> push |
+| Where am I? | Phase 72 |
+| Where am I going? | Phase 72 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成分类阈值（book-module）并等待增量 checkpoint |
+| What have I done? | 已完成分类阈值扩展（book-cover/file-ref）并等待增量 checkpoint |
