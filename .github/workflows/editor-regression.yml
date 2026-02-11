@@ -64,6 +64,8 @@ jobs:
           const missing = Array.isArray(selection.missingBookIds) ? selection.missingBookIds : [];
           const invalidFormat = Array.isArray(selection.invalidFormatBookIds) ? selection.invalidFormatBookIds : [];
           const ratio = stats.comparePercent || {};
+          const missingAssets = Number(stats.subsetMinimal?.missingAssets ?? 0);
+          const missingAssetsAlert = missingAssets > 0 ? "warning" : "ok";
           const lines = [
             "### packStats Summary",
             "",
@@ -72,6 +74,7 @@ jobs:
             `- selected: \`${selected.join(", ") || "(none)"}\``,
             `- missing requested: \`${missing.join(", ") || "(none)"}\``,
             `- invalid format IDs: \`${invalidFormat.join(", ") || "(none)"}\``,
+            `- missing assets (subset-minimal): ${missingAssets} (${missingAssetsAlert})`,
             `- full bytes: ${stats.full?.totalBytes ?? 0}`,
             `- subset-balanced bytes: ${stats.subsetBalanced?.totalBytes ?? 0}`,
             `- subset-minimal bytes: ${stats.subsetMinimal?.totalBytes ?? 0}`,

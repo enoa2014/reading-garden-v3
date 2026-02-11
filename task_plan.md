@@ -78,9 +78,9 @@ Phase 9
 - **Status:** in_progress
 
 ## Key Questions
-1. 缺失资源分类统计是否需要用于 CI 阈值告警？
+1. 缺失资源告警是否需要从 summary 升级为“可配置 fail 阈值”？
 2. 最近模板导入模式是否需要支持“预览差异”？
-3. CI summary 是否需要额外显示“格式非法 ID”计数告警？
+3. missing-assets 告警是否需要细化到分类级别（book-cover/book-module/...）？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -101,3 +101,4 @@ Phase 9
 | CI 默认启用严格抽样校验（invalid ID fail） | 尽早暴露输入错误，避免产出误导性对比结果 |
 | workflow_dispatch 允许按需关闭严格校验 | 兼容探索性分析场景，默认仍保持严格 |
 | 严格模式补充抽样 ID 格式校验 | 提前拦截输入错误，减少“误判为缺失书籍”噪声 |
+| CI summary 增加 missing-assets 告警状态 | 先提供可见性，再评估是否升级为 fail 阈值 |
