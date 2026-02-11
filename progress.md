@@ -140,6 +140,7 @@
 | 最近模板清空检查 | 审查 `dashboard clear action -> app feedback` | 可一键清空历史模板并提示结果 | 已接入 | ✓ |
 | 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
 | 回归样本配置检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"wave,totto-chan\" ./scripts/editor-regression.sh` | packStats 按指定书籍抽样 | 通过（mode=env） | ✓ |
+| CI 固定抽样检查 | 审查 workflow 回归步骤 env | PR/Push 采用固定 packStats 抽样 | 已接入（totto-chan,wave） | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -727,6 +728,34 @@
   - `progress.md` (updated)
 
 ### Phase 44: Sprint 4 checkpoint（pack-sample-config 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`522984d`（packStats sample books via env）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 45: Sprint 4 CI 固定 packStats 抽样
+- **Status:** complete
+- Actions taken:
+  - `.github/workflows/editor-regression.yml` 固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`
+  - 本地按相同 env 执行回归脚本并验证通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 46: Sprint 4 checkpoint（ci-pack-sample 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -744,8 +773,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 44 |
-| Where am I going? | Phase 44 -> checkpoint commit -> push |
+| Where am I? | Phase 46 |
+| Where am I going? | Phase 46 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 packStats 样本可配置并等待增量 checkpoint |
+| What have I done? | 已完成 CI 固定 packStats 抽样并等待增量 checkpoint |

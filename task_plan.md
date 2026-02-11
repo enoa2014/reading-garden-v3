@@ -66,10 +66,11 @@ Phase 9
 - [x] 最近模板支持一键清空与结果反馈
 - [x] 回归报告增加 `packStats`（full/subset/minimal 对比）
 - [x] `packStats` 支持通过环境变量指定 subset 样本书籍
+- [x] CI 固定 `packStats` 样本（`totto-chan,wave`）
 - **Status:** in_progress
 
 ## Key Questions
-1. CI 是否要固定设置 `EDITOR_PACK_STATS_SELECTED_BOOKS` 以保证跨分支可比性？
+1. `workflow_dispatch` 是否需要支持输入自定义 `EDITOR_PACK_STATS_SELECTED_BOOKS`？
 2. 缺失资源分组标签是否需要进一步收敛为“模块级固定枚举”？
 3. 最近模板是否需要“导入/导出模板配置”能力？
 
@@ -84,3 +85,4 @@ Phase 9
 | 最近模板先支持“一键清空”，不做二次确认弹窗 | 操作可逆（重新下载自定义报告会再写入），优先减少交互阻塞 |
 | 回归报告内置包体统计并固定抽样前 2 本书 | 低成本提供趋势对比，先满足 CI 可观测性 |
 | `packStats` 抽样支持环境变量覆盖 | 兼容不同书籍组合的针对性回归分析 |
+| CI 默认固定 `packStats` 抽样为 `totto-chan,wave` | 提升跨分支、跨时间段报告对比稳定性 |

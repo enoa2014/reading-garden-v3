@@ -103,6 +103,7 @@
     - 生成 `tmp/editor-regression-report.json` 报告
     - 回归报告新增 `packStats`（full/subset-balanced/subset-minimal 体积对比）
     - 支持 `EDITOR_PACK_STATS_SELECTED_BOOKS` 指定 subset 样本书籍
+    - CI 默认固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`
     - 新增 `.github/workflows/editor-regression.yml` 接入 CI 门禁
     - CI 自动上传 `editor-regression-report` artifact（失败场景也保留）
   - 文档同步：
