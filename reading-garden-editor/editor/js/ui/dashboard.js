@@ -407,6 +407,16 @@ function renderPreviewPanel(state) {
     ? String(state.previewDevice || "desktop")
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
+  const recoveryHistory = Array.isArray(state.recoveryHistory) ? state.recoveryHistory : [];
+  const historyOptions = recoveryHistory
+    .map((item, index) => {
+      const stamp = String(item?.savedAt || "").trim();
+      if (!stamp) return "";
+      const mode = String(item?.analysisSuggestion?.mode || "manual");
+      return `<option value="${escapeHtml(stamp)}">${escapeHtml(stamp)} (${escapeHtml(mode)})${index === 0 ? " [latest]" : ""}</option>`;
+    })
+    .filter(Boolean)
+    .join("");
   const recoveryFeedback = state.recoveryFeedback
     ? `<p class="${state.recoveryFeedback.type === "error" ? "error-text" : "ok-text"}">${escapeHtml(state.recoveryFeedback.message)}</p>`
     : "";
@@ -450,8 +460,15 @@ function renderPreviewPanel(state) {
           <input name="previewAutoRefresh" type="checkbox" ${previewAutoRefresh ? "checked" : ""} ${busy} />
           写入后自动刷新预览
         </label>
+        <label class="full">
+          恢复历史快照（最近 5 条）
+          <select name="recoverySavedAt" ${busy} ${historyOptions ? "" : "disabled"}>
+            ${historyOptions || '<option value="">暂无历史快照</option>'}
+          </select>
+        </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-refresh-btn" type="button" ${busy}>Refresh Preview</button>
+          <button class="btn btn-secondary preview-restore-recovery-btn" type="button" ${busy} ${historyOptions ? "" : "disabled"}>Restore Selected Snapshot</button>
           <button class="btn btn-secondary preview-clear-recovery-btn" type="button" ${busy}>Clear Recovery Snapshot</button>
           ${openLink}
         </div>
@@ -903,6 +920,7 @@ export function renderDashboard(root, state, handlers = {}) {
     });
   }
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
+  const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
@@ -912,6 +930,12 @@ export function renderDashboard(root, state, handlers = {}) {
   previewClearRecoveryBtn?.addEventListener("click", () => {
     if (handlers.onClearRecoverySnapshot) {
       handlers.onClearRecoverySnapshot();
+    }
+  });
+  previewRestoreRecoveryBtn?.addEventListener("click", () => {
+    if (handlers.onRestoreRecoverySnapshot) {
+      const recoverySelect = root.querySelector('select[name="recoverySavedAt"]');
+      handlers.onRestoreRecoverySnapshot(String(recoverySelect?.value || ""));
     }
   });
 

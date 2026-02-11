@@ -1,11 +1,18 @@
 const DEFAULT_DB_NAME = "rg-editor-recovery";
 const DEFAULT_STORE_NAME = "snapshots";
 const LATEST_KEY = "latest";
+const HISTORY_LIMIT = 5;
 
 function projectKey(projectName = "") {
   const safe = String(projectName || "").trim();
   if (!safe) return "";
   return `project:${safe}`;
+}
+
+function projectHistoryKey(projectName = "") {
+  const safe = String(projectName || "").trim();
+  if (!safe) return "";
+  return `project-history:${safe}`;
 }
 
 function openDatabase(dbName, storeName) {
@@ -79,6 +86,13 @@ export function createRecoveryStore({
       const db = await getDb();
       return readValue(db, storeName, key);
     },
+    async loadProjectHistory(projectName) {
+      const key = projectHistoryKey(projectName);
+      if (!key) return [];
+      const db = await getDb();
+      const history = await readValue(db, storeName, key);
+      return Array.isArray(history) ? history : [];
+    },
     async saveLatest(snapshot) {
       const db = await getDb();
       const payload = {
@@ -89,6 +103,19 @@ export function createRecoveryStore({
       const key = projectKey(payload.projectName);
       if (key) {
         await writeValue(db, storeName, key, payload);
+        const historyKey = projectHistoryKey(payload.projectName);
+        if (historyKey) {
+          const history = await readValue(db, storeName, historyKey);
+          const safeHistory = Array.isArray(history) ? history : [];
+          const nextHistory = [payload, ...safeHistory]
+            .filter((item, index, list) => {
+              const stamp = String(item?.savedAt || "");
+              if (!stamp) return false;
+              return list.findIndex((cursor) => String(cursor?.savedAt || "") === stamp) === index;
+            })
+            .slice(0, HISTORY_LIMIT);
+          await writeValue(db, storeName, historyKey, nextHistory);
+        }
       }
       return payload;
     },
@@ -102,6 +129,10 @@ export function createRecoveryStore({
       if (!key) return false;
       const db = await getDb();
       await deleteValue(db, storeName, key);
+      const historyKey = projectHistoryKey(projectName);
+      if (historyKey) {
+        await deleteValue(db, storeName, historyKey);
+      }
       return true;
     },
   };

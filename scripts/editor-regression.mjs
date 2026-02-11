@@ -531,7 +531,10 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("scheduleRecoverySnapshot"), "app should schedule recovery snapshots");
   assert(appSource.includes("restoreRecoverySnapshotForProject"), "app should restore recovery snapshot");
   assert(appSource.includes("loadByProject"), "app should prefer project-scoped recovery snapshot");
+  assert(appSource.includes("loadProjectHistory"), "app should load project recovery history");
+  assert(appSource.includes("restoreRecoveryHistorySnapshotFlow"), "app should support restoring recovery snapshot history");
   assert(appSource.includes("clearRecoverySnapshotFlow"), "app should support clearing recovery snapshot");
+  assert(appSource.includes("onRestoreRecoverySnapshot"), "app should wire recovery history restore handler");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
@@ -563,7 +566,11 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-refresh-btn"), "dashboard should expose preview refresh action");
   assert(dashboardSource.includes("previewAutoRefresh"), "dashboard should expose preview auto refresh toggle");
   assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
+  assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
+  assert(dashboardSource.includes("recoverySavedAt"), "dashboard should expose recovery history selector");
+  assert(dashboardSource.includes("Restore Selected Snapshot"), "dashboard should expose restore snapshot button label");
   assert(dashboardSource.includes("onClearRecoverySnapshot"), "dashboard should wire recovery clear handler");
+  assert(dashboardSource.includes("onRestoreRecoverySnapshot"), "dashboard should wire recovery restore handler");
   assert(dashboardSource.includes("Live Preview"), "dashboard should expose live preview title");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
@@ -595,6 +602,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("packManualPlan"), "state should track manual merge plan");
   assert(stateSource.includes("validationFeedback"), "state should track validation feedback");
   assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");
+  assert(stateSource.includes("recoveryHistory"), "state should track recovery snapshot history");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
@@ -605,6 +613,9 @@ async function testDiagnosticSourceMarkers() {
   assert(recoveryStoreSource.includes("saveLatest"), "recovery store should support snapshot save");
   assert(recoveryStoreSource.includes("loadLatest"), "recovery store should support snapshot load");
   assert(recoveryStoreSource.includes("loadByProject"), "recovery store should support loading project snapshot");
+  assert(recoveryStoreSource.includes("loadProjectHistory"), "recovery store should support loading project history");
+  assert(recoveryStoreSource.includes("project-history:"), "recovery store should persist project history namespace");
+  assert(recoveryStoreSource.includes("HISTORY_LIMIT"), "recovery store should enforce history limit");
   assert(recoveryStoreSource.includes("clearByProject"), "recovery store should support clearing project snapshot");
   assert(recoveryStoreSource.includes("clearLatest"), "recovery store should support snapshot clear");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");

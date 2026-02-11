@@ -21,6 +21,7 @@ const state = {
   aiSettings: null,
   aiFeedback: null,
   recoveryFeedback: null,
+  recoveryHistory: [],
   analysisFeedback: null,
   analysisSuggestion: null,
   previewBookId: "",

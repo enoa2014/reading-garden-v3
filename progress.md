@@ -1824,6 +1824,28 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 106: Sprint 4 会话快照历史恢复（最近 5 条）
+- **Status:** complete
+- Actions taken:
+  - `recovery-store.js` 新增项目级历史键空间（`project-history:<name>`）与 `loadProjectHistory`
+  - `saveLatest` 扩展为同步写入最近 5 条历史快照（按 `savedAt` 去重）
+  - `app.js` 在项目恢复时加载 `recoveryHistory`，并新增 `restoreRecoveryHistorySnapshotFlow`
+  - `dashboard.js` Preview 面板新增历史快照下拉与 `Restore Selected Snapshot` 按钮
+  - `state.js` 新增 `recoveryHistory` 状态
+  - 回归脚本新增历史恢复相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1833,8 +1855,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 105 |
-| Where am I going? | Phase 105 -> checkpoint commit -> push |
+| Where am I? | Phase 106 |
+| Where am I going? | Phase 106 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 校验信息需要可导出，才能支持线下协作排障与归档 |
-| What have I done? | 已完成 manual 推荐导入闭环，并继续补齐校验报告下载能力 |
+| What have I learned? | 会话恢复需要“项目隔离 + 历史回退”组合，才能覆盖断电恢复与误操作修复 |
+| What have I done? | 已完成历史快照（最近 5 条）选择恢复闭环，并补齐回归与文档同步 |

@@ -289,10 +289,17 @@ async function restoreRecoverySnapshotForProject(books = []) {
   try {
     const state = getState();
     if (!state.projectName) return;
+    const history = await recoveryStore.loadProjectHistory(state.projectName);
     const snapshot = await recoveryStore.loadByProject(state.projectName)
       || await recoveryStore.loadLatest();
-    if (!snapshot || typeof snapshot !== "object") return;
-    if (snapshot.projectName && snapshot.projectName !== state.projectName) return;
+    if (!snapshot || typeof snapshot !== "object") {
+      setState({ recoveryHistory: Array.isArray(history) ? history : [] });
+      return;
+    }
+    if (snapshot.projectName && snapshot.projectName !== state.projectName) {
+      setState({ recoveryHistory: Array.isArray(history) ? history : [] });
+      return;
+    }
 
     const ui = snapshot.ui && typeof snapshot.ui === "object" ? snapshot.ui : {};
     const previewPatch = buildPreviewStatePatch(state, books, {
@@ -306,6 +313,7 @@ async function restoreRecoverySnapshotForProject(books = []) {
         type: "ok",
         message: `已恢复会话快照：${String(snapshot.savedAt || "unknown")}`,
       },
+      recoveryHistory: Array.isArray(history) ? history : [],
     };
     if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
       patch.analysisSuggestion = snapshot.analysisSuggestion;
@@ -314,6 +322,50 @@ async function restoreRecoverySnapshotForProject(books = []) {
   } catch {
     // recovery storage is best-effort only
   }
+}
+
+function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
+  const state = getState();
+  const stamp = String(savedAt || "").trim();
+  if (!stamp) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "请选择要恢复的历史快照。",
+      },
+    });
+    return;
+  }
+  const history = Array.isArray(state.recoveryHistory) ? state.recoveryHistory : [];
+  const snapshot = history.find((item) => String(item?.savedAt || "") === stamp);
+  if (!snapshot) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "未找到对应历史快照，可能已被清理。",
+      },
+    });
+    return;
+  }
+
+  const ui = snapshot.ui && typeof snapshot.ui === "object" ? snapshot.ui : {};
+  const previewPatch = buildPreviewStatePatch(state, state.books, {
+    previewBookId: String(ui.previewBookId || ""),
+    previewDevice: String(ui.previewDevice || state.previewDevice || "desktop"),
+  });
+  const patch = {
+    ...previewPatch,
+    previewAutoRefresh: ui.previewAutoRefresh !== false,
+    recoveryFeedback: {
+      type: "ok",
+      message: `已恢复历史快照：${stamp}`,
+    },
+  };
+  if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
+    patch.analysisSuggestion = snapshot.analysisSuggestion;
+  }
+  setState(patch);
+  setStatus("Recovery snapshot restored");
 }
 
 async function clearRecoverySnapshotFlow() {
@@ -334,6 +386,7 @@ async function clearRecoverySnapshotFlow() {
           ? `项目会话快照已清理：${projectName}`
           : "会话快照已清理。",
       },
+      recoveryHistory: [],
     });
     setStatus("Recovery snapshot cleared");
   } catch (err) {
@@ -387,6 +440,7 @@ function render() {
       onUpdatePreviewState: updatePreviewStateFlow,
       onRefreshPreview: refreshPreviewFlow,
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
+      onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,
@@ -671,6 +725,7 @@ async function openProjectFlow() {
     validationFeedback: null,
     aiFeedback: null,
     recoveryFeedback: null,
+    recoveryHistory: [],
     analysisFeedback: null,
     analysisSuggestion: null,
   });
@@ -708,6 +763,7 @@ async function openProjectFlow() {
         validationFeedback: null,
         aiSettings: buildDefaultAiSettings(),
         recoveryFeedback: null,
+        recoveryHistory: [],
         previewBookId: "",
         previewDevice: "desktop",
         previewRefreshToken: 0,
@@ -737,6 +793,7 @@ async function openProjectFlow() {
       aiSettings: buildDefaultAiSettings(),
       aiFeedback: null,
       recoveryFeedback: null,
+      recoveryHistory: [],
       analysisFeedback: null,
       analysisSuggestion: null,
       packManualPlan: null,
