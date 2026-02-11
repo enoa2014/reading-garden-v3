@@ -100,6 +100,7 @@
     - 模板导入支持 `replace` / `merge` 模式（默认 replace）
     - 模板导入支持“预览差异”（统计当前/导入/结果数量与新增/移除/保留）
     - `rgsite` 导出反馈增加缺失资源分组数量（groups）与分类数量（categories）
+    - `rgsite` 缺失资源回退支持 `svg-placeholder`（缺失 SVG 自动生成占位图）
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`
     - 新增 `scripts/editor-regression.mjs`

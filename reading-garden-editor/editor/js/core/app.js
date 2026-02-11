@@ -687,6 +687,7 @@ async function exportSiteFlow(options = {}) {
   const scope = String(options.scope || "all");
   const selectedBookIds = Array.isArray(options.selectedBookIds) ? options.selectedBookIds : [];
   const subsetAssetMode = String(options.subsetAssetMode || "balanced");
+  const missingAssetFallbackMode = String(options.missingAssetFallbackMode || "report-only");
   if (scope === "selected" && !selectedBookIds.length) {
     setState({
       packFeedback: {
@@ -705,6 +706,7 @@ async function exportSiteFlow(options = {}) {
       includeEditor: Boolean(options.includeEditor),
       selectedBookIds: scope === "selected" ? selectedBookIds : [],
       subsetAssetMode: scope === "selected" ? subsetAssetMode : "balanced",
+      missingAssetFallbackMode: scope === "selected" ? missingAssetFallbackMode : "report-only",
     });
 
     const scopeText = result.scope === "subset"
@@ -723,11 +725,16 @@ async function exportSiteFlow(options = {}) {
       ).length
       : 0;
     const categoryText = missingCategoryCount ? `，categories ${missingCategoryCount}` : "";
+    const fallbackText = result.missingAssetFallbackMode && result.missingAssetFallbackMode !== "report-only"
+      ? `，fallback ${result.missingAssetFallbackMode}`
+      : "";
+    const fallbackGenerated = Number(result.generatedFallbackAssets || 0);
+    const fallbackGeneratedText = fallbackGenerated > 0 ? `，generated ${fallbackGenerated}` : "";
     const reportText = result.missingAssetsReportAdded ? "，含 MISSING-ASSETS.txt" : "";
     setState({
       packFeedback: {
         type: "ok",
-        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}${missingText}${groupText}${categoryText}${reportText}）`,
+        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}${missingText}${groupText}${categoryText}${fallbackText}${fallbackGeneratedText}${reportText}）`,
       },
     });
     setStatus("rgsite exported");

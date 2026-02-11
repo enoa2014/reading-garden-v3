@@ -399,8 +399,12 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("missingAssets"), "site pack should report missingAssets in subset");
   assert(source.includes("missingAssetsByGroup"), "site pack should report grouped missing assets");
   assert(source.includes("missingAssetsByCategory"), "site pack should report categorized missing assets");
+  assert(source.includes("missingAssetFallbackMode"), "site pack should expose missing-asset fallback mode");
+  assert(source.includes("svg-placeholder"), "site pack should support svg placeholder fallback");
+  assert(source.includes("buildMissingAssetFallbackPlan"), "site pack should plan fallback placeholders");
   assert(source.includes("MISSING-ASSETS.txt"), "site pack should emit missing assets report file");
   assert(source.includes("## Category Summary"), "missing assets report should include category summary");
+  assert(source.includes("## Fallback"), "missing assets report should include fallback summary");
   assert(source.includes("## Groups"), "missing assets report should include grouped section");
 }
 
@@ -427,7 +431,9 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("import-redaction-templates-btn"), "dashboard should expose import-template action");
   assert(dashboardSource.includes("export-redaction-templates-btn"), "dashboard should expose export-template action");
   assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
+  assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
+  assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {

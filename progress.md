@@ -154,6 +154,7 @@
 | 分类阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE=0 ./scripts/editor-regression.sh` | 模块缺失分类按阈值校验 | 已接入 | ✓ |
 | 分类阈值扩展检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER=1 EDITOR_PACK_STATS_MAX_MISSING_FILE_REF=1 ./scripts/editor-regression.sh` | 封面/文件引用分类支持独立阈值 | 已接入 | ✓ |
 | 未分类阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED=0 ./scripts/editor-regression.sh` | 未分类缺失支持独立阈值 | 已接入 | ✓ |
+| 缺失资源回退检查 | 审查 `dashboard -> app -> site-pack-service` 参数链路 | 支持 `report-only/svg-placeholder` 回退策略 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
@@ -1257,13 +1258,51 @@
   - `progress.md` (updated)
 
 ### Phase 76: Sprint 4 checkpoint（unclassified-threshold 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`38e247f`（unclassified threshold）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 77: Sprint 4 缺失资源回退（svg-placeholder）
+- **Status:** complete
+- Actions taken:
+  - `site-pack-service.js` 新增缺失资源回退策略：`report-only` / `svg-placeholder`
+  - `svg-placeholder` 会为缺失的 `.svg` 资源生成占位文件并打入发布包
+  - manifest/result 增加 `missingAssetFallback` 相关字段
+  - `MISSING-ASSETS.txt` 增加 fallback 摘要区块
+  - Dashboard 导出表单增加“缺失资源回退”选项，app 导出反馈增加 fallback 信息
+  - 回归脚本增加 fallback 能力关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 78: Sprint 4 checkpoint（svg-fallback 增量）
 - **Status:** in_progress
 - Actions taken:
   - 已完成功能实现与回归验证
   - 待创建 checkpoint commit 并推送
 - Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
   - `scripts/editor-regression.mjs` (updated)
-  - `.github/workflows/editor-regression.yml` (updated)
   - `README.md` (updated)
   - `reading-garden-editor/README.md` (updated)
   - `task_plan.md` (updated)
@@ -1279,8 +1318,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 76 |
-| Where am I going? | Phase 76 -> checkpoint commit -> push |
+| Where am I? | Phase 78 |
+| Where am I going? | Phase 78 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成未分类阈值扩展并等待增量 checkpoint |
+| What have I done? | 已完成缺失资源回退（svg-placeholder）并等待增量 checkpoint |

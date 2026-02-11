@@ -483,6 +483,13 @@ function renderPackPanel(state) {
             <option value="minimal">minimal（最小资源集）</option>
           </select>
         </label>
+        <label>
+          缺失资源回退
+          <select name="missingAssetFallbackMode" ${busy}>
+            <option value="report-only">report-only（仅报告缺失）</option>
+            <option value="svg-placeholder">svg-placeholder（缺失 SVG 自动占位）</option>
+          </select>
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Export rgsite</button>
         </div>
@@ -582,6 +589,7 @@ export function renderDashboard(root, state, handlers = {}) {
         scope: String(fd.get("siteScope") || "all"),
         selectedBookIds,
         subsetAssetMode: String(fd.get("subsetAssetMode") || "balanced"),
+        missingAssetFallbackMode: String(fd.get("missingAssetFallbackMode") || "report-only"),
       });
     });
   }

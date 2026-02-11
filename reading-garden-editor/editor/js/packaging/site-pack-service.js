@@ -28,6 +28,8 @@ const SUBSET_CORE_ROOTS = [
 const SENSITIVE_KEY_PATTERN = /(api[-_]?key|token|secret|authorization|password)/i;
 const TEXT_ENCODER = new TextEncoder();
 const ASSET_REF_PATTERN = /assets\/[a-zA-Z0-9_./-]+(?:\?[^\s"'`)]+)?/g;
+const MISSING_ASSET_FALLBACK_REPORT_ONLY = "report-only";
+const MISSING_ASSET_FALLBACK_SVG_PLACEHOLDER = "svg-placeholder";
 
 function nowStamp() {
   const dt = new Date();
@@ -79,6 +81,71 @@ function normalizeSelection(selectedBookIds = []) {
     out.push(id);
   });
   return out;
+}
+
+function normalizeMissingAssetFallbackMode(rawMode) {
+  return rawMode === MISSING_ASSET_FALLBACK_SVG_PLACEHOLDER
+    ? MISSING_ASSET_FALLBACK_SVG_PLACEHOLDER
+    : MISSING_ASSET_FALLBACK_REPORT_ONLY;
+}
+
+function escapeXmlText(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
+function buildMissingAssetPlaceholderSvg(assetPath) {
+  const basename = String(assetPath || "missing.svg").split("/").pop() || "missing.svg";
+  const label = escapeXmlText(basename).slice(0, 42);
+  return [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">',
+    '<rect width="1200" height="800" fill="#f5f5f5" />',
+    '<rect x="40" y="40" width="1120" height="720" fill="#ffffff" stroke="#c9c9c9" stroke-width="4" />',
+    '<text x="600" y="360" text-anchor="middle" font-size="72" fill="#555" font-family="Arial, sans-serif">MISSING</text>',
+    `<text x="600" y="430" text-anchor="middle" font-size="30" fill="#777" font-family="Arial, sans-serif">${label}</text>`,
+    "</svg>",
+    "",
+  ].join("\n");
+}
+
+function buildMissingAssetFallbackPlan(missingAssets = [], rawMode = MISSING_ASSET_FALLBACK_REPORT_ONLY) {
+  const mode = normalizeMissingAssetFallbackMode(rawMode);
+  if (mode !== MISSING_ASSET_FALLBACK_SVG_PLACEHOLDER) {
+    return {
+      mode,
+      generatedPlaceholders: [],
+      skippedAssets: [],
+      unresolvedMissingAssets: Array.isArray(missingAssets) ? missingAssets : [],
+    };
+  }
+
+  const generatedPlaceholders = [];
+  const skippedAssets = [];
+  const unresolvedMissingAssets = [];
+  (Array.isArray(missingAssets) ? missingAssets : []).forEach((assetPath) => {
+    const normalized = String(assetPath || "").trim();
+    if (!normalized) return;
+    if (normalized.toLowerCase().endsWith(".svg")) {
+      generatedPlaceholders.push({
+        path: normalized,
+        content: buildMissingAssetPlaceholderSvg(normalized),
+      });
+      return;
+    }
+    skippedAssets.push(normalized);
+    unresolvedMissingAssets.push(normalized);
+  });
+
+  return {
+    mode,
+    generatedPlaceholders,
+    skippedAssets,
+    unresolvedMissingAssets,
+  };
 }
 
 function redactSensitiveValue(value) {
@@ -254,7 +321,8 @@ function buildMissingAssetsCategorySummary(missingAssetDetails = []) {
 function buildMissingAssetsReport(
   missingAssets = [],
   missingAssetsByGroup = {},
-  missingAssetsByCategory = {}
+  missingAssetsByCategory = {},
+  fallback = null
 ) {
   const lines = [
     "# Missing Assets Report",
@@ -281,6 +349,21 @@ function buildMissingAssetsReport(
       assets.forEach((item) => lines.push(`- ${item}`));
       lines.push("");
     });
+  }
+
+  const fallbackInfo = fallback && typeof fallback === "object" ? fallback : null;
+  if (fallbackInfo) {
+    const generated = Number(fallbackInfo.generated || 0);
+    const skipped = Array.isArray(fallbackInfo.skippedAssets) ? fallbackInfo.skippedAssets : [];
+    lines.push("## Fallback");
+    lines.push("");
+    lines.push(`- mode: ${String(fallbackInfo.mode || MISSING_ASSET_FALLBACK_REPORT_ONLY)}`);
+    lines.push(`- generated placeholders: ${generated}`);
+    lines.push(`- unresolved missing assets: ${missingAssets.length}`);
+    if (skipped.length) {
+      lines.push(`- skipped (unsupported extension): ${skipped.length}`);
+    }
+    lines.push("");
   }
 
   lines.push("## Flat List");
@@ -528,6 +611,9 @@ export class SitePackService {
     missingAssets,
     missingAssetsByGroup,
     missingAssetsByCategory,
+    missingAssetFallbackMode,
+    generatedFallbackAssets,
+    fallbackSkippedAssets,
     checks,
     filesCount,
     totalBytes,
@@ -551,6 +637,12 @@ export class SitePackService {
       missingAssetsByCategory: missingAssetsByCategory && typeof missingAssetsByCategory === "object"
         ? missingAssetsByCategory
         : {},
+      missingAssetFallback: {
+        mode: String(missingAssetFallbackMode || MISSING_ASSET_FALLBACK_REPORT_ONLY),
+        generated: Number(generatedFallbackAssets || 0),
+        skippedAssets: Array.isArray(fallbackSkippedAssets) ? fallbackSkippedAssets : [],
+        unresolved: Array.isArray(missingAssets) ? missingAssets.length : 0,
+      },
       checks: {
         schema: Boolean(checks?.schema),
         assets: Boolean(checks?.assets),
@@ -633,6 +725,7 @@ export class SitePackService {
       selectedIds,
       subsetAssetMode,
       missingAssets,
+      missingAssetDetails,
       missingAssetsByGroup,
       missingAssetsByCategory,
     };
@@ -642,9 +735,11 @@ export class SitePackService {
     includeEditor = false,
     selectedBookIds = [],
     subsetAssetMode = "balanced",
+    missingAssetFallbackMode = MISSING_ASSET_FALLBACK_REPORT_ONLY,
   } = {}) {
     const normalizedSelected = normalizeSelection(selectedBookIds);
     const normalizedSubsetAssetMode = subsetAssetMode === "minimal" ? "minimal" : "balanced";
+    const normalizedMissingAssetFallbackMode = normalizeMissingAssetFallbackMode(missingAssetFallbackMode);
     const readiness = await this.validateForExport({
       selectedBookIds: normalizedSelected,
     });
@@ -664,8 +759,15 @@ export class SitePackService {
     let effectiveSelectedIds = [];
     let effectiveSubsetAssetMode = "balanced";
     let missingAssets = [];
+    let missingAssetDetails = [];
     let missingAssetsByGroup = {};
     let missingAssetsByCategory = {};
+    let missingAssetFallback = {
+      mode: normalizedMissingAssetFallbackMode,
+      generatedPlaceholders: [],
+      skippedAssets: [],
+      unresolvedMissingAssets: [],
+    };
 
     if (subsetMode) {
       const subsetFiles = await this.collectSubsetFiles({
@@ -679,8 +781,23 @@ export class SitePackService {
       effectiveSelectedIds = subsetFiles.selectedIds;
       effectiveSubsetAssetMode = subsetFiles.subsetAssetMode;
       missingAssets = subsetFiles.missingAssets || [];
+      missingAssetDetails = subsetFiles.missingAssetDetails || [];
       missingAssetsByGroup = subsetFiles.missingAssetsByGroup || {};
       missingAssetsByCategory = subsetFiles.missingAssetsByCategory || {};
+
+      if (missingAssets.length) {
+        missingAssetFallback = buildMissingAssetFallbackPlan(
+          missingAssets,
+          normalizedMissingAssetFallbackMode
+        );
+        const unresolvedSet = new Set(missingAssetFallback.unresolvedMissingAssets);
+        const unresolvedDetails = (missingAssetDetails || []).filter((item) => unresolvedSet.has(item?.path));
+        missingAssets = missingAssetFallback.unresolvedMissingAssets;
+        missingAssetsByGroup = groupMissingAssetsBySource(unresolvedDetails);
+        missingAssetsByCategory = buildMissingAssetsCategorySummary(unresolvedDetails);
+      } else {
+        missingAssetFallback.unresolvedMissingAssets = [];
+      }
     } else {
       const includeRoots = includeEditor
         ? [...DEFAULT_INCLUDE_ROOTS, "reading-garden-editor"]
@@ -738,6 +855,15 @@ export class SitePackService {
       }
     }
 
+    for (const placeholder of missingAssetFallback.generatedPlaceholders) {
+      zip.file(placeholder.path, placeholder.content);
+      totalBytes += TEXT_ENCODER.encode(placeholder.content).byteLength;
+      if (checksumEnabled) {
+        // eslint-disable-next-line no-await-in-loop
+        checksums[placeholder.path] = await sha256Text(placeholder.content);
+      }
+    }
+
     const deployGuide = buildEdgeOneGuide();
     zip.file("DEPLOY-EDGEONE.md", deployGuide);
     totalBytes += TEXT_ENCODER.encode(deployGuide).byteLength;
@@ -750,7 +876,12 @@ export class SitePackService {
       const missingAssetsText = buildMissingAssetsReport(
         missingAssets,
         missingAssetsByGroup,
-        missingAssetsByCategory
+        missingAssetsByCategory,
+        {
+          mode: missingAssetFallback.mode,
+          generated: missingAssetFallback.generatedPlaceholders.length,
+          skippedAssets: missingAssetFallback.skippedAssets,
+        }
       );
       zip.file("MISSING-ASSETS.txt", missingAssetsText);
       totalBytes += TEXT_ENCODER.encode(missingAssetsText).byteLength;
@@ -768,8 +899,11 @@ export class SitePackService {
       missingAssets,
       missingAssetsByGroup,
       missingAssetsByCategory,
+      missingAssetFallbackMode: missingAssetFallback.mode,
+      generatedFallbackAssets: missingAssetFallback.generatedPlaceholders.length,
+      fallbackSkippedAssets: missingAssetFallback.skippedAssets,
       checks: readiness.checks,
-      filesCount: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
+      filesCount: orderedFiles.length + 2 + (subsetMode ? 1 : 0) + missingAssetFallback.generatedPlaceholders.length,
       totalBytes,
       checksumMode: checksumEnabled ? "sha256" : "none",
       checksums: checksumEnabled ? checksums : {},
@@ -785,7 +919,7 @@ export class SitePackService {
     return {
       ok: true,
       filename,
-      files: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
+      files: orderedFiles.length + 2 + (subsetMode ? 1 : 0) + missingAssetFallback.generatedPlaceholders.length,
       books: readiness.booksCount,
       checksumMode: checksumEnabled ? "sha256" : "none",
       redacted: redactedFiles.length,
@@ -795,6 +929,9 @@ export class SitePackService {
       missingAssets,
       missingAssetsByGroup,
       missingAssetsByCategory,
+      missingAssetFallbackMode: missingAssetFallback.mode,
+      generatedFallbackAssets: missingAssetFallback.generatedPlaceholders.length,
+      fallbackSkippedAssets: missingAssetFallback.skippedAssets,
       missingAssetsReportAdded,
     };
   }

@@ -80,6 +80,7 @@ Phase 9
 - [x] 支持 `book-module` 分类阈值
 - [x] 支持 `book-cover` / `file-ref` 分类阈值
 - [x] 支持 `unclassified` 分类阈值
+- [x] subset minimal 支持缺失资源 `svg-placeholder` 回退
 - **Status:** in_progress
 
 ## Key Questions
@@ -113,3 +114,4 @@ Phase 9
 | `book-module` 分类阈值默认值设为 0 | 优先阻断关键模块资源缺失，避免线上功能断裂 |
 | `book-cover`/`file-ref` 分类阈值默认关闭 | 兼顾可配置能力与当前样本兼容性，避免引入非预期阻断 |
 | `unclassified` 分类阈值默认关闭 | 未分类来源噪声较大，先提供可选治理能力而非默认阻断 |
+| 缺失资源回退默认 `report-only` | 保持导出结果可解释、可审计，按需启用 `svg-placeholder` |
