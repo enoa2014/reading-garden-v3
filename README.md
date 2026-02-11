@@ -103,6 +103,7 @@ CI 门禁：
 - CI Job Summary 会输出 `packStats` 摘要（含 missing/invalid IDs、missing-assets 告警、分类统计）
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 - 严格模式下会额外校验抽样 ID 格式（仅允许 `a-z0-9-`）
+- CI 新增 EdgeOne 预检脚本自测（生成最小样例 `rgsite.zip` 并执行 `edgeone-preflight.sh`）
 
 ## 项目概览
 

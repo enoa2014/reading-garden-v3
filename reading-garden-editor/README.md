@@ -119,6 +119,7 @@ EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 - CI Job Summary 会输出 `packStats` 摘要（含 missing/invalid IDs、missing-assets 告警、分类统计）
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 - 严格模式下会校验抽样 ID 格式（仅允许 `a-z0-9-`）
+- CI 新增 EdgeOne 预检脚本自测（最小样例 `rgsite.zip`）
 
 5. EdgeOne 手动发布验收与回滚清单：
 

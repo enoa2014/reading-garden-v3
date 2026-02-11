@@ -2230,6 +2230,21 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 127: Sprint 4 CI 接入 EdgeOne 预检脚本自测
+- **Status:** complete
+- Actions taken:
+  - `.github/workflows/editor-regression.yml` 触发路径新增 `scripts/edgeone-preflight.*`
+  - CI 新增 `Run EdgeOne Preflight Self-Test` 步骤，生成最小 `rgsite.zip` 样例并执行预检
+  - `README.md` 与 `reading-garden-editor/README.md` 同步 CI 新增预检自测说明
+  - `task_plan.md` / `findings.md` / `progress.md` 同步“CI 接入预检脚本”决策与状态
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2239,8 +2254,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 126 |
-| Where am I going? | Phase 126 -> checkpoint commit -> push |
+| Where am I? | Phase 127 |
+| Where am I going? | Phase 127 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 手动上传流程在文档之外还需要可执行预检脚本，才能进一步降低漏检概率 |
-| What have I done? | 已完成 EdgeOne 发布包预检脚本化，并接入回归与文档流程 |
+| What have I learned? | 预检脚本需要进入 CI 才能长期稳定，单靠本地执行难以防止后续回归 |
+| What have I done? | 已完成 CI 对 EdgeOne 预检脚本的自测接入，并同步文档与计划 |

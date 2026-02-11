@@ -8,12 +8,16 @@ on:
       - "reading-garden-editor/**"
       - "scripts/editor-regression.sh"
       - "scripts/editor-regression.mjs"
+      - "scripts/edgeone-preflight.sh"
+      - "scripts/edgeone-preflight.mjs"
       - ".github/workflows/editor-regression.yml"
   pull_request:
     paths:
       - "reading-garden-editor/**"
       - "scripts/editor-regression.sh"
       - "scripts/editor-regression.mjs"
+      - "scripts/edgeone-preflight.sh"
+      - "scripts/edgeone-preflight.mjs"
       - ".github/workflows/editor-regression.yml"
   workflow_dispatch:
     inputs:
@@ -85,6 +89,52 @@ jobs:
           EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_unclassified || '' }}
           EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_category_threshold_preset || 'custom' }}
         run: ./scripts/editor-regression.sh
+
+      - name: Run EdgeOne Preflight Self-Test
+        run: |
+          set -euo pipefail
+          tmpdir="$(mktemp -d)"
+          cleanup() {
+            rm -rf "$tmpdir"
+          }
+          trap cleanup EXIT
+
+          mkdir -p "$tmpdir/data/demo" "$tmpdir/css" "$tmpdir/js"
+          printf '<!doctype html>\n' > "$tmpdir/index.html"
+          printf '<!doctype html>\n' > "$tmpdir/book.html"
+          cat > "$tmpdir/data/books.json" <<'JSON'
+          {
+            "books": [
+              {
+                "id": "demo",
+                "title": "Demo",
+                "page": "book.html?book=demo"
+              }
+            ]
+          }
+          JSON
+          cat > "$tmpdir/data/demo/registry.json" <<'JSON'
+          {
+            "id": "demo",
+            "modules": []
+          }
+          JSON
+          cat > "$tmpdir/rgsite-manifest.json" <<'JSON'
+          {
+            "format": "rgsite",
+            "scope": "all",
+            "books": 1,
+            "files": 7,
+            "totalBytes": 1024,
+            "missingAssets": 0
+          }
+          JSON
+          printf '# DEPLOY\nEdgeOne\n' > "$tmpdir/DEPLOY-EDGEONE.md"
+          (
+            cd "$tmpdir"
+            zip -qr sample.rgsite.zip index.html book.html data css js rgsite-manifest.json DEPLOY-EDGEONE.md
+          )
+          ./scripts/edgeone-preflight.sh "$tmpdir/sample.rgsite.zip"
 
       - name: Summarize packStats
         if: always()
