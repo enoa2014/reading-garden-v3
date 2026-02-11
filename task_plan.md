@@ -81,7 +81,7 @@ Phase 9
 ## Key Questions
 1. missing-assets 阈值是否需要按导出模式（full/subset）分别配置？
 2. 最近模板导入模式是否需要支持“预览差异”？
-3. missing-assets 告警是否需要细化到分类级别（book-cover/book-module/...）？
+3. 分类级 missing-assets 是否需要单独阈值（如 book-module > 0 直接 fail）？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -104,3 +104,4 @@ Phase 9
 | 严格模式补充抽样 ID 格式校验 | 提前拦截输入错误，减少“误判为缺失书籍”噪声 |
 | CI summary 增加 missing-assets 告警状态 | 先提供可见性，再评估是否升级为 fail 阈值 |
 | missing-assets 阈值策略默认值设为 1 | 与当前样本数据兼容，同时对新增缺失保持敏感 |
+| CI summary 增加 missing-assets 分类统计输出 | 便于定位问题来源并支持后续分类阈值策略 |

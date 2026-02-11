@@ -179,6 +179,49 @@ function normalizeAssetPath(bookId, rawPath) {
   return "";
 }
 
+function rememberAssetSource(assetSources, assetPath, source) {
+  if (!assetSources || !assetPath) return;
+  if (!assetSources.has(assetPath)) {
+    assetSources.set(assetPath, new Set());
+  }
+  if (source) {
+    assetSources.get(assetPath).add(source);
+  }
+}
+
+function detectMissingAssetCategory(source) {
+  const raw = String(source || "").trim();
+  if (!raw) return "unclassified";
+  if (raw.startsWith("book:")) {
+    const parts = raw.split(":");
+    const scope = parts[2] || "";
+    if (scope === "cover") return "book-cover";
+    if (scope === "module") return "book-module";
+  }
+  if (raw.startsWith("file:")) return "file-ref";
+  return "unclassified";
+}
+
+function buildMissingAssetsCategorySummary(missingAssetDetails = []) {
+  const out = {
+    "book-cover": 0,
+    "book-module": 0,
+    "file-ref": 0,
+    unclassified: 0,
+  };
+
+  missingAssetDetails.forEach((item) => {
+    const sources = Array.isArray(item?.sources) && item.sources.length
+      ? item.sources
+      : ["unclassified"];
+    const categories = new Set(sources.map((source) => detectMissingAssetCategory(source)));
+    categories.forEach((category) => {
+      out[category] = Number(out[category] || 0) + 1;
+    });
+  });
+  return out;
+}
+
 function bookIdFromAssetPath(assetPath, allBookIdsSet) {
   const marker = "assets/images/";
   if (!assetPath.startsWith(marker)) return null;
@@ -199,13 +242,21 @@ function buildEdgeOneGuide() {
   ].join("\n");
 }
 
-function buildMissingAssetsReport(missingAssets = []) {
+function buildMissingAssetsReport(missingAssets = [], missingAssetsByCategory = {}) {
   const lines = [
     "# Missing Assets Report",
     "",
     `count: ${missingAssets.length}`,
     "",
   ];
+  lines.push("## Category Summary");
+  lines.push("");
+  Object.keys(missingAssetsByCategory || {})
+    .sort()
+    .forEach((category) => {
+      lines.push(`- ${category}: ${Number(missingAssetsByCategory[category] || 0)}`);
+    });
+  lines.push("");
   missingAssets.forEach((item) => lines.push(`- ${item}`));
   return lines.join("\n");
 }
@@ -215,6 +266,7 @@ function createManifestForStats({
   selectedBookIds,
   subsetAssetMode,
   missingAssets,
+  missingAssetsByCategory,
   filesCount,
   totalBytes,
 }) {
@@ -228,6 +280,7 @@ function createManifestForStats({
     selectedBookIds,
     subsetAssetMode,
     missingAssets,
+    missingAssetsByCategory,
     checks: {
       schema: true,
       assets: missingAssets.length === 0,
@@ -346,12 +399,15 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
 }
 
-async function collectReferencedAssetsFromBook(book, assetSet) {
+async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {
   const bookId = String(book?.id || "").trim();
   if (!bookId) return;
 
   const coverPath = normalizeAssetPath(bookId, book?.cover);
-  if (coverPath) assetSet.add(coverPath);
+  if (coverPath) {
+    assetSet.add(coverPath);
+    rememberAssetSource(assetSources, coverPath, `book:${bookId}:cover`);
+  }
 
   const registryPath = `data/${bookId}/registry.json`;
   if (!(await pathExists(registryPath))) return;
@@ -365,6 +421,7 @@ async function collectReferencedAssetsFromBook(book, assetSet) {
 
   const modules = Array.isArray(registry?.modules) ? registry.modules : [];
   for (const mod of modules) {
+    const modId = String(mod?.id || "unknown").trim() || "unknown";
     const dataRaw = String(mod?.data || "").trim();
     if (!dataRaw) continue;
     const dataPath = normalizePathValue(`data/${bookId}/${dataRaw}`);
@@ -378,7 +435,10 @@ async function collectReferencedAssetsFromBook(book, assetSet) {
       collectStrings(parsed, strings);
       strings.forEach((item) => {
         const assetPath = normalizeAssetPath(bookId, item);
-        if (assetPath) assetSet.add(assetPath);
+        if (assetPath) {
+          assetSet.add(assetPath);
+          rememberAssetSource(assetSources, assetPath, `book:${bookId}:module:${modId}`);
+        }
       });
     } catch {
       // ignore non-json or parse errors
@@ -386,7 +446,7 @@ async function collectReferencedAssetsFromBook(book, assetSet) {
   }
 }
 
-async function collectAssetRefsFromFileSet(fileSet, assetSet) {
+async function collectAssetRefsFromFileSet(fileSet, assetSet, assetSources = null) {
   const candidates = Array.from(fileSet).filter((item) => isLikelyTextFile(item));
   for (const filePath of candidates) {
     // eslint-disable-next-line no-await-in-loop
@@ -394,21 +454,32 @@ async function collectAssetRefsFromFileSet(fileSet, assetSet) {
     // eslint-disable-next-line no-await-in-loop
     const text = await readFile(path.resolve(ROOT, filePath), "utf8");
     const refs = extractAssetRefsFromText(text);
-    refs.forEach((item) => assetSet.add(item));
+    refs.forEach((item) => {
+      assetSet.add(item);
+      rememberAssetSource(assetSources, item, `file:${filePath}`);
+    });
   }
 }
 
-async function addExistingAssetsToFileSet(assetSet, fileSet) {
+async function addExistingAssetsToFileSet(assetSet, fileSet, assetSources = null) {
   const missingAssets = [];
+  const missingAssetDetails = [];
   for (const assetPath of assetSet) {
     // eslint-disable-next-line no-await-in-loop
     if (await pathExists(assetPath)) {
       fileSet.add(assetPath);
     } else {
       missingAssets.push(assetPath);
+      missingAssetDetails.push({
+        path: assetPath,
+        sources: Array.from(assetSources?.get(assetPath) || []),
+      });
     }
   }
-  return missingAssets;
+  return {
+    missingAssets,
+    missingAssetDetails,
+  };
 }
 
 async function buildModeStats({
@@ -418,6 +489,7 @@ async function buildModeStats({
   selectedBookIds,
   subsetAssetMode,
   missingAssets,
+  missingAssetsByCategory,
   includeSubsetBooksJson,
 }) {
   const extras = [];
@@ -426,7 +498,7 @@ async function buildModeStats({
   }
   extras.push(buildEdgeOneGuide());
   if (missingAssets.length) {
-    extras.push(buildMissingAssetsReport(missingAssets));
+    extras.push(buildMissingAssetsReport(missingAssets, missingAssetsByCategory));
   }
 
   const fileBytes = await sumFileBytes(fileSet);
@@ -438,6 +510,7 @@ async function buildModeStats({
     selectedBookIds,
     subsetAssetMode,
     missingAssets,
+    missingAssetsByCategory,
     filesCount: filesWithoutManifest + 1,
     totalBytes: bytesWithoutManifest,
   });
@@ -450,6 +523,7 @@ async function buildModeStats({
     files: filesWithoutManifest + 1,
     totalBytes: bytesWithoutManifest + manifestBytes,
     missingAssets: missingAssets.length,
+    missingAssetsByCategory,
     selectedBookIds,
   };
 }
@@ -540,6 +614,7 @@ async function estimateSitePackStats() {
     selectedBookIds: [],
     subsetAssetMode: "balanced",
     missingAssets: [],
+    missingAssetsByCategory: {},
     includeSubsetBooksJson: false,
   });
 
@@ -563,6 +638,7 @@ async function estimateSitePackStats() {
     selectedBookIds,
     subsetAssetMode: "balanced",
     missingAssets: [],
+    missingAssetsByCategory: {},
     includeSubsetBooksJson: true,
   });
 
@@ -573,12 +649,15 @@ async function estimateSitePackStats() {
   }
 
   const referencedAssets = new Set();
+  const assetSources = new Map();
   for (const book of selectedBooks) {
     // eslint-disable-next-line no-await-in-loop
-    await collectReferencedAssetsFromBook(book, referencedAssets);
+    await collectReferencedAssetsFromBook(book, referencedAssets, assetSources);
   }
-  await collectAssetRefsFromFileSet(subsetMinimalFiles, referencedAssets);
-  const missingAssets = await addExistingAssetsToFileSet(referencedAssets, subsetMinimalFiles);
+  await collectAssetRefsFromFileSet(subsetMinimalFiles, referencedAssets, assetSources);
+  const missing = await addExistingAssetsToFileSet(referencedAssets, subsetMinimalFiles, assetSources);
+  const missingAssets = missing.missingAssets;
+  const missingAssetsByCategory = buildMissingAssetsCategorySummary(missing.missingAssetDetails);
 
   const subsetMinimalStats = await buildModeStats({
     mode: "subset-minimal",
@@ -587,6 +666,7 @@ async function estimateSitePackStats() {
     selectedBookIds,
     subsetAssetMode: "minimal",
     missingAssets,
+    missingAssetsByCategory,
     includeSubsetBooksJson: true,
   });
   enforceMissingAssetsThreshold(subsetMinimalStats.missingAssets, maxMissingAssets);

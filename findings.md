@@ -112,7 +112,7 @@
     - CI 默认固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`
     - `workflow_dispatch` 可通过输入覆盖 packStats 抽样书籍
     - `workflow_dispatch` 可通过输入覆盖严格校验开关（默认开启）
-    - CI Job Summary 输出 packStats 摘要并标记 missing/invalid IDs 与 missing-assets 告警
+    - CI Job Summary 输出 packStats 摘要并标记 missing/invalid IDs、missing-assets 告警、分类统计
     - 新增 `.github/workflows/editor-regression.yml` 接入 CI 门禁
     - CI 自动上传 `editor-regression-report` artifact（失败场景也保留）
   - 文档同步：

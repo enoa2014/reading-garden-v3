@@ -71,6 +71,10 @@ jobs:
           const ratio = stats.comparePercent || {};
           const missingAssets = Number(stats.subsetMinimal?.missingAssets ?? 0);
           const missingAssetsAlert = missingAssets > 0 ? "warning" : "ok";
+          const missingByCategory = stats.subsetMinimal?.missingAssetsByCategory || {};
+          const categorySummary = Object.entries(missingByCategory)
+            .map(([k, v]) => `${k}:${Number(v || 0)}`)
+            .join(", ") || "(none)";
           const threshold = stats.missingAssetsThreshold || {};
           const thresholdText = threshold.enabled ? String(threshold.maxMissingAssets) : "disabled";
           const lines = [
@@ -83,6 +87,7 @@ jobs:
             `- missing requested: \`${missing.join(", ") || "(none)"}\``,
             `- invalid format IDs: \`${invalidFormat.join(", ") || "(none)"}\``,
             `- missing assets (subset-minimal): ${missingAssets} (${missingAssetsAlert})`,
+            `- missing assets by category: ${categorySummary}`,
             `- full bytes: ${stats.full?.totalBytes ?? 0}`,
             `- subset-balanced bytes: ${stats.subsetBalanced?.totalBytes ?? 0}`,
             `- subset-minimal bytes: ${stats.subsetMinimal?.totalBytes ?? 0}`,
