@@ -105,7 +105,7 @@ function parseImportedTemplatePayload(parsed) {
   return deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
 }
 
-async function importCustomRedactionTemplates(file) {
+async function importCustomRedactionTemplates(file, mode = "replace") {
   if (!file) {
     return {
       ok: false,
@@ -116,12 +116,27 @@ async function importCustomRedactionTemplates(file) {
   try {
     const text = await file.text();
     const parsed = JSON.parse(text);
-    const templates = parseImportedTemplatePayload(parsed);
+    const imported = parseImportedTemplatePayload(parsed);
+    const normalizedMode = mode === "merge" ? "merge" : "replace";
+    const current = readCustomRedactionTemplates();
+    const merged = normalizedMode === "merge"
+      ? [...current, ...imported]
+      : imported;
+    const deduped = [];
+    const seen = new Set();
+    merged.forEach((item) => {
+      const normalized = normalizeCustomRedactionFields(item);
+      if (!normalized || seen.has(normalized)) return;
+      seen.add(normalized);
+      deduped.push(normalized);
+    });
+    const templates = deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
     writeCustomRedactionTemplates(templates);
     return {
       ok: true,
       count: templates.length,
       templates,
+      mode: normalizedMode,
     };
   } catch (err) {
     return {
@@ -313,6 +328,13 @@ function renderPackPanel(state) {
         <button class="btn btn-secondary import-redaction-templates-btn" type="button" ${busy}>Import Templates</button>
         <input class="import-redaction-templates-input" type="file" accept=".json,application/json" hidden ${busy} />
       </div>
+      <label class="full">
+        模板导入模式
+        <select name="importTemplateMode" class="diag-input" ${busy}>
+          <option value="replace">replace（覆盖本地）</option>
+          <option value="merge">merge（合并去重）</option>
+        </select>
+      </label>
     `
     : "";
 
@@ -515,6 +537,7 @@ export function renderDashboard(root, state, handlers = {}) {
     const exportTemplatesBtn = root.querySelector(".export-redaction-templates-btn");
     const importTemplatesBtn = root.querySelector(".import-redaction-templates-btn");
     const importTemplatesInput = root.querySelector(".import-redaction-templates-input");
+    const importTemplateModeEl = root.querySelector('select[name="importTemplateMode"]');
 
     customInput?.addEventListener("blur", () => {
       const normalized = normalizeCustomRedactionFields(customInput.value);
@@ -554,7 +577,8 @@ export function renderDashboard(root, state, handlers = {}) {
 
     importTemplatesInput?.addEventListener("change", async () => {
       const file = importTemplatesInput.files?.[0];
-      const result = await importCustomRedactionTemplates(file);
+      const importTemplateMode = String(importTemplateModeEl?.value || "replace");
+      const result = await importCustomRedactionTemplates(file, importTemplateMode);
       if (importTemplatesInput) {
         importTemplatesInput.value = "";
       }

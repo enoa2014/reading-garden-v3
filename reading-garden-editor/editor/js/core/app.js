@@ -641,10 +641,11 @@ function importRedactionTemplatesFlow(result) {
     return;
   }
   const count = Number(result.count || 0);
+  const mode = result.mode === "merge" ? "merge" : "replace";
   setState({
     packFeedback: {
       type: "ok",
-      message: `模板导入完成（${count} 条）。`,
+      message: `模板导入完成（${count} 条，mode ${mode}）。`,
     },
   });
 }

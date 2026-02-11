@@ -323,6 +323,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");
   assert(dashboardSource.includes("import-redaction-templates-btn"), "dashboard should expose import-template action");
   assert(dashboardSource.includes("export-redaction-templates-btn"), "dashboard should expose export-template action");
+  assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
+  assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet) {

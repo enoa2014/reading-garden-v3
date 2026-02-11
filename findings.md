@@ -97,6 +97,7 @@
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）
     - 支持一键清空最近模板并显示清空结果反馈
     - 支持最近模板导入/导出（JSON）
+    - 模板导入支持 `replace` / `merge` 模式（默认 replace）
     - `rgsite` 导出反馈增加缺失资源分组数量（groups）与分类数量（categories）
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`
