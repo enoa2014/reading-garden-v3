@@ -94,6 +94,7 @@
     - 诊断脱敏策略：隐藏项目名与原始文件名，保留错误码/策略/大小用于排障
     - 诊断支持自定义脱敏字段（按路径，如 `project.name,input.fileName`）
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）
+    - 支持一键清空最近模板并显示清空结果反馈
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`
     - 新增 `scripts/editor-regression.mjs`

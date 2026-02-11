@@ -305,9 +305,11 @@ async function testDiagnosticSourceMarkers() {
     "utf8"
   );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
+  assert(appSource.includes("clearRedactionTemplatesFlow"), "app should support clearing redaction templates");
   assert(dashboardSource.includes('data-mode="custom"'), "dashboard should expose custom report action");
   assert(dashboardSource.includes("recentRedactionTemplate"), "dashboard should support recent redaction templates");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
+  assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet) {

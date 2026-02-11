@@ -61,6 +61,12 @@ function rememberCustomRedactionTemplate(rawValue) {
   return next;
 }
 
+function clearCustomRedactionTemplates() {
+  const existing = readCustomRedactionTemplates();
+  writeCustomRedactionTemplates([]);
+  return existing.length;
+}
+
 function renderStructurePanel(state) {
   const missing = state.structure?.missing || [];
   const ok = state.structure?.ok;
@@ -237,6 +243,9 @@ function renderPackPanel(state) {
           ${templateOptions}
         </select>
       </label>
+      <div class="actions-row">
+        <button class="btn btn-secondary clear-redaction-templates-btn" type="button" ${busy}>Clear Recent Templates</button>
+      </div>
     `
     : "";
 
@@ -435,6 +444,7 @@ export function renderDashboard(root, state, handlers = {}) {
   if (reportButtons.length && handlers.onDownloadImportReport) {
     const customInput = root.querySelector('input[name="customRedactionFields"]');
     const templateSelect = root.querySelector('select[name="recentRedactionTemplate"]');
+    const clearTemplatesBtn = root.querySelector(".clear-redaction-templates-btn");
 
     customInput?.addEventListener("blur", () => {
       const normalized = normalizeCustomRedactionFields(customInput.value);
@@ -445,6 +455,20 @@ export function renderDashboard(root, state, handlers = {}) {
       const selected = normalizeCustomRedactionFields(templateSelect.value);
       if (!selected || !customInput) return;
       customInput.value = selected;
+    });
+
+    clearTemplatesBtn?.addEventListener("click", () => {
+      const removedCount = clearCustomRedactionTemplates();
+      if (customInput) {
+        customInput.value = DEFAULT_CUSTOM_REDACTION_FIELDS;
+      }
+      if (templateSelect) {
+        templateSelect.innerHTML = '<option value="">请选择历史模板</option>';
+      }
+      clearTemplatesBtn.disabled = true;
+      if (handlers.onClearRedactionTemplates) {
+        handlers.onClearRedactionTemplates(removedCount);
+      }
     });
 
     reportButtons.forEach((btn) => {

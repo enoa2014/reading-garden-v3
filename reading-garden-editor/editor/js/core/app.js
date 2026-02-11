@@ -52,6 +52,7 @@ function render() {
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
       onDownloadImportReport: downloadImportReportFlow,
+      onClearRedactionTemplates: clearRedactionTemplatesFlow,
     });
     return;
   }
@@ -603,6 +604,16 @@ function downloadImportReportFlow(mode = "full", customFields = []) {
     packFeedback: {
       type: "ok",
       message: `${label}已下载。`,
+    },
+  });
+}
+
+function clearRedactionTemplatesFlow(removedCount = 0) {
+  const count = Number(removedCount || 0);
+  setState({
+    packFeedback: {
+      type: "ok",
+      message: count > 0 ? `最近模板已清空（${count} 条）。` : "最近模板已为空。",
     },
   });
 }

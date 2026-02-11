@@ -136,6 +136,7 @@
 | 自定义脱敏链路 | 审查 `dashboard(custom fields) -> app(custom redaction)` | 可按字段路径导出 custom 脱敏报告 | 已接入 | ✓ |
 | 缺失资源报告文件检查 | 审查 `site-pack-service` 导出逻辑 | 缺失资产时包含 `MISSING-ASSETS.txt` | 已接入 | ✓ |
 | 最近模板复用检查 | 审查 `dashboard(localStorage) -> custom report` | 自定义脱敏字段可复用最近模板 | 已接入（最多 5 条） | ✓ |
+| 最近模板清空检查 | 审查 `dashboard clear action -> app feedback` | 可一键清空历史模板并提示结果 | 已接入 | ✓ |
 | 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
@@ -623,6 +624,39 @@
   - `progress.md` (updated)
 
 ### Phase 38: Sprint 4 checkpoint（pack-stats 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`fe22d95`（pack size stats in regression report）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 39: Sprint 4 最近模板清空能力
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 增加最近模板一键清空按钮
+  - 增加清空后的默认字段回填与空模板状态处理
+  - `app.js` 增加清空结果反馈（清空 N 条/已为空）
+  - 回归脚本增加 clear-template 能力关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 40: Sprint 4 checkpoint（template-clear 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -640,8 +674,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 38 |
-| Where am I going? | Phase 38 -> checkpoint commit -> push |
+| Where am I? | Phase 40 |
+| Where am I going? | Phase 40 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成回归包体统计并等待增量 checkpoint |
+| What have I done? | 已完成最近模板清空能力并等待增量 checkpoint |
