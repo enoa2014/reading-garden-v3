@@ -94,6 +94,8 @@ async function testDiagnosticSourceMarkers() {
   );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(dashboardSource.includes('data-mode="custom"'), "dashboard should expose custom report action");
+  assert(dashboardSource.includes("recentRedactionTemplate"), "dashboard should support recent redaction templates");
+  assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
 }
 
 async function writeReport(report) {

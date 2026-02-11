@@ -135,6 +135,7 @@
 | CI artifact 配置检查 | 审查 workflow `upload-artifact` 步骤 | 回归报告可在 CI 下载 | 已接入 | ✓ |
 | 自定义脱敏链路 | 审查 `dashboard(custom fields) -> app(custom redaction)` | 可按字段路径导出 custom 脱敏报告 | 已接入 | ✓ |
 | 缺失资源报告文件检查 | 审查 `site-pack-service` 导出逻辑 | 缺失资产时包含 `MISSING-ASSETS.txt` | 已接入 | ✓ |
+| 最近模板复用检查 | 审查 `dashboard(localStorage) -> custom report` | 自定义脱敏字段可复用最近模板 | 已接入（最多 5 条） | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -557,6 +558,39 @@
   - `progress.md` (updated)
 
 ### Phase 34: Sprint 4 checkpoint（missing-assets report 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`acc47e3`（missing-assets report file）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 35: Sprint 4 最近模板复用
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 增加自定义脱敏字段最近模板持久化（localStorage）
+  - 增加最近模板下拉回填与输入归一化
+  - 回归脚本增加最近模板能力关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 36: Sprint 4 checkpoint（recent-template 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -574,8 +608,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 34 |
-| Where am I going? | Phase 34 -> checkpoint commit -> push |
+| Where am I? | Phase 36 |
+| Where am I going? | Phase 36 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成缺失资源清单文件并等待增量 checkpoint |
+| What have I done? | 已完成最近模板复用并等待增量 checkpoint |

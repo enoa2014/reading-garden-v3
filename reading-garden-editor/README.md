@@ -30,6 +30,7 @@
   - 导出包附带 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
   - Dashboard 增加 `Export rgsite` 入口（可选包含编辑器子应用）
   - `rgbook` 导入失败可下载诊断报告（完整/脱敏/自定义脱敏 JSON）
+  - 自定义脱敏字段支持“最近使用模板”本地复用（localStorage，最多 5 条）
 
 ## 运行方式
 

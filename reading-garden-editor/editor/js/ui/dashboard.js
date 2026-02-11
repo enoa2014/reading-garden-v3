@@ -1,5 +1,66 @@
 import { sanitizeBookId } from "../core/path-resolver.js";
 
+const DEFAULT_CUSTOM_REDACTION_FIELDS = "project.name,input.fileName";
+const CUSTOM_REDACTION_TEMPLATES_KEY = "rg.editor.customRedactionTemplates";
+const MAX_CUSTOM_REDACTION_TEMPLATES = 5;
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function normalizeCustomRedactionFields(rawValue) {
+  const seen = new Set();
+  const fields = String(rawValue || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => {
+      if (!item || seen.has(item)) return false;
+      seen.add(item);
+      return true;
+    });
+  return fields.join(",");
+}
+
+function readCustomRedactionTemplates() {
+  try {
+    const raw = window.localStorage.getItem(CUSTOM_REDACTION_TEMPLATES_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((item) => normalizeCustomRedactionFields(item))
+      .filter(Boolean)
+      .slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
+  } catch (err) {
+    return [];
+  }
+}
+
+function writeCustomRedactionTemplates(list) {
+  try {
+    window.localStorage.setItem(
+      CUSTOM_REDACTION_TEMPLATES_KEY,
+      JSON.stringify(list.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES))
+    );
+  } catch (err) {
+    // ignore storage errors in private mode or blocked storage contexts
+  }
+}
+
+function rememberCustomRedactionTemplate(rawValue) {
+  const normalized = normalizeCustomRedactionFields(rawValue);
+  if (!normalized) return readCustomRedactionTemplates();
+  const deduped = readCustomRedactionTemplates().filter((item) => item !== normalized);
+  const next = [normalized, ...deduped].slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
+  writeCustomRedactionTemplates(next);
+  return next;
+}
+
 function renderStructurePanel(state) {
   const missing = state.structure?.missing || [];
   const ok = state.structure?.ok;
@@ -160,6 +221,24 @@ function renderPackPanel(state) {
   const options = state.books
     .map((book) => `<option value="${book.id}">${book.title} (${book.id})</option>`)
     .join("");
+  const templates = readCustomRedactionTemplates();
+  const customRedactionValue = normalizeCustomRedactionFields(
+    templates[0] || DEFAULT_CUSTOM_REDACTION_FIELDS
+  );
+  const templateOptions = templates
+    .map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`)
+    .join("");
+  const templateSelect = templates.length
+    ? `
+      <label class="full">
+        最近使用模板
+        <select name="recentRedactionTemplate" class="diag-input" ${busy}>
+          <option value="">请选择历史模板</option>
+          ${templateOptions}
+        </select>
+      </label>
+    `
+    : "";
 
   const feedback = state.packFeedback
     ? `<p class="${state.packFeedback.type === "error" ? "error-text" : "ok-text"}">${state.packFeedback.message}</p>`
@@ -176,11 +255,12 @@ function renderPackPanel(state) {
             name="customRedactionFields"
             class="diag-input"
             type="text"
-            value="project.name,input.fileName"
+            value="${escapeHtml(customRedactionValue)}"
             placeholder="例如：project.name,input.fileName,error.stack"
             ${busy}
           />
         </label>
+        ${templateSelect}
         <div class="actions-row">
           <button class="btn btn-secondary download-report-btn" data-mode="full" type="button" ${busy}>Download Report</button>
           <button class="btn btn-secondary download-report-btn" data-mode="redacted" type="button" ${busy}>Download Redacted</button>
@@ -354,14 +434,33 @@ export function renderDashboard(root, state, handlers = {}) {
   const reportButtons = root.querySelectorAll(".download-report-btn");
   if (reportButtons.length && handlers.onDownloadImportReport) {
     const customInput = root.querySelector('input[name="customRedactionFields"]');
+    const templateSelect = root.querySelector('select[name="recentRedactionTemplate"]');
+
+    customInput?.addEventListener("blur", () => {
+      const normalized = normalizeCustomRedactionFields(customInput.value);
+      customInput.value = normalized;
+    });
+
+    templateSelect?.addEventListener("change", () => {
+      const selected = normalizeCustomRedactionFields(templateSelect.value);
+      if (!selected || !customInput) return;
+      customInput.value = selected;
+    });
+
     reportButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
+        const mode = btn.dataset.mode || "full";
         const rawFields = String(customInput?.value || "");
-        const customFields = rawFields
+        const normalizedRaw = normalizeCustomRedactionFields(rawFields);
+        if (customInput) customInput.value = normalizedRaw;
+        if (mode === "custom") {
+          rememberCustomRedactionTemplate(normalizedRaw);
+        }
+        const customFields = normalizedRaw
           .split(",")
           .map((item) => item.trim())
           .filter(Boolean);
-        handlers.onDownloadImportReport(btn.dataset.mode || "full", customFields);
+        handlers.onDownloadImportReport(mode, customFields);
       });
     });
   }
