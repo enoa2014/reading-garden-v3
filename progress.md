@@ -2119,6 +2119,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 121: Sprint 4 组合策略包导入导出（恢复策略 + 自动刷新策略）
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `exportEditorPolicyBundleFlow/importEditorPolicyBundleFlow`
+  - 组合策略包支持一次导入/导出会话快照策略与自动刷新策略
+  - 组合包导入支持 `replace/merge`，并按当前项目即时应用两类策略
+  - `dashboard.js` Preview 面板新增 `Export All Policies` / `Import All Policies` 操作
+  - 回归脚本新增组合策略包关键标记断言
+  - 运行 `node --check`（`app.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2128,8 +2148,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 120 |
-| Where am I going? | Phase 120 -> checkpoint commit -> push |
+| Where am I? | Phase 121 |
+| Where am I going? | Phase 121 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 自动刷新策略跨设备迁移同样需要 replace/merge 两种导入路径，才能兼顾全量迁移与增量合并 |
-| What have I done? | 已完成 Live Preview 自动刷新策略导入导出闭环，并接入 UI、回归与文档同步 |
+| What have I learned? | 教学场景迁移更偏好“一次导出/一次导入”的组合策略包，而不是多文件分步操作 |
+| What have I done? | 已完成组合策略包导入导出闭环，并接入 UI、回归与文档同步 |

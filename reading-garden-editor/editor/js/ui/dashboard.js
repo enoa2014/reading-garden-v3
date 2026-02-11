@@ -740,6 +740,9 @@ function renderPreviewPanel(state) {
           <button class="btn btn-secondary preview-export-recovery-policy-btn" type="button" ${busy}>Export Policy</button>
           <button class="btn btn-secondary preview-import-recovery-policy-btn" type="button" ${busy}>Import Policy</button>
           <input class="preview-import-recovery-policy-input" type="file" accept=".json,application/json" hidden ${busy} />
+          <button class="btn btn-secondary preview-export-policy-bundle-btn" type="button" ${busy}>Export All Policies</button>
+          <button class="btn btn-secondary preview-import-policy-bundle-btn" type="button" ${busy}>Import All Policies</button>
+          <input class="preview-import-policy-bundle-input" type="file" accept=".json,application/json" hidden ${busy} />
         </div>
         <label class="full">
           恢复历史快照（最近 5 条）
@@ -1361,6 +1364,9 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewExportRecoveryPolicyBtn = root.querySelector(".preview-export-recovery-policy-btn");
   const previewImportRecoveryPolicyBtn = root.querySelector(".preview-import-recovery-policy-btn");
   const previewImportRecoveryPolicyInput = root.querySelector(".preview-import-recovery-policy-input");
+  const previewExportPolicyBundleBtn = root.querySelector(".preview-export-policy-bundle-btn");
+  const previewImportPolicyBundleBtn = root.querySelector(".preview-import-policy-bundle-btn");
+  const previewImportPolicyBundleInput = root.querySelector(".preview-import-policy-bundle-input");
   const recoveryPolicyImportModeEl = root.querySelector('select[name="recoveryPolicyImportMode"]');
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
@@ -1425,6 +1431,22 @@ export function renderDashboard(root, state, handlers = {}) {
     if (previewImportRecoveryPolicyInput) previewImportRecoveryPolicyInput.value = "";
     if (handlers.onImportRecoveryHistoryPolicy) {
       handlers.onImportRecoveryHistoryPolicy(file || null, importRecoveryPolicyMode);
+    }
+  });
+  previewExportPolicyBundleBtn?.addEventListener("click", () => {
+    if (handlers.onExportEditorPolicyBundle) {
+      handlers.onExportEditorPolicyBundle();
+    }
+  });
+  previewImportPolicyBundleBtn?.addEventListener("click", () => {
+    previewImportPolicyBundleInput?.click();
+  });
+  previewImportPolicyBundleInput?.addEventListener("change", () => {
+    const file = previewImportPolicyBundleInput.files?.[0];
+    const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
+    if (previewImportPolicyBundleInput) previewImportPolicyBundleInput.value = "";
+    if (handlers.onImportEditorPolicyBundle) {
+      handlers.onImportEditorPolicyBundle(file || null, importRecoveryPolicyMode);
     }
   });
 

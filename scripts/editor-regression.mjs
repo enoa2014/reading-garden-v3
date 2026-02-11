@@ -565,11 +565,16 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("normalizeRecoveryPolicyImportMode"), "app should normalize recovery policy import mode");
   assert(appSource.includes("mergeRecoveryHistoryPolicyPayload"), "app should support merging recovery policy payloads");
   assert(appSource.includes("mode=${merged.mode}"), "app should surface recovery policy import mode in feedback");
+  assert(appSource.includes("exportEditorPolicyBundleFlow"), "app should support exporting editor policy bundle");
+  assert(appSource.includes("importEditorPolicyBundleFlow"), "app should support importing editor policy bundle");
+  assert(appSource.includes("readEditorPolicyBundleSections"), "app should parse editor policy bundle sections");
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("onResetPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy reset handler");
   assert(appSource.includes("onExportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy export handler");
   assert(appSource.includes("onImportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy import handler");
+  assert(appSource.includes("onExportEditorPolicyBundle"), "app should wire editor policy bundle export handler");
+  assert(appSource.includes("onImportEditorPolicyBundle"), "app should wire editor policy bundle import handler");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
   assert(appSource.includes("payload.projects"), "app should persist per-project recovery policy entries");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
@@ -608,6 +613,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("preview-reset-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy reset action");
   assert(dashboardSource.includes("preview-export-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy export action");
   assert(dashboardSource.includes("preview-import-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy import action");
+  assert(dashboardSource.includes("preview-export-policy-bundle-btn"), "dashboard should expose editor policy bundle export action");
+  assert(dashboardSource.includes("preview-import-policy-bundle-btn"), "dashboard should expose editor policy bundle import action");
   assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
   assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
   assert(dashboardSource.includes("preview-remove-recovery-btn"), "dashboard should expose recovery remove action");
@@ -635,6 +642,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("onResetPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy reset handler");
   assert(dashboardSource.includes("onExportPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy export handler");
   assert(dashboardSource.includes("onImportPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy import handler");
+  assert(dashboardSource.includes("onExportEditorPolicyBundle"), "dashboard should wire editor policy bundle export handler");
+  assert(dashboardSource.includes("onImportEditorPolicyBundle"), "dashboard should wire editor policy bundle import handler");
   assert(dashboardSource.includes("onResetRecoveryHistoryPolicy"), "dashboard should wire recovery policy reset handler");
   assert(dashboardSource.includes("onExportRecoveryHistoryPolicy"), "dashboard should wire recovery policy export handler");
   assert(dashboardSource.includes("onImportRecoveryHistoryPolicy"), "dashboard should wire recovery policy import handler");

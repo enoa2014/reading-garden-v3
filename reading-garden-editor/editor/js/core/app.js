@@ -925,6 +925,115 @@ async function importRecoveryHistoryPolicyFlow(file, mode = "replace") {
   setState({ busy: false });
 }
 
+function exportEditorPolicyBundleFlow() {
+  const filename = `editor-policy-bundle-${buildTimestampToken()}.json`;
+  downloadJsonFile(filename, {
+    format: "rg-editor-policy-bundle",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    recoveryHistoryPolicy: readRecoveryHistoryPolicyPayloadFromStorage(),
+    previewAutoRefreshPolicy: readPreviewAutoRefreshPolicyPayloadFromStorage(),
+  });
+  setState({
+    recoveryFeedback: {
+      type: "ok",
+      message: `组合策略包已导出：${filename}`,
+    },
+  });
+  setStatus("Editor policy bundle exported");
+}
+
+function readEditorPolicyBundleSections(parsed) {
+  const safe = parsed && typeof parsed === "object" ? parsed : {};
+  const recoverySource = safe.recoveryHistoryPolicy
+    ?? safe.recoveryPolicy
+    ?? safe.recovery;
+  const previewSource = safe.previewAutoRefreshPolicy
+    ?? safe.previewPolicy
+    ?? safe.preview;
+  return {
+    recovery: recoverySource?.policy || recoverySource || null,
+    preview: previewSource?.policy || previewSource || null,
+  };
+}
+
+async function importEditorPolicyBundleFlow(file, mode = "replace") {
+  if (!file) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "未选择组合策略包文件。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, recoveryFeedback: null });
+  setStatus("Importing editor policy bundle...");
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const sections = readEditorPolicyBundleSections(parsed);
+    if (!sections.recovery && !sections.preview) {
+      throw new Error("文件中未找到可导入的策略数据");
+    }
+
+    const currentRecovery = readRecoveryHistoryPolicyPayloadFromStorage();
+    const currentPreview = readPreviewAutoRefreshPolicyPayloadFromStorage();
+    const incomingRecovery = sections.recovery
+      ? normalizeRecoveryHistoryPolicyPayload(sections.recovery)
+      : currentRecovery;
+    const incomingPreview = sections.preview
+      ? normalizePreviewAutoRefreshPolicyPayload(sections.preview)
+      : currentPreview;
+    const mergedRecovery = mergeRecoveryHistoryPolicyPayload(currentRecovery, incomingRecovery, mode);
+    const mergedPreview = mergePreviewAutoRefreshPolicyPayload(currentPreview, incomingPreview, mode);
+
+    writeRecoveryHistoryPolicyPayloadToStorage(mergedRecovery.payload);
+    writePreviewAutoRefreshPolicyPayloadToStorage(mergedPreview.payload);
+
+    const state = getState();
+    const projectName = String(state.projectName || "").trim();
+    const appliedRecovery = applyRecoveryHistoryPolicyForProject(projectName, mergedRecovery.payload);
+    const appliedPreview = applyPreviewAutoRefreshPreferenceForProject(projectName, mergedPreview.payload);
+    const importedRecoveryProjects = sections.recovery
+      ? Object.keys(incomingRecovery.projects || {}).length
+      : 0;
+    const importedPreviewProjects = sections.preview
+      ? Object.keys(incomingPreview.projects || {}).length
+      : 0;
+    const normalizedMode = normalizeRecoveryPolicyImportMode(mode);
+
+    const patch = {
+      recoveryHistoryMaxAgeDays: appliedRecovery.maxAgeDays,
+      recoveryHistoryPolicyScope: appliedRecovery.scope,
+      previewAutoRefresh: appliedPreview.enabled,
+      previewAutoRefreshPolicyScope: appliedPreview.scope,
+      recoveryFeedback: {
+        type: "ok",
+        message: projectName
+          ? `组合策略包已导入（mode=${normalizedMode}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）并应用到项目：${projectName}`
+          : `组合策略包已导入（mode=${normalizedMode}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）。`,
+      },
+    };
+    if (projectName) {
+      const history = await recoveryStore.loadProjectHistory(projectName);
+      patch.recoveryHistory = Array.isArray(history) ? history : [];
+    }
+    setState(patch);
+    setStatus("Editor policy bundle imported");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `导入组合策略包失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Editor policy bundle import failed");
+  }
+  setState({ busy: false });
+}
+
 async function removeRecoveryHistorySnapshotFlow(savedAt = "") {
   const state = getState();
   const stamp = String(savedAt || "").trim();
@@ -1067,6 +1176,8 @@ function render() {
       onResetRecoveryHistoryPolicy: resetRecoveryHistoryPolicyFlow,
       onExportRecoveryHistoryPolicy: exportRecoveryHistoryPolicyFlow,
       onImportRecoveryHistoryPolicy: importRecoveryHistoryPolicyFlow,
+      onExportEditorPolicyBundle: exportEditorPolicyBundleFlow,
+      onImportEditorPolicyBundle: importEditorPolicyBundleFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,
