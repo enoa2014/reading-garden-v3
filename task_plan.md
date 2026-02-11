@@ -75,10 +75,11 @@ Phase 9
 - [x] 无效 `packStats` 抽样 ID 支持严格失败策略
 - [x] `workflow_dispatch` 支持输入覆盖严格校验开关
 - [x] 严格模式增加抽样 ID 格式校验
+- [x] 支持 missing-assets 可配置失败阈值
 - **Status:** in_progress
 
 ## Key Questions
-1. 缺失资源告警是否需要从 summary 升级为“可配置 fail 阈值”？
+1. missing-assets 阈值是否需要按导出模式（full/subset）分别配置？
 2. 最近模板导入模式是否需要支持“预览差异”？
 3. missing-assets 告警是否需要细化到分类级别（book-cover/book-module/...）？
 
@@ -102,3 +103,4 @@ Phase 9
 | workflow_dispatch 允许按需关闭严格校验 | 兼容探索性分析场景，默认仍保持严格 |
 | 严格模式补充抽样 ID 格式校验 | 提前拦截输入错误，减少“误判为缺失书籍”噪声 |
 | CI summary 增加 missing-assets 告警状态 | 先提供可见性，再评估是否升级为 fail 阈值 |
+| missing-assets 阈值策略默认值设为 1 | 与当前样本数据兼容，同时对新增缺失保持敏感 |

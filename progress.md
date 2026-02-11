@@ -149,6 +149,7 @@
 | dispatch 严格开关检查 | 审查 workflow_dispatch 输入与 env 表达式 | 手动触发可切换严格校验开关 | 已接入 | ✓ |
 | 抽样格式校验检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"bad;id\" EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true node scripts/editor-regression.mjs` | 非法格式 ID 在严格模式下失败 | 已接入 | ✓ |
 | summary 告警检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 告警状态 | 已接入（warning/ok） | ✓ |
+| missing-assets 阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_ASSETS=0 ./scripts/editor-regression.sh` | 超阈值时回归失败 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 
@@ -1054,6 +1055,38 @@
   - `progress.md` (updated)
 
 ### Phase 64: Sprint 4 checkpoint（summary-missing-alert 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`232ac37`（missing-assets alert indicator）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 65: Sprint 4 missing-assets 阈值策略
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加 `EDITOR_PACK_STATS_MAX_MISSING_ASSETS`
+  - 支持阈值解析与超阈值失败
+  - workflow_dispatch 增加 `pack_stats_max_missing_assets` 输入
+  - workflow summary 增加阈值显示
+  - 本地验证阈值通过（1）与失败（0）路径
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 66: Sprint 4 checkpoint（missing-assets-threshold 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -1071,8 +1104,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 64 |
-| Where am I going? | Phase 64 -> checkpoint commit -> push |
+| Where am I? | Phase 66 |
+| Where am I going? | Phase 66 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 summary missing-assets 告警并等待增量 checkpoint |
+| What have I done? | 已完成 missing-assets 阈值策略并等待增量 checkpoint |

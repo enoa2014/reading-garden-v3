@@ -108,6 +108,7 @@
     - 支持 `EDITOR_PACK_STATS_SELECTED_BOOKS` 指定 subset 样本书籍
     - 支持 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION`（无效抽样 ID 可直接失败）
     - 严格模式下增加抽样 ID 格式校验（仅 `a-z0-9-`）
+    - 支持 `EDITOR_PACK_STATS_MAX_MISSING_ASSETS`（missing-assets 超阈值失败）
     - CI 默认固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`
     - `workflow_dispatch` 可通过输入覆盖 packStats 抽样书籍
     - `workflow_dispatch` 可通过输入覆盖严格校验开关（默认开启）

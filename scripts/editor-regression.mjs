@@ -36,6 +36,25 @@ function isTruthyEnv(rawValue) {
   return value === "1" || value === "true" || value === "yes" || value === "on";
 }
 
+function parseMaxMissingAssetsThreshold(rawValue) {
+  const raw = String(rawValue ?? "").trim();
+  if (!raw) return null;
+  if (!/^\d+$/.test(raw)) {
+    throw new Error("ASSERT_FAILED: EDITOR_PACK_STATS_MAX_MISSING_ASSETS must be a non-negative integer");
+  }
+  return Number(raw);
+}
+
+function enforceMissingAssetsThreshold(missingAssetsCount, maxMissingAssets) {
+  if (maxMissingAssets == null) return;
+  const missing = Number(missingAssetsCount || 0);
+  if (missing > maxMissingAssets) {
+    throw new Error(
+      `ASSERT_FAILED: subset-minimal missingAssets ${missing} exceeds threshold ${maxMissingAssets}`
+    );
+  }
+}
+
 function normalizePathValue(input) {
   const raw = String(input || "").replaceAll("\\", "/");
   const out = [];
@@ -486,6 +505,7 @@ async function estimateSitePackStats() {
   }
 
   const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
+  const maxMissingAssets = parseMaxMissingAssetsThreshold(process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS);
   if (requireValidSelection && selectionMeta.invalidFormatBookIds.length) {
     throw new Error(
       `ASSERT_FAILED: invalid pack stats selected book id format -> ${selectionMeta.invalidFormatBookIds.join(", ")}`
@@ -569,11 +589,16 @@ async function estimateSitePackStats() {
     missingAssets,
     includeSubsetBooksJson: true,
   });
+  enforceMissingAssetsThreshold(subsetMinimalStats.missingAssets, maxMissingAssets);
 
   return {
     sampleSelectedBookIds: selectedBookIds,
     selection: selectionMeta,
     requireValidSelection,
+    missingAssetsThreshold: {
+      enabled: maxMissingAssets != null,
+      maxMissingAssets: maxMissingAssets == null ? null : maxMissingAssets,
+    },
     full: fullStats,
     subsetBalanced: subsetBalancedStats,
     subsetMinimal: subsetMinimalStats,
@@ -648,6 +673,29 @@ async function testPackStatsStrictFormat() {
   assert(failed, "strict pack stats should fail when selection format is invalid");
 }
 
+function testPackStatsThresholdConfig() {
+  assert(parseMaxMissingAssetsThreshold("") === null, "empty threshold should be disabled");
+  assert(parseMaxMissingAssetsThreshold("0") === 0, "threshold zero should be valid");
+  assert(parseMaxMissingAssetsThreshold("3") === 3, "threshold parse mismatch");
+
+  let invalidFailed = false;
+  try {
+    parseMaxMissingAssetsThreshold("bad");
+  } catch (err) {
+    invalidFailed = String(err?.message || "").includes("non-negative integer");
+  }
+  assert(invalidFailed, "threshold parser should reject invalid input");
+
+  let exceededFailed = false;
+  try {
+    enforceMissingAssetsThreshold(2, 1);
+  } catch (err) {
+    exceededFailed = String(err?.message || "").includes("exceeds threshold");
+  }
+  assert(exceededFailed, "threshold guard should fail when missing assets exceed limit");
+  enforceMissingAssetsThreshold(1, 1);
+}
+
 async function writeReport(report) {
   await mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -661,6 +709,7 @@ async function runChecks() {
     { name: "diagnostic-markers", run: testDiagnosticSourceMarkers },
     { name: "pack-size-strict-selection", run: testPackStatsStrictSelection },
     { name: "pack-size-strict-format", run: testPackStatsStrictFormat },
+    { name: "pack-size-threshold-config", run: testPackStatsThresholdConfig },
     { name: "pack-size-stats", run: testPackSizeStats },
   ];
 

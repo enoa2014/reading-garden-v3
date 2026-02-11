@@ -25,6 +25,10 @@ on:
         description: "Fail when selected book IDs are invalid (true/false)"
         required: false
         default: "true"
+      pack_stats_max_missing_assets:
+        description: "Max allowed missing assets in subset-minimal (non-negative integer)"
+        required: false
+        default: "1"
 
 jobs:
   editor-regression:
@@ -44,6 +48,7 @@ jobs:
           EDITOR_REGRESSION_REPORT: tmp/editor-regression-report.json
           EDITOR_PACK_STATS_SELECTED_BOOKS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_selected_books || 'totto-chan,wave' }}
           EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_require_valid_selection || 'true' }}
+          EDITOR_PACK_STATS_MAX_MISSING_ASSETS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_assets || '1' }}
         run: ./scripts/editor-regression.sh
 
       - name: Summarize packStats
@@ -66,11 +71,14 @@ jobs:
           const ratio = stats.comparePercent || {};
           const missingAssets = Number(stats.subsetMinimal?.missingAssets ?? 0);
           const missingAssetsAlert = missingAssets > 0 ? "warning" : "ok";
+          const threshold = stats.missingAssetsThreshold || {};
+          const thresholdText = threshold.enabled ? String(threshold.maxMissingAssets) : "disabled";
           const lines = [
             "### packStats Summary",
             "",
             `- mode: \`${selection.mode || "unknown"}\``,
             `- require valid selection: \`${String(stats.requireValidSelection ?? false)}\``,
+            `- max missing-assets threshold: \`${thresholdText}\``,
             `- selected: \`${selected.join(", ") || "(none)"}\``,
             `- missing requested: \`${missing.join(", ") || "(none)"}\``,
             `- invalid format IDs: \`${invalidFormat.join(", ") || "(none)"}\``,
