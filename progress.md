@@ -162,6 +162,7 @@
 | 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
 | Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
 | Live Preview 自动刷新检查 | 审查 `touchPreviewAfterWrite` 与开关链路 | 导入/建书/覆盖写入后按设置自动刷新 iframe | 已接入 | ✓ |
+| 路径级校验检查 | 审查 `validator(validateBooksData/validateRegistryData)` | 输出 JSON 路径 + 原因 + 修复建议 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
@@ -1661,6 +1662,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 98: Sprint 4 路径级校验提示增强
+- **Status:** complete
+- Actions taken:
+  - `validator.js` 新增路径级错误格式（path + reason + suggestion）
+  - `validateBooksData` 增加结构化路径提示与页面参数校验
+  - 新增 `validateRegistryData`（book/modules 基础结构、重复 ID、entry/data 格式）
+  - `app.js` 在书籍健康检查中接入 `validateRegistryData`
+  - 回归脚本增加 validator 关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/validator.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1670,8 +1690,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 97 |
-| Where am I going? | Phase 97 -> checkpoint commit -> push |
+| Where am I? | Phase 98 |
+| Where am I going? | Phase 98 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 预览刷新应可配置，避免低性能设备被强制实时刷新拖慢 |
-| What have I done? | 已完成 Live Preview 视口切换，并继续补齐自动刷新控制 |
+| What have I learned? | 错误提示必须同时给出路径和修复建议，非技术用户才能快速定位 |
+| What have I done? | 已完成 Live Preview 自动刷新控制，并继续增强校验可诊断性 |

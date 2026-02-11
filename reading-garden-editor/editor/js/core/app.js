@@ -5,6 +5,7 @@ import {
   validateProjectStructure,
   validateErrorList,
   validateNewBookInput,
+  validateRegistryData,
 } from "./validator.js";
 import { normalizePath, sanitizeBookId } from "./path-resolver.js";
 import { buildNewBookArtifacts } from "./book-template.js";
@@ -419,23 +420,16 @@ async function inspectBookHealth(book) {
   if (registryExists) {
     try {
       const registry = await fs.readJson(registryPath);
+      const registryCheck = validateRegistryData(registry);
+      moduleIssues.push(...registryCheck.errors);
       const modules = Array.isArray(registry?.modules) ? registry.modules : [];
-
-      if (!modules.length) {
-        moduleIssues.push("registry.modules 为空");
-      }
 
       for (const mod of modules) {
         const modId = String(mod?.id || "(unknown)");
         const entryRaw = String(mod?.entry || "").trim();
         const dataRaw = String(mod?.data || "").trim();
 
-        if (!entryRaw) {
-          moduleIssues.push(`模块 ${modId} 缺失 entry 配置`);
-          continue;
-        }
-        if (!dataRaw) {
-          moduleIssues.push(`模块 ${modId} 缺失 data 配置`);
+        if (!entryRaw || !dataRaw) {
           continue;
         }
 

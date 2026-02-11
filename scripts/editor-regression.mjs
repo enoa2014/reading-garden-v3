@@ -493,6 +493,10 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/css/editor.css"),
     "utf8"
   );
+  const validatorSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/validator.js"),
+    "utf8"
+  );
   const analysisSource = await readFile(
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/analysis-assistant.js"),
     "utf8"
@@ -512,6 +516,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("refreshPreviewFlow"), "app should support refreshing preview");
   assert(appSource.includes("touchPreviewAfterWrite"), "app should support auto refreshing preview after writes");
   assert(appSource.includes("buildPreviewUrl"), "app should build preview urls");
+  assert(appSource.includes("validateRegistryData"), "app should validate registry with structured rules");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
@@ -563,6 +568,9 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
+  assert(validatorSource.includes("validateRegistryData"), "validator should expose registry validation");
+  assert(validatorSource.includes("$.books"), "validator should emit path-based books errors");
+  assert(validatorSource.includes("$.modules"), "validator should emit path-based registry errors");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
   assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");

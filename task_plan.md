@@ -95,6 +95,7 @@ Phase 9
 - [x] 新建书支持图片策略基础落地（emoji/none/prompt-file）
 - [x] 支持编辑器内 Live Preview（设备切换 + 刷新）
 - [x] Live Preview 支持写入后自动刷新开关
+- [x] 校验层支持路径级错误提示（books/registry）
 - **Status:** in_progress
 
 ## Key Questions
@@ -143,3 +144,4 @@ Phase 9
 | 新建书优先落地图片策略“可离线兜底”能力 | 即使无 AI 生图接口，也能通过 emoji/no-image/prompt-file 完成建书 |
 | Live Preview 先做“手动刷新 + 设备切换” | 先确保稳定可用，再评估自动刷新策略与性能开销 |
 | Live Preview 自动刷新先默认开启并提供关闭开关 | 兼顾实时反馈与性能控制，允许按设备能力降级 |
+| 校验增强先采用“路径级规则校验 + 建议”，暂不强依赖 Ajv | 先提升可诊断性与离线可维护性，再视需求引入完整 schema 引擎 |
