@@ -29,6 +29,7 @@ python3 -m http.server 8080
 - 已实现：分析建议可在未选目标书籍时自动创建草稿书并完成应用
 - 已实现：新建书支持图片策略基础落地（`emoji`/`none` 封面与 `prompt-file` 提示词模板输出）
 - 已实现：编辑器内 Live Preview（desktop/tablet/mobile 视口切换 + 刷新 + 新标签页预览）
+- 已实现：Live Preview 自动刷新开关（写入后按需自动刷新 iframe）
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 
 配套文档：

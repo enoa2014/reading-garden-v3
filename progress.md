@@ -161,6 +161,7 @@
 | AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
 | 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
 | Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
+| Live Preview 自动刷新检查 | 审查 `touchPreviewAfterWrite` 与开关链路 | 导入/建书/覆盖写入后按设置自动刷新 iframe | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
@@ -1641,6 +1642,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 97: Sprint 4 Live Preview 自动刷新开关
+- **Status:** complete
+- Actions taken:
+  - `state.js` 增加 `previewAutoRefresh` 状态
+  - `dashboard.js` 预览面板新增“写入后自动刷新预览”开关
+  - `app.js` 新增 `touchPreviewAfterWrite`，在建书/导入/覆盖写入后按需刷新
+  - 回归脚本增加自动刷新关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1650,8 +1670,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 96 |
-| Where am I going? | Phase 96 -> checkpoint commit -> push |
+| Where am I? | Phase 97 |
+| Where am I going? | Phase 97 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 预览能力必须和书架状态联动，避免切书后 iframe 仍指向旧对象 |
-| What have I done? | 已完成建议应用安全闸门，并继续补齐 Live Preview 闭环 |
+| What have I learned? | 预览刷新应可配置，避免低性能设备被强制实时刷新拖慢 |
+| What have I done? | 已完成 Live Preview 视口切换，并继续补齐自动刷新控制 |

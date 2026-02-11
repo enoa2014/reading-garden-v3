@@ -510,6 +510,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("applyAnalysisSuggestionFlow"), "app should support applying analysis suggestion");
   assert(appSource.includes("updatePreviewStateFlow"), "app should support updating preview state");
   assert(appSource.includes("refreshPreviewFlow"), "app should support refreshing preview");
+  assert(appSource.includes("touchPreviewAfterWrite"), "app should support auto refreshing preview after writes");
   assert(appSource.includes("buildPreviewUrl"), "app should build preview urls");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
@@ -537,6 +538,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("renderPreviewPanel"), "dashboard should render preview panel");
   assert(dashboardSource.includes("previewForm"), "dashboard should expose preview form");
   assert(dashboardSource.includes("preview-refresh-btn"), "dashboard should expose preview refresh action");
+  assert(dashboardSource.includes("previewAutoRefresh"), "dashboard should expose preview auto refresh toggle");
   assert(dashboardSource.includes("Live Preview"), "dashboard should expose live preview title");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
@@ -557,6 +559,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
   assert(stateSource.includes("previewBookId"), "state should track preview book");
   assert(stateSource.includes("previewDevice"), "state should track preview device");
+  assert(stateSource.includes("previewAutoRefresh"), "state should track preview auto refresh setting");
   assert(stateSource.includes("previewUrl"), "state should track preview url");
   assert(cssSource.includes(".preview-stage"), "css should style preview stage");
   assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");

@@ -406,6 +406,7 @@ function renderPreviewPanel(state) {
   const previewDevice = ["desktop", "tablet", "mobile"].includes(String(state.previewDevice || ""))
     ? String(state.previewDevice || "desktop")
     : "desktop";
+  const previewAutoRefresh = state.previewAutoRefresh !== false;
   const previewUrl = String(state.previewUrl || "");
   const options = books
     .map((book) => {
@@ -441,6 +442,10 @@ function renderPreviewPanel(state) {
           <select name="previewDevice" ${busy}>
             ${deviceOptions}
           </select>
+        </label>
+        <label class="checkbox-inline">
+          <input name="previewAutoRefresh" type="checkbox" ${previewAutoRefresh ? "checked" : ""} ${busy} />
+          写入后自动刷新预览
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-refresh-btn" type="button" ${busy}>Refresh Preview</button>
@@ -848,6 +853,7 @@ export function renderDashboard(root, state, handlers = {}) {
       handlers.onUpdatePreviewState({
         bookId: String(fd.get("previewBookId") || ""),
         device: String(fd.get("previewDevice") || "desktop"),
+        autoRefresh: fd.get("previewAutoRefresh") === "on",
       });
     });
   }

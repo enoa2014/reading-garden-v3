@@ -41,6 +41,7 @@
   - 支持“覆盖应用建议”：可直接写入 `data/<bookId>/registry.json`，自动备份并补齐新增模块数据模板
   - 覆盖应用需显式确认，防止误操作覆盖 `registry.json`
   - 支持 Live Preview：书籍实时预览 + desktop/tablet/mobile 设备切换 + 手动刷新
+  - 支持 Live Preview 自动刷新开关：在导入/新建/覆盖写入后按设置自动刷新
   - 新建书流程支持图片策略基础落地：
     - `emoji`：生成 emoji 风格封面
     - `none`：生成 no-image 占位封面

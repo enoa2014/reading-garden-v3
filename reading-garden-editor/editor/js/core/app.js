@@ -369,12 +369,15 @@ function buildPreviewStatePatch(state, books, overrides = {}) {
   };
 }
 
-function updatePreviewStateFlow({ bookId = "", device = "" } = {}) {
+function updatePreviewStateFlow({ bookId = "", device = "", autoRefresh } = {}) {
   const state = getState();
   const patch = buildPreviewStatePatch(state, state.books, {
     previewBookId: String(bookId || "").trim(),
     previewDevice: String(device || state.previewDevice || "desktop"),
   });
+  if (typeof autoRefresh === "boolean") {
+    patch.previewAutoRefresh = autoRefresh;
+  }
   setState(patch);
 }
 
@@ -389,6 +392,18 @@ function refreshPreviewFlow() {
   });
   setState(patch);
   setStatus("Preview refreshed");
+}
+
+function touchPreviewAfterWrite(changedBookId = "") {
+  const state = getState();
+  if (!state.previewAutoRefresh) return;
+  const currentPreviewBookId = String(state.previewBookId || "").trim();
+  const targetBookId = String(changedBookId || "").trim();
+  if (targetBookId && currentPreviewBookId && targetBookId !== currentPreviewBookId) return;
+  const patch = buildPreviewStatePatch(state, state.books, {
+    previewRefreshToken: Date.now(),
+  });
+  setState(patch);
 }
 
 function resolveFromBookDir(bookId, relativePath) {
@@ -882,6 +897,7 @@ async function applyAnalysisSuggestionFlow({
     if (mode === "overwrite") {
       const writeResult = await fs.writeJson(registryPath, next.registry);
       const seedResult = await ensureSuggestedModuleDataFiles(targetBookId, next.addedModuleIds);
+      touchPreviewAfterWrite(targetBookId);
       const backupText = writeResult?.backupPath ? `，备份：${writeResult.backupPath}` : "";
       const seedText = seedResult.created.length ? `，补齐数据模板 ${seedResult.created.length} 个` : "";
       setState({
@@ -1103,6 +1119,7 @@ async function createBookFlow(rawInput) {
     await refreshProjectData();
     const previewPatch = buildPreviewStatePatch(getState(), getState().books, {
       previewBookId: artifacts.bookId,
+      previewRefreshToken: Date.now(),
     });
     setState(previewPatch);
     const promptText = artifacts.promptTemplateText ? "，已生成 prompts/image-prompts.md" : "";
@@ -1222,6 +1239,7 @@ async function importPackFlow(file, strategy) {
       });
       setStatus("Import skipped");
     } else {
+      touchPreviewAfterWrite(result.targetBookId);
       setState({
         packFeedback: {
           type: "ok",

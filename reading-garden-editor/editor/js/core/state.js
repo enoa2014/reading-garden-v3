@@ -22,6 +22,7 @@ const state = {
   analysisSuggestion: null,
   previewBookId: "",
   previewDevice: "desktop",
+  previewAutoRefresh: true,
   previewRefreshToken: 0,
   previewUrl: "",
 };

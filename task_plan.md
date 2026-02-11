@@ -94,11 +94,12 @@ Phase 9
 - [x] 覆盖应用前增加显式确认开关
 - [x] 新建书支持图片策略基础落地（emoji/none/prompt-file）
 - [x] 支持编辑器内 Live Preview（设备切换 + 刷新）
+- [x] Live Preview 支持写入后自动刷新开关
 - **Status:** in_progress
 
 ## Key Questions
 1. 自动创建草稿书时是否需要暴露“模板级别选择”（极简/教学型）？
-2. Live Preview 是否需要接入“自动刷新（写盘后）”而非仅手动刷新？
+2. Live Preview 的自动刷新是否默认开启（当前为开启）？
 3. 阈值预设是否需要按导出范围（full/subset）自动切换默认值？
 
 ## Decisions Made
@@ -141,3 +142,4 @@ Phase 9
 | 覆盖应用必须勾选确认后才可执行 | 在保留自动化效率的同时降低误操作风险 |
 | 新建书优先落地图片策略“可离线兜底”能力 | 即使无 AI 生图接口，也能通过 emoji/no-image/prompt-file 完成建书 |
 | Live Preview 先做“手动刷新 + 设备切换” | 先确保稳定可用，再评估自动刷新策略与性能开销 |
+| Live Preview 自动刷新先默认开启并提供关闭开关 | 兼顾实时反馈与性能控制，允许按设备能力降级 |
