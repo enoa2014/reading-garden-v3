@@ -69,6 +69,21 @@ function sanitizeAiSettings(raw) {
   };
 }
 
+function buildTimestampToken() {
+  return new Date().toISOString().replace(/[:.]/g, "-");
+}
+
+function downloadJsonFile(filename, payload) {
+  const text = `${JSON.stringify(payload, null, 2)}\n`;
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function qs(sel) {
   return document.querySelector(sel);
 }
@@ -100,6 +115,8 @@ function render() {
     renderDashboard(root, state, {
       onCreateBook: createBookFlow,
       onSaveAiSettings: saveAiSettingsFlow,
+      onExportAiSettings: exportAiSettingsFlow,
+      onImportAiSettings: importAiSettingsFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -361,6 +378,75 @@ async function saveAiSettingsFlow(rawSettings) {
       },
     });
     setStatus("AI settings save failed");
+  }
+
+  setState({ busy: false });
+}
+
+function exportAiSettingsFlow() {
+  const settings = sanitizeAiSettings(getState().aiSettings || buildDefaultAiSettings());
+  const payload = {
+    format: "rg-ai-settings",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    settings,
+  };
+  const filename = `ai-settings-${buildTimestampToken()}.json`;
+  downloadJsonFile(filename, payload);
+  setState({
+    aiFeedback: {
+      type: "ok",
+      message: `AI 配置已导出：${filename}`,
+    },
+  });
+}
+
+async function importAiSettingsFlow(file) {
+  if (!file) {
+    setState({
+      aiFeedback: {
+        type: "error",
+        message: "未选择 AI 配置文件。",
+      },
+    });
+    return;
+  }
+
+  const state = getState();
+  if (!state.projectHandle || !state.structure?.ok) {
+    setState({
+      aiFeedback: {
+        type: "error",
+        message: "请先打开项目后再导入 AI 配置。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, aiFeedback: null });
+  setStatus("Importing AI settings...");
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const settings = sanitizeAiSettings(parsed?.settings || parsed);
+    await fs.writeJson(AI_SETTINGS_PATH, settings);
+    setState({
+      aiSettings: settings,
+      aiFeedback: {
+        type: "ok",
+        message: `AI 配置已导入并保存：${AI_SETTINGS_PATH}`,
+      },
+    });
+    setStatus("AI settings imported");
+  } catch (err) {
+    setState({
+      aiFeedback: {
+        type: "error",
+        message: `导入 AI 配置失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("AI settings import failed");
   }
 
   setState({ busy: false });

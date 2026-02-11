@@ -158,6 +158,7 @@
 | 阈值预设检查 | `EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET=strict ./scripts/editor-regression.sh` | strict 预设可触发更严格分类阈值失败 | 已接入 | ✓ |
 | 缺失资源回退检查 | 审查 `dashboard -> app -> site-pack-service` 参数链路 | 支持 `report-only/svg-placeholder` 回退策略 | 已接入 | ✓ |
 | AI 配置链路检查 | 审查 `dashboard(ai form) -> app(save/load) -> filesystem` | 支持本地保存/加载 LLM 与图片接口配置 | 已接入 | ✓ |
+| AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
@@ -1430,12 +1431,46 @@
   - `progress.md` (updated)
 
 ### Phase 86: Sprint 4 checkpoint（ai-settings-foundation 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`b3dbb57`（ai settings foundation）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 87: Sprint 4 AI 配置导入导出
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 增加 AI 配置导入/导出按钮与文件选择事件
+  - `app.js` 增加 `exportAiSettingsFlow/importAiSettingsFlow`
+  - 导入配置支持落盘到 `reading-garden-editor/config/ai-settings.json`
+  - 回归脚本增加 AI 配置导入导出关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 88: Sprint 4 checkpoint（ai-settings-transfer 增量）
 - **Status:** in_progress
 - Actions taken:
   - 已完成功能实现与回归验证
   - 待创建 checkpoint commit 并推送
 - Files created/modified:
-  - `reading-garden-editor/editor/js/core/state.js` (updated)
   - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
   - `reading-garden-editor/editor/js/core/app.js` (updated)
   - `scripts/editor-regression.mjs` (updated)
@@ -1454,8 +1489,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 86 |
-| Where am I going? | Phase 86 -> checkpoint commit -> push |
+| Where am I? | Phase 88 |
+| Where am I going? | Phase 88 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成本地 AI 配置面板并等待增量 checkpoint |
+| What have I done? | 已完成 AI 配置导入导出并等待增量 checkpoint |

@@ -345,6 +345,9 @@ function renderAiSettingsPanel(state) {
         </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Save AI Settings</button>
+          <button class="btn btn-secondary export-ai-settings-btn" type="button" ${busy}>Export AI Settings</button>
+          <button class="btn btn-secondary import-ai-settings-btn" type="button" ${busy}>Import AI Settings</button>
+          <input class="import-ai-settings-input" type="file" accept=".json,application/json" hidden ${busy} />
         </div>
       </form>
       ${feedback}
@@ -684,6 +687,28 @@ export function renderDashboard(root, state, handlers = {}) {
           promptFilePath: String(fd.get("promptFilePath") || ""),
         },
       });
+    });
+  }
+  if (aiSettingsForm) {
+    const exportAiSettingsBtn = aiSettingsForm.querySelector(".export-ai-settings-btn");
+    const importAiSettingsBtn = aiSettingsForm.querySelector(".import-ai-settings-btn");
+    const importAiSettingsInput = aiSettingsForm.querySelector(".import-ai-settings-input");
+    exportAiSettingsBtn?.addEventListener("click", () => {
+      if (handlers.onExportAiSettings) {
+        handlers.onExportAiSettings();
+      }
+    });
+    importAiSettingsBtn?.addEventListener("click", () => {
+      importAiSettingsInput?.click();
+    });
+    importAiSettingsInput?.addEventListener("change", () => {
+      const file = importAiSettingsInput.files?.[0];
+      if (importAiSettingsInput) {
+        importAiSettingsInput.value = "";
+      }
+      if (handlers.onImportAiSettings) {
+        handlers.onImportAiSettings(file || null);
+      }
     });
   }
 

@@ -487,6 +487,8 @@ async function testDiagnosticSourceMarkers() {
   );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(appSource.includes("saveAiSettingsFlow"), "app should support saving ai settings");
+  assert(appSource.includes("exportAiSettingsFlow"), "app should support exporting ai settings");
+  assert(appSource.includes("importAiSettingsFlow"), "app should support importing ai settings");
   assert(appSource.includes("AI_SETTINGS_PATH"), "app should define ai settings path");
   assert(appSource.includes("clearRedactionTemplatesFlow"), "app should support clearing redaction templates");
   assert(appSource.includes("previewRedactionTemplatesFlow"), "app should support previewing redaction templates");
@@ -497,6 +499,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes('data-mode="custom"'), "dashboard should expose custom report action");
   assert(dashboardSource.includes("recentRedactionTemplate"), "dashboard should support recent redaction templates");
   assert(dashboardSource.includes("aiSettingsForm"), "dashboard should expose ai settings form");
+  assert(dashboardSource.includes("export-ai-settings-btn"), "dashboard should expose ai settings export action");
+  assert(dashboardSource.includes("import-ai-settings-btn"), "dashboard should expose ai settings import action");
   assert(dashboardSource.includes("AI Settings (Local)"), "dashboard should render ai settings panel");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
   assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");

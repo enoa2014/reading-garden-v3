@@ -85,6 +85,7 @@ Phase 9
 - [x] 支持分类阈值预设（`custom/balanced/strict`）
 - [x] 支持 missing-assets 按导出模式独立阈值（balanced/minimal）
 - [x] 本地 AI 配置面板与配置文件读写（LLM/图片接口）
+- [x] 支持 AI 配置导入/导出（JSON）
 - **Status:** in_progress
 
 ## Key Questions
@@ -123,3 +124,4 @@ Phase 9
 | 新增分类阈值预设 `custom/balanced/strict` | 提升手动回归可用性，减少逐项配置成本 |
 | missing-assets 阈值支持按模式覆盖 | 兼容全局默认，同时允许对 minimal 进行更严格门禁 |
 | AI 配置先采用本地 JSON 文件存储 | 满足离线优先与可迁移性，后续再接入远端密钥管理 |
+| AI 配置支持导入/导出 | 降低跨设备迁移成本，便于教师/家长复制环境 |

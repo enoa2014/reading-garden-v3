@@ -33,6 +33,7 @@
   - `rgbook` 导入失败可下载诊断报告（完整/脱敏/自定义脱敏 JSON）
   - 自定义脱敏字段支持“最近使用模板”本地复用（localStorage，最多 5 条）
   - 新增 AI 配置面板：本地保存/加载 LLM 与图片接口配置（`reading-garden-editor/config/ai-settings.json`）
+  - 支持 AI 配置导入/导出（JSON），便于跨机器迁移配置
   - 支持一键清空最近模板并在面板给出结果反馈
   - 支持最近模板导入/导出（JSON 文件）
   - 模板导入支持 `replace`（覆盖）/`merge`（合并去重）模式
