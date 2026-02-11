@@ -123,14 +123,14 @@ function renderScenario(ctx, bookId, moduleId, scenarios, state) {
         <div class="rg-options__k">你会怎么做？</div>
         <div class="rg-options__list">
           ${options
-            .map((o, i) => {
-              const oid = escapeHtml(String(o?.id || `opt_${i + 1}`));
-              const text = escapeHtml(String(o?.text || ""));
-              const on = String(selectedId) === String(o?.id);
-              const disabled = selectedId ? " disabled" : "";
-              return `<button type="button" class="rg-option ${on ? "is-on" : ""}" data-action="choose" data-option="${oid}"${disabled}><span class="rg-option__letter">${String.fromCharCode(65 + i)}</span><span class="rg-option__text">${text}</span></button>`;
-            })
-            .join("")}
+      .map((o, i) => {
+        const oid = escapeHtml(String(o?.id || `opt_${i + 1}`));
+        const text = escapeHtml(String(o?.text || ""));
+        const on = String(selectedId) === String(o?.id);
+        const disabled = selectedId ? " disabled" : "";
+        return `<button type="button" class="rg-option ${on ? "is-on" : ""}" data-action="choose" data-option="${oid}"${disabled}><span class="rg-option__letter">${String.fromCharCode(65 + i)}</span><span class="rg-option__text">${text}</span></button>`;
+      })
+      .join("")}
         </div>
       </div>
 
@@ -139,8 +139,8 @@ function renderScenario(ctx, bookId, moduleId, scenarios, state) {
       </div>
 
       <nav class="rg-snav">
-        <button type="button" class="rg-btn rg-btn--ghost" data-action="prev"${idx <= 0 ? " disabled" : ""}>◄ 上一个</button>
-        <button type="button" class="rg-btn rg-btn--primary" data-action="next"${idx >= scenarios.length - 1 ? " disabled" : ""}>下一个 ►</button>
+        <button type="button" class="rg-btn rg-btn--ghost" data-action="prev" ${idx <= 0 ? "disabled" : ""} style="${idx <= 0 ? "visibility:hidden" : ""}">◄ 上一个</button>
+        <button type="button" class="rg-btn rg-btn--primary" data-action="next" ${idx >= scenarios.length - 1 ? "disabled" : ""} style="${idx >= scenarios.length - 1 ? "visibility:hidden" : ""}">下一个 ►</button>
       </nav>
     </article>
   `;
@@ -166,8 +166,8 @@ function renderReport(scenarios, state) {
       ${hasRating ? `
         <div class="rg-report__grid">
           ${Object.keys(ratings)
-            .map((k) => `<div class="rg-report__cell"><div class="rg-report__k">${escapeHtml(ratingMeta[k]?.label || k)}</div><div class="rg-report__v">${ratings[k]}</div></div>`)
-            .join("")}
+        .map((k) => `<div class="rg-report__cell"><div class="rg-report__k">${escapeHtml(ratingMeta[k]?.label || k)}</div><div class="rg-report__v">${ratings[k]}</div></div>`)
+        .join("")}
         </div>
       ` : `
         <p class="rg-report__hint">本书互动更偏向讨论式选择：重点不在“对错”，而在于你如何解释与引导。</p>

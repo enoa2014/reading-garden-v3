@@ -1,0 +1,416 @@
+/* Ove Theme - Nordic Literary Minimalism */
+/* Color Palette: 冷暖对比 - 灰蓝 vs 暖橙/金 */
+
+:root {
+    /* Primary Colors */
+    --ove-primary: #1E1B4B;
+    --ove-secondary: #312E81;
+    --ove-accent: #F97316;
+    --ove-background: #0F0F23;
+    --ove-text: #F8FAFC;
+
+    /* Semantic Colors */
+    --ove-sonja-red: #DC2626;
+    --ove-saab-blue: #1E40AF;
+    --ove-warm-gold: #D97706;
+    --ove-cold-gray: #64748B;
+
+    /* Timeline Colors */
+    --ove-past-timeline: #D97706;
+    --ove-present-timeline: #64748B;
+
+    /* Spacing */
+    --ove-space-xs: 4px;
+    --ove-space-sm: 8px;
+    --ove-space-md: 16px;
+    --ove-space-lg: 24px;
+    --ove-space-xl: 32px;
+
+    /* Animation */
+    --ove-transition: 400ms ease-out;
+}
+
+/* Apply Ove Theme */
+.ove-theme {
+    --color-primary: var(--ove-primary);
+    --color-secondary: var(--ove-secondary);
+    --color-accent: var(--ove-accent);
+    --color-background: var(--ove-background);
+    --color-text: var(--ove-text);
+
+    background: var(--ove-background);
+    color: var(--ove-text);
+    font-family: 'Libre Baskerville', 'Noto Serif SC', serif;
+}
+
+.ove-theme h1,
+.ove-theme h2,
+.ove-theme h3 {
+    font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+    font-weight: 600;
+}
+
+/* Header Customization */
+.ove-theme .header {
+    background: rgba(30, 27, 75, 0.9);
+    border-bottom: 1px solid rgba(248, 250, 252, 0.1);
+}
+
+.ove-theme .site-title {
+    color: var(--ove-text);
+}
+
+/* Tab Bar */
+.ove-theme .story-tab-bar {
+    background: rgba(15, 15, 35, 0.95);
+    border-top: 1px solid rgba(248, 250, 252, 0.1);
+}
+
+.ove-theme .story-tab-btn {
+    color: var(--ove-cold-gray);
+    transition: var(--ove-transition);
+}
+
+.ove-theme .story-tab-btn.active {
+    color: var(--ove-accent);
+}
+
+/* Panel Styles */
+.ove-theme .panel-header h2 {
+    color: var(--ove-text);
+}
+
+.ove-theme .panel-desc {
+    color: var(--ove-cold-gray);
+}
+
+/* ===== DUAL TIMELINE ===== */
+.dual-timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ove-space-lg);
+    padding: var(--ove-space-lg);
+}
+
+.timeline-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: var(--ove-space-md);
+    padding: var(--ove-space-sm) var(--ove-space-md);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.timeline-label.past {
+    background: rgba(217, 119, 6, 0.2);
+    color: var(--ove-warm-gold);
+}
+
+.timeline-label.present {
+    background: rgba(100, 116, 139, 0.2);
+    color: var(--ove-cold-gray);
+}
+
+.timeline-events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ove-space-sm);
+}
+
+.timeline-event {
+    padding: var(--ove-space-sm) var(--ove-space-md);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--ove-transition);
+}
+
+.timeline-event.past {
+    background: rgba(217, 119, 6, 0.15);
+    border: 1px solid var(--ove-warm-gold);
+    color: var(--ove-warm-gold);
+}
+
+.timeline-event.present {
+    background: rgba(100, 116, 139, 0.15);
+    border: 1px solid var(--ove-cold-gray);
+    color: var(--ove-cold-gray);
+}
+
+.timeline-event.suicide {
+    border-color: var(--ove-sonja-red);
+    color: var(--ove-sonja-red);
+}
+
+.timeline-event.highlight {
+    border-width: 2px;
+    font-weight: 600;
+}
+
+.timeline-event:hover {
+    transform: translateY(-2px);
+}
+
+.timeline-event.past:hover {
+    background: rgba(217, 119, 6, 0.3);
+}
+
+.timeline-event.present:hover {
+    background: rgba(100, 116, 139, 0.3);
+}
+
+/* ===== SUICIDE ATTEMPTS GRID ===== */
+.suicide-attempts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--ove-space-lg);
+    padding: var(--ove-space-lg);
+}
+
+.suicide-card {
+    background: rgba(30, 27, 75, 0.6);
+    border: 1px solid rgba(248, 250, 252, 0.1);
+    border-radius: 12px;
+    padding: var(--ove-space-lg);
+    transition: var(--ove-transition);
+    cursor: pointer;
+}
+
+.suicide-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--ove-accent);
+}
+
+.suicide-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--ove-space-md);
+    margin-bottom: var(--ove-space-md);
+}
+
+.suicide-card-number {
+    width: 32px;
+    height: 32px;
+    background: var(--ove-cold-gray);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.suicide-card-method {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ove-text);
+}
+
+.suicide-card-chapter {
+    font-size: 0.75rem;
+    color: var(--ove-cold-gray);
+    margin-left: auto;
+}
+
+.suicide-card-interrupted {
+    font-size: 0.875rem;
+    color: var(--ove-warm-gold);
+    margin-bottom: var(--ove-space-sm);
+}
+
+.suicide-card-result {
+    font-size: 0.875rem;
+    color: var(--ove-accent);
+}
+
+.suicide-card-quote {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ove-cold-gray);
+    margin-top: var(--ove-space-md);
+    padding-top: var(--ove-space-md);
+    border-top: 1px solid rgba(248, 250, 252, 0.1);
+}
+
+/* ===== THEMES GRID ===== */
+.ove-theme .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--ove-space-lg);
+    padding: var(--ove-space-lg);
+}
+
+.theme-card {
+    background: rgba(30, 27, 75, 0.6);
+    border: 1px solid rgba(248, 250, 252, 0.1);
+    border-radius: 12px;
+    padding: var(--ove-space-lg);
+    transition: var(--ove-transition);
+    cursor: pointer;
+}
+
+.theme-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--ove-accent);
+}
+
+.theme-card-icon {
+    font-size: 2rem;
+    margin-bottom: var(--ove-space-md);
+}
+
+.theme-card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--ove-space-sm);
+    color: var(--ove-text);
+}
+
+.theme-card-desc {
+    font-size: 0.875rem;
+    color: var(--ove-cold-gray);
+}
+
+/* ===== HOUSE INTERACTIVE ===== */
+.house-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--ove-space-lg);
+}
+
+.house-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+.house-hotspot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgba(249, 115, 22, 0.8);
+    border: 2px solid var(--ove-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--ove-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.house-hotspot:hover {
+    transform: scale(1.2);
+    background: var(--ove-accent);
+}
+
+.house-hotspot::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--ove-accent);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+.house-info-panel {
+    background: rgba(30, 27, 75, 0.8);
+    border: 1px solid rgba(248, 250, 252, 0.1);
+    border-radius: 12px;
+    padding: var(--ove-space-lg);
+    margin-top: var(--ove-space-lg);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ===== CHARACTER GRAPH ===== */
+.ove-theme .character-graph-container {
+    height: 400px;
+    background: rgba(15, 15, 35, 0.5);
+    border-radius: 12px;
+    margin: var(--ove-space-lg);
+}
+
+.ove-theme .character-detail-panel {
+    background: rgba(30, 27, 75, 0.8);
+    border: 1px solid rgba(248, 250, 252, 0.1);
+    border-radius: 12px;
+    padding: var(--ove-space-lg);
+    margin: 0 var(--ove-space-lg) var(--ove-space-lg);
+}
+
+/* ===== THEME MODAL ===== */
+.ove-theme .theme-modal {
+    background: rgba(15, 15, 35, 0.9);
+}
+
+.ove-theme .theme-modal-content {
+    background: var(--ove-primary);
+    border: 1px solid rgba(248, 250, 252, 0.1);
+}
+
+/* ===== BUTTONS ===== */
+.ove-theme .btn-primary {
+    background: var(--ove-accent);
+    color: var(--ove-text);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--ove-transition);
+}
+
+.ove-theme .btn-primary:hover {
+    opacity: 0.9;
+}
+
+.ove-theme .btn-secondary {
+    background: transparent;
+    color: var(--ove-text);
+    border: 2px solid var(--ove-primary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--ove-transition);
+}
+
+.ove-theme .btn-secondary:hover {
+    background: rgba(30, 27, 75, 0.5);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    .suicide-attempts-grid,
+    .ove-theme .bento-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dual-timeline-container {
+        padding: var(--ove-space-md);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ove-theme * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

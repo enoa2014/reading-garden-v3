@@ -101,12 +101,12 @@ function renderStep(theme, steps, index, saved) {
               ${pollQ ? `<p class="rg-tmodal__pollq">${escapeHtml(pollQ)}</p>` : ""}
               <div class="rg-tmodal__pollopts" role="group" aria-label="投票选项">
                 ${pollOptions
-                  .map((opt) => {
-                    const v = String(opt);
-                    const on = selected === v;
-                    return `<button type="button" class="rg-tmodal__pollbtn ${on ? "is-on" : ""}" data-action="poll" data-value="${escapeHtml(v)}">${escapeHtml(v)}</button>`;
-                  })
-                  .join("")}
+          .map((opt) => {
+            const v = String(opt);
+            const on = selected === v;
+            return `<button type="button" class="rg-tmodal__pollbtn ${on ? "is-on" : ""}" data-action="poll" data-value="${escapeHtml(v)}">${escapeHtml(v)}</button>`;
+          })
+          .join("")}
               </div>
             </div>
           ` : ""}
@@ -194,8 +194,8 @@ export default {
     const render = () => {
       const bodyHtml = renderStep(theme, steps, index, saved);
       const footHtml = `
-        <button type="button" class="rg-btn rg-btn--ghost" data-action="prev-step"${index <= 0 ? " disabled" : ""}>◄ 上一步</button>
-        <button type="button" class="rg-btn rg-btn--primary" data-action="next-step"${index >= steps.length - 1 ? " disabled" : ""}>下一步 ►</button>
+        <button type="button" class="rg-btn rg-btn--ghost" data-action="prev-step" ${index <= 0 ? "disabled" : ""} style="${index <= 0 ? "visibility:hidden" : ""}">◄ 上一步</button>
+        <button type="button" class="rg-btn rg-btn--primary" data-action="next-step" ${index >= steps.length - 1 ? "disabled" : ""} style="${index >= steps.length - 1 ? "visibility:hidden" : ""}">下一步 ►</button>
       `;
       ctx.modal.open({
         title: String(theme?.title || "主题"),

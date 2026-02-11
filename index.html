@@ -1,93 +1,74 @@
-<!doctype html>
-<html lang="zh-CN" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>阅读花园 | Reading Garden</title>
-    <meta
-      name="description"
-      content="在故事中播种思考，在互动中收获感悟。面向教师与家长的沉浸式互动阅读花园。"
-    />
+<!DOCTYPE html>
+<html lang="zh-CN">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Garden | 阅 读 花 园</title>
+  <meta name="description" content="Immersive reading experience. Deep dive into stories and themes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/bookshelf.css">
+</head>
 
-    <link rel="stylesheet" href="css/tokens.css" />
-    <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/components.css" />
-    <link rel="stylesheet" href="css/home.css" />
-  </head>
+<body>
+  <div class="garden-container">
+    <header class="garden-hero" id="top">
+      <div class="hero-inner">
+        <p class="hero-pretitle">The Reading Garden</p>
+        <h1 class="hero-title">阅 读<br>花 园</h1>
+        <p class="hero-subtitle">
+          Planting seeds of thought using interactive stories.
+          <br>
+          在故事中播种思考，在互动中收获感悟。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#start-reading">Start Journey</a>
+          <a class="btn btn-secondary" href="#library">Explore Library</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <!-- Abstract nature shape or simple gradient circle -->
+        <div class="garden-circle"></div>
+      </div>
+    </header>
 
-  <body data-page="home">
-    <div class="rg-site">
-      <header class="rg-hero" id="top">
-        <div class="rg-hero__inner">
-          <p class="rg-eyebrow">The Reading Garden</p>
-          <h1 class="rg-hero__title">阅 读<br />花 园</h1>
-          <p class="rg-hero__subtitle">在故事中播种思考，在互动中收获感悟。</p>
+    <main class="garden-main">
+      <section class="section-featured" id="start-reading">
+        <header class="section-header">
+          <span class="section-label">01 / Featured</span>
+          <h2>Current Readings</h2>
+        </header>
+        <div class="entry-grid" id="quickEntryGrid">
+          <div class="loading">Loading Garden...</div>
+        </div>
+      </section>
 
-          <div class="rg-hero__actions">
-            <a class="rg-btn rg-btn--primary" href="#featured">开始阅读</a>
-            <a class="rg-btn rg-btn--ghost" href="#library">浏览书架</a>
-          </div>
-
-          <div class="rg-hero__tools">
-            <label class="rg-search" aria-label="搜索书名或标签">
-              <span class="rg-search__icon" aria-hidden="true" id="homeSearchIcon"></span>
-              <input id="homeSearchInput" type="search" placeholder="搜索书名 / 标签" autocomplete="off" />
-            </label>
-
-            <button id="globalThemeToggle" class="rg-iconbtn" type="button" aria-label="切换日夜模式">
-              <span class="rg-icon" aria-hidden="true" id="globalThemeIcon"></span>
-            </button>
+      <section class="section-library" id="library">
+        <header class="section-header">
+          <span class="section-label">02 / Library</span>
+          <h2>All Collections</h2>
+        </header>
+        <div class="shelf-container">
+          <div class="shelf-board" id="shelfBoard">
+            <div class="loading">Arranging Books...</div>
           </div>
         </div>
+      </section>
+    </main>
 
-        <div class="rg-hero__visual" aria-hidden="true">
-          <div class="rg-hero__orb"></div>
-          <div class="rg-hero__paper"></div>
-        </div>
-      </header>
+    <footer class="garden-footer">
+      <div class="footer-content">
+        <p>&copy; 2026 Reading Garden. Designed for Deep Reading.</p>
+        <p class="footer-quote">"Reading is a discount ticket to everywhere."</p>
+      </div>
+    </footer>
+  </div>
 
-      <main class="rg-main">
-        <section class="rg-section" id="featured">
-          <div class="rg-section__head">
-            <span class="rg-kicker">01 / Featured</span>
-            <h2 class="rg-h2">当前书单</h2>
-            <p class="rg-muted">面向课堂投屏与亲子共读，点击进入单书互动空间。</p>
-          </div>
+  <script src="js/bookshelf.js"></script>
+</body>
 
-          <div class="rg-grid rg-grid--cards" id="featuredGrid">
-            <div class="rg-skeleton">正在布置花园...</div>
-          </div>
-        </section>
-
-        <section class="rg-section" id="library">
-          <div class="rg-section__head">
-            <span class="rg-kicker">02 / Library</span>
-            <h2 class="rg-h2">完整书架</h2>
-            <p class="rg-muted">书脊视图支持横向滚动。悬停倾斜，轻触进入。</p>
-          </div>
-
-          <div class="rg-shelf" id="shelfSpines" aria-label="书脊书架">
-            <div class="rg-skeleton">正在整理书架...</div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="rg-footer">
-        <div class="rg-footer__inner">
-          <p class="rg-footer__brand">Reading Garden · 2026</p>
-          <p class="rg-footer__quote">“Reading is a discount ticket to everywhere.”</p>
-        </div>
-      </footer>
-    </div>
-
-    <script type="module" src="js/app/home.js"></script>
-  </body>
 </html>
-

@@ -7,7 +7,7 @@
       "cover": "assets/images/totto-chan/covers/totto_cover.webp",
       "description": "一个关于巴学园的温暖故事，讲述特别的教育方式如何改变一个小女孩的人生。",
       "theme": "totto-chan-theme",
-      "page": "books/totto-chan-modular.html",
+      "page": "book.html?book=totto-chan",
       "tags": [
         "教育",
         "童年",
@@ -21,7 +21,7 @@
       "cover": "assets/images/wave/covers/wave-cover.webp",
       "description": "根据真实事件改编，揭示法西斯主义如何在五天内席卷一所高中。",
       "theme": "wave-theme",
-      "page": "books/wave-modular.html",
+      "page": "book.html?book=wave",
       "tags": [
         "历史",
         "社会实验",
@@ -35,7 +35,7 @@
       "cover": "assets/images/story-of-your-life/covers/cover.webp",
       "description": "语言学、非线性时间与宿命论的科幻经典。通过七肢桶文字，体验思维的同伦性。",
       "theme": "ink-time",
-      "page": "books/story-of-your-life-modular.html",
+      "page": "book.html?book=story-of-your-life",
       "tags": [
         "科幻",
         "语言学",
@@ -49,7 +49,7 @@
       "cover": "assets/images/wonder/covers/cover.webp",
       "description": "一个天生面部畸形的小男孩奥古斯特，在进入普通学校后，用善良和勇气改变周围人的故事。",
       "theme": "wonder-theme",
-      "page": "books/wonder-modular.html",
+      "page": "book.html?book=wonder",
       "tags": [
         "成长",
         "多视角",
@@ -63,7 +63,7 @@
       "cover": "assets/images/a-man-called-ove/cover.webp",
       "description": "关于悲伤、失去、社区与爱的故事。一个脾气古怪的老人和他温暖的邻居们。",
       "theme": "ove-theme",
-      "page": "books/a-man-called-ove-modular.html",
+      "page": "book.html?book=a-man-called-ove",
       "tags": [
         "人际关系",
         "治愈",
@@ -77,7 +77,7 @@
       "cover": "assets/images/lord-of-the-flies/covers/cover.webp",
       "description": "一群被困荒岛的英国少年，从建立文明秩序到逐渐堕落为野蛮人的惊心动魄的故事。",
       "theme": "lotf-theme",
-      "page": "books/lord-of-the-flies-modular.html",
+      "page": "book.html?book=lord-of-the-flies",
       "tags": [
         "人性",
         "寓言",

@@ -1,0 +1,155 @@
+/* Ink & Time Theme */
+:root {
+    --bg-color: #F5F5F0;
+    --ink-color: #2C3E50;
+    --accent-color: #C0392B;
+    --text-main: #333;
+    --text-fade: #666;
+    --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+    --font-sans: 'Inter', 'Noto Sans SC', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-serif);
+    margin: 0;
+    padding: 0;
+    line-height: 1.8;
+    overflow-x: hidden;
+}
+
+/* Header with Logogram Decoder */
+.story-header {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify_content: center;
+    background: radial-gradient(circle at center, #fff 0%, var(--bg-color) 70%);
+    position: relative;
+}
+
+.logogram-canvas {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.logogram-canvas:hover {
+    transform: scale(1.05);
+}
+
+h1 {
+    font-size: 3rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-color);
+    margin: 0;
+    opacity: 0.9;
+}
+
+.author {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-fade);
+    margin-top: 1rem;
+}
+
+/* Reading Container */
+.reader-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    position: relative;
+}
+
+/* Timeline Visualization */
+.timeline-marker {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60vh;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+.timeline-progress {
+    width: 100%;
+    background: var(--ink-color);
+    height: 0%;
+    border-radius: 2px;
+    transition: height 0.3s ease;
+}
+
+/* Story Segments */
+.segment {
+    margin-bottom: 6rem;
+    padding: 2rem;
+    border-left: 2px solid transparent;
+    /* Highlight marker */
+    transition: all 0.5s ease;
+    opacity: 0.6;
+}
+
+.segment.active {
+    opacity: 1;
+    transform: translateX(10px);
+}
+
+/* Timeline specific styles */
+.timeline-daughter {
+    font-family: var(--font-sans);
+    border-left-color: var(--accent-color);
+    /* Red for emotional/personal */
+}
+
+.timeline-arrival {
+    font-family: var(--font-serif);
+    border-left-color: var(--ink-color);
+    /* Black for analytical/alien */
+}
+
+/* Flashforward effect */
+.flashforward {
+    background-color: rgba(192, 57, 43, 0.1);
+    padding: 0 4px;
+    border-radius: 2px;
+    cursor: help;
+}
+
+/* Navigation */
+.nav-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    background: var(--ink-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+}
+
+/* Component: Logogram Tool */
+#logogram-tool {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    background: white;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: none;
+}

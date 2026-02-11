@@ -1,0 +1,740 @@
+/* Ove Theme - Cinematic Storytelling (Pro Max Redesign) */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Color Palette - Deep Nordic Night */
+    --ove-bg-dark: #0A0A0F;
+    --ove-bg-panel: rgba(20, 20, 30, 0.6);
+    --ove-bg-card: rgba(30, 30, 45, 0.4);
+
+    /* Accents */
+    --ove-gold: #D4AF37;
+    --ove-gold-dim: #A68A2E;
+    --ove-blue-steel: #475569;
+    --ove-warm-orange: #EA580C;
+    /* Sonja */
+    --ove-text-main: #F8FAFC;
+    --ove-text-muted: #94A3B8;
+
+    /* Spacing & Layout */
+    --ove-radius-lg: 24px;
+    --ove-radius-md: 16px;
+    --ove-radius-sm: 8px;
+    --ove-space-section: 48px;
+
+    /* Effects */
+    --ove-glass: blur(20px) saturate(180%);
+    --ove-shadow-glow: 0 0 20px rgba(212, 175, 55, 0.1);
+    --ove-transition: cubic-bezier(0.4, 0, 0.2, 1) 500ms;
+}
+
+/* Base Typography */
+body.ove-theme {
+    background-color: var(--ove-bg-dark);
+    color: var(--ove-text-main);
+    font-family: 'Montserrat', sans-serif;
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(234, 88, 12, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(71, 85, 105, 0.05) 0%, transparent 40%);
+    min-height: 100vh;
+}
+
+.ove-theme h1,
+.ove-theme h2,
+.ove-theme h3 {
+    font-family: 'Cormorant', serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* Header Redesign */
+.ove-theme .header {
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    height: 70px;
+}
+
+.ove-theme .site-title {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #F8FAFC 0%, #94A3B8 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* View Panels - Cinematic Cards */
+.ove-theme .story-view-panel {
+    padding: var(--ove-space-section) 0 80px;
+    /* Bottom padding for nav */
+    max-width: 1400px;
+    margin: 0 auto;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ove-theme .story-view-panel.active {
+    display: block;
+    opacity: 1;
+    animation: fadeInSlideUp 0.5s ease forwards;
+}
+
+.ove-theme .panel-header {
+    margin-bottom: 48px;
+    position: relative;
+    padding-bottom: 24px;
+}
+
+.ove-theme .panel-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--ove-gold);
+    border-radius: 2px;
+}
+
+.ove-theme .panel-header h2 {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.ove-theme .panel-desc {
+    font-size: 1.125rem;
+    color: var(--ove-text-muted);
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+}
+
+/* Cards & Grid */
+.ove-theme .bento-grid,
+.suicide-attempts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 0 24px;
+}
+
+.theme-card,
+.suicide-card {
+    background: var(--ove-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--ove-radius-md);
+    padding: 32px;
+    transition: var(--ove-transition);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.theme-card:hover,
+.suicide-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--ove-shadow-glow);
+    background: linear-gradient(145deg, rgba(30, 30, 45, 0.6), rgba(20, 20, 30, 0.8));
+}
+
+/* Timeline - Elegant Vertical/Horizontal Hybrid */
+.dual-timeline-container {
+    background: var(--ove-bg-panel);
+    border-radius: var(--ove-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 40px;
+    margin: 0 24px;
+    backdrop-filter: blur(20px);
+}
+
+.timeline-label {
+    font-family: 'Cormorant', serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.timeline-event {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    /* More rigid/architectural */
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.timeline-event:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--ove-gold);
+    color: var(--ove-gold);
+}
+
+.timeline-event.past {
+    border-left: 3px solid var(--ove-gold);
+}
+
+.timeline-event.present {
+    border-left: 3px solid var(--ove-blue-steel);
+}
+
+.timeline-event.suicide {
+    border-left-color: var(--ove-warm-orange);
+}
+
+/* Reading View - Premium Paper Mode */
+.reading-layout {
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: calc(100vh - 160px);
+    /* Fill space */
+}
+
+.sidebar {
+    background: var(--ove-bg-panel);
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+}
+
+.sidebar-header h2 {
+    color: var(--ove-gold);
+}
+
+.toc-item {
+    color: var(--ove-text-muted);
+    font-family: 'Montserrat', sans-serif;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+}
+
+.toc-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--ove-text-main);
+}
+
+.toc-item.active {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--ove-gold);
+    font-weight: 600;
+}
+
+.chapter-content {
+    background: #EAE8E3;
+    /* Warm Paper */
+    color: #1F1F1F;
+    /* Ink Black */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    padding: 60px 80px;
+    border-radius: 4px;
+    height: 100%;
+    overflow-y: auto;
+    font-family: 'Cormorant', serif;
+    font-size: 1.25rem;
+    /* Larger for reading */
+    line-height: 1.8;
+}
+
+.chapter-content h2 {
+    color: #000;
+    font-size: 2.5rem;
+    border-bottom: 2px solid #D4AF37;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.chapter-content p {
+    margin-bottom: 24px;
+}
+
+.ove-sidebar-backdrop {
+    display: none;
+}
+
+/* Tab Bar - Floating Dock */
+.ove-theme .story-tab-bar {
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.story-tab-btn {
+    color: var(--ove-text-muted);
+}
+
+.story-tab-btn.active {
+    color: var(--ove-gold);
+}
+
+.story-tab-btn.active .tab-icon {
+    transform: translateY(-4px) scale(1.2);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Utility Animations */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Educational Features */
+
+/* Theme Tags */
+.theme-controls {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.theme-tags {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.theme-tag-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--ove-text-muted);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+}
+
+.theme-tag-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--ove-text-main);
+}
+
+.theme-tag-btn.active {
+    background: var(--ove-gold);
+    color: #000;
+    border-color: var(--ove-gold);
+    font-weight: 600;
+}
+
+/* Modal - Step by Step */
+.theme-modal-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.theme-icon-large {
+    font-size: 3rem;
+    color: var(--ove-gold);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.theme-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.step-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    background: var(--ove-gold);
+    transform: scale(1.2);
+}
+
+.step-dot.completed {
+    background: var(--ove-gold-dim);
+}
+
+.step-counter {
+    font-size: 0.9rem;
+    color: var(--ove-text-muted);
+}
+
+.theme-step-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.step-label {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--ove-gold);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.step-content {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+/* Teaching Tip */
+.teaching-tip {
+    background: rgba(212, 175, 55, 0.1);
+    border-left: 3px solid var(--ove-gold);
+    padding: 16px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+}
+
+.tip-icon {
+    font-size: 1.2rem;
+}
+
+.tip-content {
+    font-size: 0.95rem;
+    color: var(--ove-text-main);
+    font-style: italic;
+}
+
+/* Discussion / Poll */
+.theme-discussion {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 16px;
+}
+
+#discussionQuestion {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--ove-text-main);
+}
+
+.poll-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--ove-text-main);
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.poll-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--ove-gold);
+}
+
+.poll-option.selected {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--ove-gold);
+}
+
+.poll-results {
+    margin-top: 24px;
+}
+
+/* Nav Buttons */
+.theme-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 16px;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--ove-text-muted);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--ove-gold);
+    color: #000;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #F0CF5A;
+    transform: translateY(-2px);
+}
+
+/* Pagination */
+.theme-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.pagination-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--ove-text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--ove-gold);
+    color: var(--ove-text-main);
+}
+
+.pagination-btn.active {
+    background: var(--ove-gold);
+    color: #000;
+    border-color: var(--ove-gold);
+    font-weight: 600;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Day/Night Mode (default: day via body.light-mode in Ove pages) */
+body.ove-theme.light-mode {
+    --ove-bg-dark: #F5F1E8;
+    --ove-bg-panel: rgba(255, 255, 255, 0.84);
+    --ove-bg-card: rgba(255, 255, 255, 0.92);
+    --ove-gold: #8C6A25;
+    --ove-gold-dim: #6B521F;
+    --ove-blue-steel: #64748B;
+    --ove-warm-orange: #C2410C;
+    --ove-text-main: #1F2937;
+    --ove-text-muted: #475569;
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(194, 65, 12, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(71, 85, 105, 0.08) 0%, transparent 40%);
+}
+
+body.ove-theme.light-mode .header {
+    background: rgba(245, 241, 232, 0.9);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+body.ove-theme.light-mode .site-title {
+    background: none;
+    color: #0F172A;
+    -webkit-text-fill-color: #0F172A;
+    text-shadow: none;
+}
+
+body.ove-theme.light-mode .theme-card,
+body.ove-theme.light-mode .suicide-card {
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.ove-theme.light-mode .theme-card:hover,
+body.ove-theme.light-mode .suicide-card:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.95));
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.14), 0 0 16px rgba(140, 106, 37, 0.18);
+}
+
+body.ove-theme.light-mode .dual-timeline-container {
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.ove-theme.light-mode .timeline-label {
+    border-bottom-color: rgba(15, 23, 42, 0.12);
+}
+
+body.ove-theme.light-mode .timeline-event {
+    background: rgba(15, 23, 42, 0.04);
+    border-color: rgba(15, 23, 42, 0.08);
+}
+
+body.ove-theme.light-mode .timeline-event:hover {
+    background: rgba(15, 23, 42, 0.09);
+}
+
+body.ove-theme.light-mode .sidebar {
+    border-right: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+body.ove-theme.light-mode .chapter-content {
+    background: #FFFCF5;
+    color: #111827;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.16);
+}
+
+body.ove-theme.light-mode .chapter-content h2 {
+    color: #0F172A;
+    border-bottom-color: #8C6A25;
+}
+
+body.ove-theme.light-mode .tab-bar,
+body.ove-theme.light-mode .story-tab-bar {
+    background: rgba(245, 241, 232, 0.94);
+    border-top: 1px solid rgba(15, 23, 42, 0.1);
+    box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.12);
+}
+
+body.ove-theme.light-mode .story-tab-btn {
+    color: #64748B;
+}
+
+body.ove-theme.light-mode .story-tab-btn.active {
+    color: #8C6A25;
+}
+
+body.ove-theme.light-mode #themeToggle .icon-sun {
+    display: none;
+}
+
+body.ove-theme.light-mode #themeToggle .icon-moon {
+    display: inline;
+}
+
+body.ove-theme:not(.light-mode) #themeToggle .icon-sun {
+    display: inline;
+}
+
+body.ove-theme:not(.light-mode) #themeToggle .icon-moon {
+    display: none;
+}
+
+/* Mobile Reading Fix: keep reasonable line width on Ove pages */
+@media (max-width: 768px) {
+    .reading-layout {
+        height: auto;
+        padding: 0 12px;
+        gap: 12px;
+    }
+
+    .sidebar {
+        width: min(82vw, 300px);
+    }
+
+    .ove-sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: var(--header-height) 0 var(--tab-height) 0;
+        border: none;
+        padding: 0;
+        margin: 0;
+        background: rgba(0, 0, 0, 0.28);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 80;
+        transition: opacity 0.2s ease;
+    }
+
+    .ove-sidebar-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .chapter-content {
+        padding: 20px 16px;
+        font-size: 1.02rem;
+        line-height: 1.75;
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .chapter-content h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+
+    .chapter-content p {
+        margin-bottom: 14px;
+    }
+
+    .chapter-nav {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ove-theme .story-view-panel {
+        padding: 20px 0 84px;
+    }
+
+    .reading-layout {
+        padding: 0 8px;
+    }
+
+    .chapter-content {
+        padding: 16px 12px;
+        font-size: 0.98rem;
+        line-height: 1.72;
+        border-radius: 8px;
+    }
+
+    .chapter-content h2 {
+        font-size: 1.35rem;
+        margin-bottom: 16px;
+    }
+}

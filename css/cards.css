@@ -1,0 +1,253 @@
+/* ===== Cards Container ===== */
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ===== Philosophy Card ===== */
+.philosophy-card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.philosophy-card:hover {
+    box-shadow: 0 8px 30px var(--shadow-strong);
+}
+
+/* ===== Card Header (Collapsed View) ===== */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.card-header:hover {
+    background: var(--bg-tertiary);
+}
+
+.card-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.125rem;
+}
+
+.card-tagline {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.card-toggle {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.card-toggle::after {
+    content: '▼';
+    font-size: 0.625rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+
+.philosophy-card.expanded .card-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* ===== Card Body (Expanded View) ===== */
+.card-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.philosophy-card.expanded .card-body {
+    max-height: 2000px;
+}
+
+.card-content {
+    padding: 0 1.25rem 1.25rem;
+}
+
+/* ===== Scene Section ===== */
+.card-section {
+    margin-bottom: 1.25rem;
+}
+
+.card-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.625rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.scene-content {
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.scene-quote {
+    background: var(--bg-tertiary);
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1rem;
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+/* ===== Comparison ===== */
+.comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.comparison-item {
+    padding: 0.75rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.comparison-traditional {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.comparison-traditional .comparison-label {
+    color: var(--error);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.comparison-tomoe {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.comparison-tomoe .comparison-label {
+    color: var(--success);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+/* ===== Application Tips ===== */
+.application-scenario {
+    font-size: 0.9375rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.tips-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tips-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.tips-list li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ===== Infographic ===== */
+.card-infographic {
+    margin-top: 1rem;
+}
+
+.infographic-image {
+    width: 100%;
+    border-radius: var(--border-radius-sm);
+    display: block;
+}
+
+/* ===== Mobile Adjustments ===== */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 0.875rem 1rem;
+    }
+
+    .card-icon {
+        font-size: 1.75rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-content {
+        padding: 0 1rem 1rem;
+    }
+
+    .comparison {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .cards-container {
+        gap: 0.75rem;
+    }
+
+    .card-header {
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .card-toggle {
+        width: 28px;
+        height: 28px;
+    }
+
+    .comparison-item {
+        padding: 0.625rem;
+        font-size: 0.75rem;
+    }
+}

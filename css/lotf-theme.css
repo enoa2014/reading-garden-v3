@@ -1,0 +1,291 @@
+/* Lord of the Flies Theme */
+
+:root {
+    /* ===== Color System ===== */
+    --lotf-primary: #1E3A5F;
+    /* Deep Sea Blue */
+    --lotf-primary-light: #2C5282;
+    --lotf-primary-dark: #0F2A47;
+
+    --lotf-fire: #E53E3E;
+    /* Fire Red */
+    --lotf-fire-light: #FC8181;
+    --lotf-fire-dark: #9B2C2C;
+
+    --lotf-conch: #D69E2E;
+    /* Conch Gold */
+    --lotf-conch-light: #F6E05E;
+
+    --lotf-jungle: #276749;
+    /* Jungle Green */
+    --lotf-sand: #EDF2D7;
+    /* Sand */
+
+    /* Semantic Colors */
+    --lotf-civilization: #3182CE;
+    --lotf-savagery: #C53030;
+
+    /* Backgrounds */
+    --bg-light: #F7FAFC;
+    --bg-card: #FFFFFF;
+    --bg-sidebar: #EDF2F7;
+
+    /* Text */
+    --text-primary: #1A202C;
+    --text-secondary: #4A5568;
+    --text-muted: #A0AEC0;
+
+    /* Fonts */
+    --font-heading: 'Bitter', 'Noto Serif SC', serif;
+    --font-body: 'Source Sans 3', 'Noto Sans SC', sans-serif;
+    --font-quote: 'Literata', 'LXGW WenKai', serif;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --bg-light: #0D1B2A;
+    --bg-card: #1B2838;
+    --bg-sidebar: #101820;
+
+    --text-primary: #E2E8F0;
+    --text-secondary: #A0AEC0;
+    --text-muted: #718096;
+
+    --lotf-primary: #4299E1;
+    --lotf-fire: #FC8181;
+    --lotf-conch: #F6E05E;
+}
+
+/* Base Styles */
+body.lotf-theme {
+    font-family: var(--font-body);
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.lotf-theme .site-title {
+    font-family: var(--font-heading);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Tab Bar Override */
+.lotf-theme .tab-bar {
+    background: var(--bg-card);
+    border-top: 1px solid var(--text-muted);
+}
+
+.lotf-theme .tab-btn.active {
+    color: var(--lotf-primary);
+    border-top-color: var(--lotf-primary);
+}
+
+/* Module Layout */
+.lotf-reading-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: calc(100vh - 60px - 60px);
+}
+
+.lotf-reading-toolbar {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 0.5rem;
+}
+
+.lotf-toc-toggle {
+    border: 1px solid var(--lotf-primary);
+    background: var(--bg-card);
+    color: var(--lotf-primary);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lotf-toc-toggle:hover {
+    background: var(--lotf-primary);
+    color: #fff;
+}
+
+.lotf-toc-toggle:focus-visible {
+    outline: 2px solid var(--lotf-conch);
+    outline-offset: 2px;
+}
+
+.lotf-reading-layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.lotf-sidebar {
+    width: 280px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--text-muted);
+    overflow-y: auto;
+    padding: 1rem;
+    flex-shrink: 0;
+    transition: width 0.2s ease, max-height 0.2s ease, padding 0.2s ease, opacity 0.2s ease, border 0.2s ease;
+}
+
+.lotf-reading-layout.sidebar-collapsed .lotf-sidebar {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lotf-content {
+    flex: 1;
+    padding: 2rem 4rem;
+    overflow-y: auto;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Chapter List */
+.chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chapter-item {
+    margin-bottom: 0.5rem;
+}
+
+.chapter-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-heading);
+}
+
+.chapter-btn:hover {
+    background: rgba(30, 58, 95, 0.05);
+    color: var(--lotf-primary);
+}
+
+.chapter-btn.active {
+    background: var(--lotf-primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(30, 58, 95, 0.3);
+}
+
+/* Content Typography */
+.chapter-title {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: var(--lotf-primary);
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid var(--lotf-conch);
+    padding-bottom: 0.5rem;
+}
+
+.chapter-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.chapter-text {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.chapter-text p {
+    margin-bottom: 1.5rem;
+    text-indent: 2em;
+}
+
+/* Highlighted Paragraph */
+.chapter-text p.highlight {
+    background: rgba(214, 158, 46, 0.1);
+    border-left: 4px solid var(--lotf-conch);
+    padding-left: 1rem;
+    text-indent: 0;
+}
+
+/* Navigation Buttons */
+.chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--text-muted);
+}
+
+.btn-nav {
+    padding: 0.5rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--lotf-primary);
+    color: var(--lotf-primary);
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+}
+
+.btn-nav:hover {
+    background: var(--lotf-primary);
+    color: white;
+}
+
+.btn-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lotf-reading-shell {
+        gap: 0.5rem;
+    }
+
+    .lotf-reading-toolbar {
+        padding: 0;
+    }
+
+    .lotf-reading-layout {
+        flex-direction: column;
+    }
+
+    .lotf-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 150px;
+        border-right: none;
+        border-bottom: 1px solid var(--text-muted);
+    }
+
+    .lotf-reading-layout.sidebar-collapsed .lotf-sidebar {
+        width: 100%;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border: none;
+    }
+
+    .lotf-content {
+        padding: 1rem;
+    }
+}

@@ -18,7 +18,7 @@
       "id": "reading",
       "title": "阅读",
       "icon": "📖",
-      "entry": "../../js/modules/reading-module.js",
+      "entry": "../../js/modules/reading-module.js?v=3",
       "data": "chapters.json",
       "active": true
     },
@@ -26,28 +26,28 @@
       "id": "themes",
       "title": "主题",
       "icon": "💬",
-      "entry": "../../js/modules/themes-module.js",
+      "entry": "../../js/modules/themes-module.js?v=3",
       "data": "themes.json"
     },
     {
       "id": "timeline",
       "title": "时间线",
       "icon": "📅",
-      "entry": "../../js/modules/timeline-module.js",
-      "data": "timeline.json"
+      "entry": "../../js/modules/timeline-module.js?v=3",
+      "data": "timeline.json?v=2"
     },
     {
       "id": "suicide",
       "title": "未遂告别",
       "icon": "☁️",
-      "entry": "../../js/modules/suicide-module.js",
+      "entry": "../../js/modules/suicide-module.js?v=3",
       "data": "suicide_attempts.json"
     },
     {
       "id": "characters",
       "title": "人物",
       "icon": "👥",
-      "entry": "../../js/modules/characters-module.js",
+      "entry": "../../js/modules/characters-module.js?v=3",
       "data": "characters.json",
       "assets": {
         "graphLib": "cytoscape"

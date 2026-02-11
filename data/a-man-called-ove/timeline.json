@@ -48,7 +48,7 @@
             "title": "遇见索雅",
             "description": "在火车上遇见穿红裙子的索雅",
             "chapter": 14,
-            "image": "train-meeting.webp",
+            "image": "assets/images/a-man-called-ove/train-meeting.webp",
             "highlight": true
         },
         {
@@ -68,7 +68,7 @@
             "title": "建造房子",
             "description": "欧维亲手建造他们的家",
             "chapter": 20,
-            "image": "house-section.webp"
+            "image": "assets/images/a-man-called-ove/house-section.webp"
         },
         {
             "id": "sonja-accident",
@@ -88,7 +88,7 @@
             "title": "索雅坐轮椅",
             "description": "索雅成为教师，坐轮椅继续工作",
             "chapter": 26,
-            "image": "sonja-teacher.webp"
+            "image": "assets/images/a-man-called-ove/sonja-teacher.webp"
         },
         {
             "id": "sonja-death",
@@ -98,7 +98,7 @@
             "title": "索雅去世",
             "description": "索雅因癌症去世",
             "chapter": 4,
-            "image": "ove-cemetery.webp",
+            "image": "assets/images/a-man-called-ove/ove-cemetery.webp",
             "highlight": true
         },
         {
@@ -131,7 +131,7 @@
             "interrupted": "帕特里克借梯子",
             "chapter": 9,
             "suicideAttempt": true,
-            "image": "ove-saab.webp"
+            "image": "assets/images/a-man-called-ove/ove-saab.webp"
         },
         {
             "id": "suicide-3",
@@ -152,7 +152,7 @@
             "title": "收养猫",
             "description": "收养了一只倔强的流浪猫",
             "chapter": 21,
-            "image": "ove-cat-chair.webp"
+            "image": "assets/images/a-man-called-ove/ove-cat-chair.webp"
         },
         {
             "id": "community",
@@ -162,7 +162,7 @@
             "title": "融入社区",
             "description": "被邻居们逐渐融化，重新找到生活意义",
             "chapter": 35,
-            "image": "community-street.webp",
+            "image": "assets/images/a-man-called-ove/community-street.webp",
             "highlight": true
         }
     ],

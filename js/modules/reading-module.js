@@ -88,8 +88,8 @@ function renderFontButtons(active) {
 function resolvePovs(chapters, registryPovs) {
   const fromRegistry = Array.isArray(registryPovs)
     ? registryPovs
-        .map((p) => ({ id: String(p?.id || "").trim(), name: String(p?.name || "").trim() }))
-        .filter((p) => p.id)
+      .map((p) => ({ id: String(p?.id || "").trim(), name: String(p?.name || "").trim() }))
+      .filter((p) => p.id)
     : [];
   if (fromRegistry.length) return fromRegistry;
 
@@ -118,12 +118,12 @@ function renderPovSelector(povs, active) {
       <select data-action="pov" aria-label="选择视角">
         <option value="all"${value === "all" ? " selected" : ""}>全部</option>
         ${povs
-          .map((p) => {
-            const id = String(p.id);
-            const name = String(p.name || p.id);
-            return `<option value="${escapeHtml(id)}"${value === id ? " selected" : ""}>${escapeHtml(name)}</option>`;
-          })
-          .join("")}
+      .map((p) => {
+        const id = String(p.id);
+        const name = String(p.name || p.id);
+        return `<option value="${escapeHtml(id)}"${value === id ? " selected" : ""}>${escapeHtml(name)}</option>`;
+      })
+      .join("")}
       </select>
     </label>
   `;
@@ -630,8 +630,8 @@ export default {
         bodyEl.innerHTML = `
           <div class="rg-reading__text">
             ${paragraphs
-              .map((p) => `<p class="${p.highlight ? "is-highlight" : ""}" id="${escapeHtml(p.id || "")}">${escapeHtml(p.text)}</p>`)
-              .join("")}
+            .map((p) => `<p class="${p.highlight ? "is-highlight" : ""}" id="${escapeHtml(p.id || "")}">${escapeHtml(p.text)}</p>`)
+            .join("")}
           </div>
         `;
       }
@@ -664,8 +664,14 @@ export default {
     // Update nav button disabled states.
     const prev = ctx.panelEl.querySelector('[data-action="prev"]');
     const next = ctx.panelEl.querySelector('[data-action="next"]');
-    if (prev instanceof HTMLButtonElement) prev.disabled = ctx.state.currentIndexInFiltered <= 0;
-    if (next instanceof HTMLButtonElement) next.disabled = ctx.state.currentIndexInFiltered >= total - 1;
+    if (prev instanceof HTMLButtonElement) {
+      prev.disabled = ctx.state.currentIndexInFiltered <= 0;
+      prev.style.visibility = prev.disabled ? "hidden" : "";
+    }
+    if (next instanceof HTMLButtonElement) {
+      next.disabled = ctx.state.currentIndexInFiltered >= total - 1;
+      next.style.visibility = next.disabled ? "hidden" : "";
+    }
   },
 
   _bindSwipe(ctx) {
