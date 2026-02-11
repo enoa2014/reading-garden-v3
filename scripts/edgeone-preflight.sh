@@ -5,11 +5,12 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
 if [ $# -lt 1 ]; then
-  echo "Usage: ./scripts/edgeone-preflight.sh <path/to/site.rgsite.zip>" >&2
+  echo "Usage: ./scripts/edgeone-preflight.sh <path/to/site.rgsite.zip> [--report <path>]" >&2
   exit 1
 fi
 
 ZIP_PATH="$1"
+shift
 if [ ! -f "$ZIP_PATH" ]; then
   echo "zip file not found: $ZIP_PATH" >&2
   exit 1
@@ -22,4 +23,4 @@ cleanup() {
 trap cleanup EXIT
 
 unzip -q "$ZIP_PATH" -d "$WORK_DIR"
-node scripts/edgeone-preflight.mjs "$WORK_DIR"
+node scripts/edgeone-preflight.mjs "$WORK_DIR" "$@"

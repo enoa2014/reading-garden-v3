@@ -1,9 +1,73 @@
-import { readFile, stat } from "node:fs/promises";
+import { readFile, stat, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
 function usage() {
-  console.error("Usage: node scripts/edgeone-preflight.mjs <extracted-site-root>");
+  console.error("Usage: node scripts/edgeone-preflight.mjs <extracted-site-root> [--report <path>]");
+}
+
+function parseCliOptions(argv) {
+  const options = {
+    siteRootArg: "",
+    reportPath: "",
+    help: false,
+  };
+
+  for (let idx = 0; idx < argv.length; idx += 1) {
+    const arg = String(argv[idx] || "").trim();
+    if (!arg) {
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (arg === "--help" || arg === "-h") {
+      options.help = true;
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (arg === "--report") {
+      const next = String(argv[idx + 1] || "").trim();
+      if (!next) {
+        throw new Error("missing value for --report");
+      }
+      options.reportPath = next;
+      idx += 1;
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (!options.siteRootArg) {
+      options.siteRootArg = arg;
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    throw new Error(`unknown argument: ${arg}`);
+  }
+
+  return options;
+}
+
+function buildReportPayload(status, siteRoot, manifest, warnings, errorMessage) {
+  return {
+    status,
+    checkedAt: new Date().toISOString(),
+    siteRoot,
+    scope: String(manifest?.scope || "all"),
+    books: Number(manifest?.books || 0),
+    files: Number(manifest?.files || 0),
+    totalBytes: Number(manifest?.totalBytes || 0),
+    missingAssets: Number(manifest?.missingAssets || 0),
+    warnings: Array.isArray(warnings) ? warnings : [],
+    error: errorMessage ? String(errorMessage) : "",
+  };
+}
+
+async function maybeWriteReport(reportPath, payload) {
+  const resolvedReportPath = String(reportPath || "").trim();
+  if (!resolvedReportPath) {
+    return "";
+  }
+  const absReportPath = path.resolve(resolvedReportPath);
+  await writeFile(absReportPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  return absReportPath;
 }
 
 async function exists(targetPath) {
@@ -200,13 +264,8 @@ async function validateExtractedSiteRoot(siteRoot) {
   };
 }
 
-async function run() {
-  const siteRootArg = String(process.argv[2] || "").trim();
-  if (!siteRootArg) {
-    usage();
-    throw new Error("site root path is required");
-  }
-
+async function run(options) {
+  const siteRootArg = String(options?.siteRootArg || "").trim();
   const siteRoot = path.resolve(siteRootArg);
   let siteStats = null;
   try {
@@ -221,22 +280,78 @@ async function run() {
   const result = await validateExtractedSiteRoot(siteRoot);
   const manifest = result.manifest || {};
 
-  console.log("edgeone-preflight: ok");
-  console.log(`siteRoot: ${siteRoot}`);
-  console.log(`scope: ${String(manifest.scope || "all")}`);
-  console.log(`books: ${Number(manifest.books || 0)}`);
-  console.log(`files: ${Number(manifest.files || 0)}`);
-  console.log(`totalBytes: ${Number(manifest.totalBytes || 0)}`);
-  console.log(`missingAssets: ${Number(manifest.missingAssets || 0)}`);
-  if (result.warnings.length) {
-    console.log(`warnings: ${result.warnings.length}`);
-    result.warnings.forEach((item, idx) => {
-      console.log(`  ${idx + 1}. ${item}`);
-    });
+  return {
+    siteRoot,
+    manifest,
+    warnings: result.warnings || [],
+  };
+}
+
+async function main() {
+  let cliOptions = null;
+  try {
+    cliOptions = parseCliOptions(process.argv.slice(2));
+  } catch (err) {
+    usage();
+    throw err;
+  }
+
+  if (cliOptions.help) {
+    usage();
+    return;
+  }
+  if (!cliOptions.siteRootArg) {
+    usage();
+    throw new Error("site root path is required");
+  }
+
+  try {
+    const output = await run(cliOptions);
+    const reportPayload = buildReportPayload("ok", output.siteRoot, output.manifest, output.warnings, "");
+    const reportPath = await maybeWriteReport(cliOptions.reportPath, reportPayload);
+
+    console.log("edgeone-preflight: ok");
+    console.log(`siteRoot: ${output.siteRoot}`);
+    console.log(`scope: ${String(output.manifest.scope || "all")}`);
+    console.log(`books: ${Number(output.manifest.books || 0)}`);
+    console.log(`files: ${Number(output.manifest.files || 0)}`);
+    console.log(`totalBytes: ${Number(output.manifest.totalBytes || 0)}`);
+    console.log(`missingAssets: ${Number(output.manifest.missingAssets || 0)}`);
+    if (output.warnings.length) {
+      console.log(`warnings: ${output.warnings.length}`);
+      output.warnings.forEach((item, idx) => {
+        console.log(`  ${idx + 1}. ${item}`);
+      });
+    }
+    if (reportPath) {
+      console.log(`report: ${reportPath}`);
+    }
+  } catch (err) {
+    const siteRootForReport = cliOptions?.siteRootArg
+      ? path.resolve(String(cliOptions.siteRootArg))
+      : "";
+    const reportPayload = buildReportPayload(
+      "fail",
+      siteRootForReport,
+      {},
+      [],
+      String(err?.message || err)
+    );
+    try {
+      const reportPath = await maybeWriteReport(cliOptions?.reportPath || "", reportPayload);
+      if (reportPath) {
+        console.error(`report: ${reportPath}`);
+      }
+    } catch (reportErr) {
+      console.error(`edgeone-preflight: report write failed: ${String(reportErr?.message || reportErr)}`);
+    }
+    console.error("edgeone-preflight: fail");
+    console.error(String(err?.message || err));
+    process.exitCode = 1;
   }
 }
 
-run().catch((err) => {
+main().catch((err) => {
   console.error("edgeone-preflight: fail");
   console.error(String(err?.message || err));
   process.exitCode = 1;

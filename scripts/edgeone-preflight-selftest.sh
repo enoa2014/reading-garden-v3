@@ -30,6 +30,24 @@ assert_failure_contains() {
   fi
 }
 
+assert_report_status() {
+  local report_path="$1"
+  local expected_status="$2"
+  node - "$report_path" "$expected_status" <<'NODE'
+const fs = require("node:fs");
+
+const reportPath = process.argv[2];
+const expectedStatus = process.argv[3];
+if (!fs.existsSync(reportPath)) {
+  throw new Error(`report not found: ${reportPath}`);
+}
+const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+if (String(report?.status || "") !== expectedStatus) {
+  throw new Error(`report status mismatch: expected=${expectedStatus}, actual=${String(report?.status || "")}`);
+}
+NODE
+}
+
 write_manifest_with_checksums() {
   local site_root="$1"
   local books_count="$2"
@@ -200,13 +218,19 @@ run_preflight_zip() {
 echo "[edgeone-selftest] minimal sample"
 MINIMAL_ROOT="$WORK_DIR/minimal-site"
 MINIMAL_ZIP="$WORK_DIR/minimal.rgsite.zip"
+MINIMAL_REPORT_OK="$WORK_DIR/minimal-preflight-ok.json"
+MINIMAL_REPORT_FAIL="$WORK_DIR/minimal-preflight-fail.json"
 build_minimal_sample "$MINIMAL_ROOT"
 run_preflight_zip "$MINIMAL_ROOT" "$MINIMAL_ZIP"
+./scripts/edgeone-preflight.sh "$MINIMAL_ZIP" --report "$MINIMAL_REPORT_OK"
+assert_report_status "$MINIMAL_REPORT_OK" "ok"
 
 echo "[edgeone-selftest] tamper checksum sample (expected fail)"
 printf 'tamper\n' >> "$MINIMAL_ROOT/index.html"
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "checksum mismatch:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+assert_failure_contains "checksum mismatch:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP" --report "$MINIMAL_REPORT_FAIL"
+assert_report_status "$MINIMAL_REPORT_FAIL" "fail"
 
 echo "[edgeone-selftest] unsafe checksum path sample (expected fail)"
 build_minimal_sample "$MINIMAL_ROOT"

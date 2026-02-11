@@ -747,8 +747,13 @@ async function testDiagnosticSourceMarkers() {
   assert(edgeonePreflightSource.includes("checksum missing for required file"), "edgeone preflight script should require checksum entries for critical files");
   assert(edgeonePreflightSource.includes("invalid checksum format"), "edgeone preflight script should validate checksum hash format");
   assert(edgeonePreflightSource.includes("invalid checksum target path"), "edgeone preflight script should reject unsafe checksum target paths");
+  assert(edgeonePreflightSource.includes("--report"), "edgeone preflight script should support report output option");
+  assert(edgeonePreflightSource.includes("report:"), "edgeone preflight script should emit report output path");
   assert(edgeonePreflightShellSource.includes("edgeone-preflight.mjs"), "edgeone preflight shell wrapper should call node script");
+  assert(edgeonePreflightShellSource.includes("--report"), "edgeone preflight shell wrapper should pass report options through");
   assert(edgeonePreflightSelftestSource.includes("real-asset sample"), "edgeone preflight selftest should include real-asset sample flow");
+  assert(edgeonePreflightSelftestSource.includes("assert_report_status"), "edgeone preflight selftest should validate report file status");
+  assert(edgeonePreflightSelftestSource.includes("--report"), "edgeone preflight selftest should cover report output option");
   assert(edgeonePreflightSelftestSource.includes("checksum mismatch"), "edgeone preflight selftest should validate checksum mismatch failures");
   assert(edgeonePreflightSelftestSource.includes("checksum missing for required file"), "edgeone preflight selftest should validate missing required checksum entry failures");
   assert(edgeonePreflightSelftestSource.includes("invalid checksum format"), "edgeone preflight selftest should validate invalid checksum format failures");

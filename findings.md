@@ -131,6 +131,7 @@
     - 新增 `scripts/edgeone-preflight-selftest.sh`：覆盖最小样例、checksum mismatch/unsafe path 失败断言、真实资产样例预检
     - CI EdgeOne 自测步骤改为调用 `edgeone-preflight-selftest.sh`，从单一最小样例升级为多场景预检
     - EdgeOne 预检在 `sha256` 模式下强制关键文件 checksum 存在性与哈希格式校验，避免“部分未校验/格式伪造”漏检
+    - EdgeOne 预检新增 `--report <path>` 结构化输出，支持记录 `ok/fail`、摘要指标与错误信息
     - 用户确认：新建书模板预设按项目隔离暂不做；组合策略包加密/脱敏暂不做
     - 新建书模板扩展：支持 `timeline/interactive` 可选模块与数据脚手架
     - `manual` 导入预检查新增“一键应用推荐策略”入口

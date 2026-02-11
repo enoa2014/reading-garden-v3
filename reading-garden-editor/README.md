@@ -97,6 +97,8 @@ EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.s
 EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 # 可选：对导出的 rgsite 包做发布前预检
 ./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip
+# 可选：输出预检 JSON 报告（用于发布留档）
+./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip --report ./tmp/edgeone-preflight-report.json
 # 可选：执行预检自测（最小样例 + 真实资产样例 + 失败样例断言）
 ./scripts/edgeone-preflight-selftest.sh
 ```

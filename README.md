@@ -82,6 +82,8 @@ EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 
 ```bash
 ./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip
+# 可选：输出结构化 JSON 报告（便于留档/回滚追踪）
+./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip --report ./tmp/edgeone-preflight-report.json
 # 可选：执行预检自测（最小样例 + 真实资产样例 + 失败样例断言）
 ./scripts/edgeone-preflight-selftest.sh
 ```

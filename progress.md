@@ -2310,6 +2310,32 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 131: Sprint 4 EdgeOne 预检报告输出（`--report`）
+- **Status:** complete
+- Actions taken:
+  - `scripts/edgeone-preflight.mjs` 新增 CLI 参数 `--report <path>`，输出结构化 JSON 报告
+  - 报告统一字段：`status/checkedAt/siteRoot/scope/books/files/totalBytes/missingAssets/warnings/error`
+  - `scripts/edgeone-preflight.sh` 透传附加参数到 node 预检脚本，支持 `--report`
+  - `scripts/edgeone-preflight-selftest.sh` 新增报告断言：
+    - 正向样例 `status=ok`
+    - 失败样例（checksum mismatch）`status=fail`
+  - `scripts/editor-regression.mjs` 新增 `--report` 与 report 输出关键标记断言
+  - 运行 `node --check`（`edgeone-preflight.mjs` / `editor-regression.mjs`）通过
+  - 运行 `bash -n`（`edgeone-preflight.sh` / `edgeone-preflight-selftest.sh`）通过
+  - 运行 `./scripts/edgeone-preflight-selftest.sh` 与 `./scripts/editor-regression.sh` 均通过
+  - 同步 `README.md` / `reading-garden-editor/README.md` / `docs/edgeone-手动部署验收与回滚清单.md` / `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `scripts/edgeone-preflight.mjs` (updated)
+  - `scripts/edgeone-preflight.sh` (updated)
+  - `scripts/edgeone-preflight-selftest.sh` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `docs/edgeone-手动部署验收与回滚清单.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2321,8 +2347,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 130 |
-| Where am I going? | Phase 130 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
+| Where am I? | Phase 131 |
+| Where am I going? | Phase 131 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | checksum 规则需同时覆盖“存在性 + 格式 + 路径安全”，否则仍可能出现完整性漏检 |
-| What have I done? | 已完成 checksum 规则收口与失败断言补齐，并通过本地 selftest/回归验证 |
+| What have I learned? | 手动发布链路需要结构化报告沉淀证据，纯终端输出不利于追踪与复盘 |
+| What have I done? | 已完成 `--report` 能力、包装器透传、自测断言与文档同步，可进入提交推送阶段 |

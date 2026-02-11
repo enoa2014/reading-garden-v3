@@ -38,7 +38,7 @@ releases/
 | 编辑器回归 | `./scripts/editor-regression.sh` | 输出 `editor-regression: ok` |
 | 预检自测（开发） | `./scripts/edgeone-preflight-selftest.sh` | 输出 `[edgeone-selftest] ok` |
 | 生成发布包 | 编辑器 `Export rgsite` | 成功下载 `*.rgsite.zip` |
-| 发布包预检 | `./scripts/edgeone-preflight.sh /path/to/*.rgsite.zip` | 输出 `edgeone-preflight: ok` |
+| 发布包预检 | `./scripts/edgeone-preflight.sh /path/to/*.rgsite.zip`（可选 `--report ./tmp/edgeone-preflight-report.json`） | 输出 `edgeone-preflight: ok` |
 | Manifest 校验 | 解压后检查 `rgsite-manifest.json` | `format` 为 `rgsite`；若 `checksumMode=sha256`，关键文件 checksum 完整且格式合法 |
 | 缺失资源评估 | 检查 `MISSING-ASSETS.txt`（若存在） | 已确认可接受或已修复 |
 
