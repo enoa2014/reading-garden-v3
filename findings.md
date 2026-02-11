@@ -83,7 +83,8 @@
     - 按运行时白名单收集站点文件并打包为 `*.rgsite.zip`
     - subset 增加资源策略：`balanced` / `minimal`（最小资源集）
     - subset minimal 增加 `missingAssets` 清单输出（manifest + UI 计数提示）
-    - 当存在缺失资源时，导出包附带 `MISSING-ASSETS.txt`（按来源分组 + 平铺清单）
+    - 当存在缺失资源时，导出包附带 `MISSING-ASSETS.txt`（固定分类汇总 + 按来源分组 + 平铺清单）
+    - manifest/result 增加 `missingAssetsByCategory`（book-cover/book-module/file-ref/unclassified）
     - 生成 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
     - 对 JSON 中潜在敏感键做导出时脱敏
   - Dashboard 与应用流程：
@@ -96,7 +97,7 @@
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）
     - 支持一键清空最近模板并显示清空结果反馈
     - 支持最近模板导入/导出（JSON）
-    - `rgsite` 导出反馈增加缺失资源分组数量（groups）
+    - `rgsite` 导出反馈增加缺失资源分组数量（groups）与分类数量（categories）
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`
     - 新增 `scripts/editor-regression.mjs`

@@ -136,6 +136,7 @@
 | 自定义脱敏链路 | 审查 `dashboard(custom fields) -> app(custom redaction)` | 可按字段路径导出 custom 脱敏报告 | 已接入 | ✓ |
 | 缺失资源报告文件检查 | 审查 `site-pack-service` 导出逻辑 | 缺失资产时包含 `MISSING-ASSETS.txt` | 已接入 | ✓ |
 | 缺失资源分组检查 | 审查 `MISSING-ASSETS.txt` 生成逻辑 | 按来源输出分组清单 | 已接入 | ✓ |
+| 缺失资源分类检查 | 审查 `missingAssetsByCategory` 与报告分类汇总 | 生成固定枚举分类统计 | 已接入 | ✓ |
 | 最近模板复用检查 | 审查 `dashboard(localStorage) -> custom report` | 自定义脱敏字段可复用最近模板 | 已接入（最多 5 条） | ✓ |
 | 最近模板清空检查 | 审查 `dashboard clear action -> app feedback` | 可一键清空历史模板并提示结果 | 已接入 | ✓ |
 | 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
@@ -886,6 +887,42 @@
   - `progress.md` (updated)
 
 ### Phase 54: Sprint 4 checkpoint（template-import-export 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`7ebd5d7`（import/export redaction templates）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 55: Sprint 4 缺失资源固定分类
+- **Status:** complete
+- Actions taken:
+  - `site-pack-service.js` 增加 `missingAssetsByCategory`（4 类固定枚举）
+  - `MISSING-ASSETS.txt` 增加 `Category Summary` 区块
+  - manifest/result 增加 `missingAssetsByCategory`
+  - `app.js` 导出反馈增加分类数量（categories）
+  - 回归脚本增加分类能力关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 56: Sprint 4 checkpoint（missing-category 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -903,8 +940,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 54 |
-| Where am I going? | Phase 54 -> checkpoint commit -> push |
+| Where am I? | Phase 56 |
+| Where am I going? | Phase 56 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成模板导入导出并等待增量 checkpoint |
+| What have I done? | 已完成缺失资源固定分类并等待增量 checkpoint |

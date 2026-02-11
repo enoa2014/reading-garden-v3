@@ -26,7 +26,7 @@
   - 新增 `rgsite` 子集导出（按选中书籍过滤 `books.json` 与书籍目录）
   - subset 支持资源策略：`balanced`（兼容优先）/`minimal`（最小资源集）
   - `minimal` 模式会输出缺失资源计数（用于上线前补齐资源）
-  - 若检测到缺失资源，导出包附带 `MISSING-ASSETS.txt`（按来源分组 + 平铺清单）
+  - 若检测到缺失资源，导出包附带 `MISSING-ASSETS.txt`（固定分类汇总 + 按来源分组 + 平铺清单）
   - 导出包附带 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
   - Dashboard 增加 `Export rgsite` 入口（可选包含编辑器子应用）
   - `rgbook` 导入失败可下载诊断报告（完整/脱敏/自定义脱敏 JSON）

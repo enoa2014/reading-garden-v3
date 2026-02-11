@@ -298,7 +298,9 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("subsetAssetMode"), "site pack should support subsetAssetMode");
   assert(source.includes("missingAssets"), "site pack should report missingAssets in subset");
   assert(source.includes("missingAssetsByGroup"), "site pack should report grouped missing assets");
+  assert(source.includes("missingAssetsByCategory"), "site pack should report categorized missing assets");
   assert(source.includes("MISSING-ASSETS.txt"), "site pack should emit missing assets report file");
+  assert(source.includes("## Category Summary"), "missing assets report should include category summary");
   assert(source.includes("## Groups"), "missing assets report should include grouped section");
 }
 

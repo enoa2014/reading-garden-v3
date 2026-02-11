@@ -218,13 +218,59 @@ function groupMissingAssetsBySource(missingAssetDetails = []) {
   return out;
 }
 
-function buildMissingAssetsReport(missingAssets = [], missingAssetsByGroup = {}) {
+function detectMissingAssetCategory(source) {
+  const raw = String(source || "").trim();
+  if (!raw) return "unclassified";
+  if (raw.startsWith("book:")) {
+    const parts = raw.split(":");
+    const scope = parts[2] || "";
+    if (scope === "cover") return "book-cover";
+    if (scope === "module") return "book-module";
+  }
+  if (raw.startsWith("file:")) return "file-ref";
+  return "unclassified";
+}
+
+function buildMissingAssetsCategorySummary(missingAssetDetails = []) {
+  const out = {
+    "book-cover": 0,
+    "book-module": 0,
+    "file-ref": 0,
+    unclassified: 0,
+  };
+
+  missingAssetDetails.forEach((item) => {
+    const sources = Array.isArray(item?.sources) && item.sources.length
+      ? item.sources
+      : ["unclassified"];
+    const categories = new Set(sources.map((source) => detectMissingAssetCategory(source)));
+    categories.forEach((category) => {
+      out[category] = Number(out[category] || 0) + 1;
+    });
+  });
+  return out;
+}
+
+function buildMissingAssetsReport(
+  missingAssets = [],
+  missingAssetsByGroup = {},
+  missingAssetsByCategory = {}
+) {
   const lines = [
     "# Missing Assets Report",
     "",
     `count: ${missingAssets.length}`,
     "",
   ];
+  lines.push("## Category Summary");
+  lines.push("");
+  Object.keys(missingAssetsByCategory || {})
+    .sort()
+    .forEach((category) => {
+      lines.push(`- ${category}: ${Number(missingAssetsByCategory[category] || 0)}`);
+    });
+  lines.push("");
+
   const groups = Object.keys(missingAssetsByGroup || {}).sort();
   if (groups.length) {
     lines.push("## Groups");
@@ -481,6 +527,7 @@ export class SitePackService {
     subsetAssetMode,
     missingAssets,
     missingAssetsByGroup,
+    missingAssetsByCategory,
     checks,
     filesCount,
     totalBytes,
@@ -500,6 +547,9 @@ export class SitePackService {
       missingAssets: Array.isArray(missingAssets) ? missingAssets : [],
       missingAssetsByGroup: missingAssetsByGroup && typeof missingAssetsByGroup === "object"
         ? missingAssetsByGroup
+        : {},
+      missingAssetsByCategory: missingAssetsByCategory && typeof missingAssetsByCategory === "object"
+        ? missingAssetsByCategory
         : {},
       checks: {
         schema: Boolean(checks?.schema),
@@ -573,6 +623,7 @@ export class SitePackService {
       missingAssetDetails = missing.missingAssetDetails;
     }
     const missingAssetsByGroup = groupMissingAssetsBySource(missingAssetDetails);
+    const missingAssetsByCategory = buildMissingAssetsCategorySummary(missingAssetDetails);
 
     return {
       fileSet,
@@ -583,6 +634,7 @@ export class SitePackService {
       subsetAssetMode,
       missingAssets,
       missingAssetsByGroup,
+      missingAssetsByCategory,
     };
   }
 
@@ -613,6 +665,7 @@ export class SitePackService {
     let effectiveSubsetAssetMode = "balanced";
     let missingAssets = [];
     let missingAssetsByGroup = {};
+    let missingAssetsByCategory = {};
 
     if (subsetMode) {
       const subsetFiles = await this.collectSubsetFiles({
@@ -627,6 +680,7 @@ export class SitePackService {
       effectiveSubsetAssetMode = subsetFiles.subsetAssetMode;
       missingAssets = subsetFiles.missingAssets || [];
       missingAssetsByGroup = subsetFiles.missingAssetsByGroup || {};
+      missingAssetsByCategory = subsetFiles.missingAssetsByCategory || {};
     } else {
       const includeRoots = includeEditor
         ? [...DEFAULT_INCLUDE_ROOTS, "reading-garden-editor"]
@@ -693,7 +747,11 @@ export class SitePackService {
 
     let missingAssetsReportAdded = false;
     if (missingAssets.length) {
-      const missingAssetsText = buildMissingAssetsReport(missingAssets, missingAssetsByGroup);
+      const missingAssetsText = buildMissingAssetsReport(
+        missingAssets,
+        missingAssetsByGroup,
+        missingAssetsByCategory
+      );
       zip.file("MISSING-ASSETS.txt", missingAssetsText);
       totalBytes += TEXT_ENCODER.encode(missingAssetsText).byteLength;
       if (checksumEnabled) {
@@ -709,6 +767,7 @@ export class SitePackService {
       subsetAssetMode: effectiveSubsetAssetMode,
       missingAssets,
       missingAssetsByGroup,
+      missingAssetsByCategory,
       checks: readiness.checks,
       filesCount: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
       totalBytes,
@@ -735,6 +794,7 @@ export class SitePackService {
       subsetAssetMode: effectiveSubsetAssetMode,
       missingAssets,
       missingAssetsByGroup,
+      missingAssetsByCategory,
       missingAssetsReportAdded,
     };
   }
