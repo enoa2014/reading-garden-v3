@@ -80,6 +80,7 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("data/books.json"), "site pack should handle books.json rewrite in subset");
   assert(source.includes("subsetAssetMode"), "site pack should support subsetAssetMode");
   assert(source.includes("missingAssets"), "site pack should report missingAssets in subset");
+  assert(source.includes("MISSING-ASSETS.txt"), "site pack should emit missing assets report file");
 }
 
 async function testDiagnosticSourceMarkers() {

@@ -166,6 +166,17 @@ function buildEdgeOneGuide() {
   ].join("\n");
 }
 
+function buildMissingAssetsReport(missingAssets = []) {
+  const lines = [
+    "# Missing Assets Report",
+    "",
+    `count: ${missingAssets.length}`,
+    "",
+  ];
+  missingAssets.forEach((item) => lines.push(`- ${item}`));
+  return lines.join("\n");
+}
+
 export class SitePackService {
   constructor({ fs }) {
     this.fs = fs;
@@ -582,6 +593,17 @@ export class SitePackService {
       checksums["DEPLOY-EDGEONE.md"] = await sha256Text(deployGuide);
     }
 
+    let missingAssetsReportAdded = false;
+    if (missingAssets.length) {
+      const missingAssetsText = buildMissingAssetsReport(missingAssets);
+      zip.file("MISSING-ASSETS.txt", missingAssetsText);
+      totalBytes += TEXT_ENCODER.encode(missingAssetsText).byteLength;
+      if (checksumEnabled) {
+        checksums["MISSING-ASSETS.txt"] = await sha256Text(missingAssetsText);
+      }
+      missingAssetsReportAdded = true;
+    }
+
     const manifest = await this.buildManifest({
       booksCount: readiness.booksCount,
       includeEditor,
@@ -613,6 +635,7 @@ export class SitePackService {
       selectedBookIds: effectiveSelectedIds,
       subsetAssetMode: effectiveSubsetAssetMode,
       missingAssets,
+      missingAssetsReportAdded,
     };
   }
 }

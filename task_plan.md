@@ -64,9 +64,9 @@ Phase 9
 - **Status:** in_progress
 
 ## Key Questions
-1. `rgsite minimal` 的缺失资源是否要额外导出为独立文本文件？
-2. 自定义脱敏字段是否需要保存为“最近使用模板”供复用？
-3. 回归报告是否需要补充包体统计（full/subset/minimal 对比）？
+1. 自定义脱敏字段是否需要保存为“最近使用模板”供复用？
+2. 回归报告是否需要补充包体统计（full/subset/minimal 对比）？
+3. `MISSING-ASSETS.txt` 是否需要按模块分组输出？
 
 ## Decisions Made
 | Decision | Rationale |
