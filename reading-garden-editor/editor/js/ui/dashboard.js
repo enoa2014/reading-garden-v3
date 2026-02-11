@@ -195,6 +195,18 @@ function renderPackPanel(state) {
           <button class="btn btn-primary" type="submit" ${busy}>Import rgbook</button>
         </div>
       </form>
+      <hr />
+      <h3>Site Publish Pack (rgsite)</h3>
+      <p class="muted">导出可上传到 EdgeOne 的整站发布包 <code>.rgsite.zip</code>。</p>
+      <form id="exportSiteForm" class="form-grid">
+        <label class="checkbox-inline full">
+          <input name="includeEditor" type="checkbox" ${busy} />
+          包含 <code>reading-garden-editor</code> 子应用
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-primary" type="submit" ${busy}>Export rgsite</button>
+        </div>
+      </form>
       ${feedback}
     </section>
   `;
@@ -272,6 +284,17 @@ export function renderDashboard(root, state, handlers = {}) {
         return;
       }
       handlers.onImportPack(file, strategy);
+    });
+  }
+
+  const exportSiteForm = root.querySelector("#exportSiteForm");
+  if (exportSiteForm && handlers.onExportSite) {
+    exportSiteForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const fd = new FormData(exportSiteForm);
+      handlers.onExportSite({
+        includeEditor: fd.get("includeEditor") === "on",
+      });
     });
   }
 }

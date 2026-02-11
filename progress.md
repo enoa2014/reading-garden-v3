@@ -123,15 +123,21 @@
 | 路径归一化检查 | `normalizePath` smoke test | 保留 `?v=` query | 通过 | ✓ |
 | Sprint3 语法检查 | `node --check`（排除 vendor） | 全部通过 | 通过 | ✓ |
 | 合并策略检查 | `ImportMergeService` smoke test | rename 生成新 id | 通过（`wave-imported-1`） | ✓ |
+| Sprint4 语法检查 | `node --check` on `pack-utils/book-pack/site-pack/app/dashboard` | 无语法错误 | 通过 | ✓ |
+| rgsite 流程接入检查 | 审查 `dashboard.js` + `app.js` 事件链路 | 可触发导出并回传反馈 | 已接入 `onExportSite` | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 引入本地 `JSZip` vendor 文件
   - 实现 `BookPackService` 的导出/导入/检查流程
   - 实现 `ImportMergeService.applyMergePlan`
   - 扩展 `FileSystemAdapter` 支持二进制读写（readBinary/writeBinary）
   - 扩展 Dashboard 与 app：接入 rgbook 导出/导入交互
+  - 创建 checkpoint commit：`f04c677`（新建书流程 + 健康检查骨架）
+  - 创建 checkpoint commit：`283bee7`（模板增强 + 深度健康检查）
+  - 创建 checkpoint commit：`c5ec954`（rgbook 导入导出链路落地）
+  - 推送到远端 `origin/master`
 - Files created/modified:
   - `reading-garden-editor/editor/js/vendor/jszip.min.js` (created)
   - `reading-garden-editor/editor/js/packaging/book-pack-service.js` (updated)
@@ -142,16 +148,58 @@
   - `reading-garden-editor/index.html` (updated)
   - `reading-garden-editor/README.md` (updated)
 
+### Phase 9: Sprint 4 安全与发布打包
+- **Status:** complete
+- Actions taken:
+  - 将 `task_plan.md` 切换到 Sprint 4（安全校验 + rgsite 导出）
+  - 新增 `pack-utils.js`，统一 checksum/zip 安全/下载工具
+  - 重构 `book-pack-service.js`：
+    - 导出生成 `manifest.checksums`（SHA-256）
+    - 导入前执行路径/白名单/文件数/体积安全门禁
+    - 导入时校验 checksum，不一致即阻断
+  - 实现 `site-pack-service.js`：
+    - 导出前校验结构、books、registry 模块引用
+    - 校验模块 `entry/data` 空配置并阻断导出
+    - 打包运行时白名单文件，输出 `*.rgsite.zip`
+    - 生成 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
+    - JSON 敏感键导出时脱敏
+  - 扩展 `dashboard.js` 与 `app.js`：
+    - 新增 `Export rgsite` 表单（可选包含 editor）
+    - 新增导出状态反馈
+  - 更新 `README.md` 与 `reading-garden-editor/README.md` 到 Sprint 4 状态
+- Files created/modified:
+  - `task_plan.md` (rewritten)
+  - `reading-garden-editor/editor/js/packaging/pack-utils.js` (created)
+  - `reading-garden-editor/editor/js/packaging/book-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 10: Sprint 4 checkpoint 提交与推送
+- **Status:** in_progress
+- Actions taken:
+  - 同步 `task_plan.md`/`findings.md`/`progress.md` 阶段状态
+  - 准备执行提交与推送
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
-|           |       | 1       |            |
+| 2026-02-11 | `apply_patch` 上下文不匹配（`progress.md` 片段更新失败） | 1 | 使用 `nl -ba progress.md` 定位准确行后重试补丁成功 |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 8 |
-| Where am I going? | Phase 8 -> checkpoint 提交 |
-| What's the goal? | 打通编辑器最小可运行闭环 |
-| What have I learned? | 可先以 rgbook 打通分享闭环，再推进 rgsite 发布闭环 |
-| What have I done? | 已把 rgbook 从骨架推进到可导入导出链路 |
+| Where am I? | Phase 10 |
+| Where am I going? | Phase 10 -> checkpoint commit -> push |
+| What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
+| What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
+| What have I done? | 已完成 Sprint 4 核心实现，正在做 checkpoint 收口 |

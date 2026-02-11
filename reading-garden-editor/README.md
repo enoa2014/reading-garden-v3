@@ -14,12 +14,17 @@
   - 书架健康检查（`registry.json` 存在性）
   - 模块健康检查（`registry.modules[].entry/data` 文件可达性）
   - 新建书失败回滚（逆序删除本次创建路径）
-  - `rgbook/rgsite` 交换包服务骨架接口（待下一轮填充实现）
-
-- Sprint 3 早期实现（进行中）：
+  - `rgbook/rgsite` 交换包服务骨架接口
+- Sprint 3 已完成：
   - 已接入本地 `JSZip`（`editor/js/vendor/jszip.min.js`）
   - 已支持 `rgbook` 导出（单书打包为 `*.rgbook.zip`）
   - 已支持 `rgbook` 导入（`rename/overwrite/skip` 冲突策略）
+  - 已支持导入失败基础回滚（路径逆序删除 + books 索引恢复尝试）
+- Sprint 4 进行中：
+  - `rgbook` 增加 checksum 与压缩包安全门禁（路径/文件数/体积）
+  - 新增 `rgsite` 发布包导出（`*.rgsite.zip`）
+  - 导出包附带 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
+  - Dashboard 增加 `Export rgsite` 入口（可选包含编辑器子应用）
 
 ## 运行方式
 
@@ -41,9 +46,8 @@ python3 -m http.server 8080
    - `.rg-editor-backups/<timestamp>/<original-path>`
 3. 若写入出现问题，可根据备份路径手动恢复。
 
-## 下个迭代目标（Sprint 2）
+## 下个迭代目标（Sprint 4 后续）
 
-- 新建书向导（最小模板）
-- 更完整的规则校验（交叉引用、资源路径）
-- 降级模式（ZIP 导入导出）入口占位
-- 交换包（`rgbook`）的数据结构与导入事务骨架
+- 细化 `rgsite` 导出前校验（跨文件引用全扫描）
+- 为 `rgbook`/`rgsite` 增加自动化回归测试
+- 增加导入导出过程日志面板（可追踪、可复制）

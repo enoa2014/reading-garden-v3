@@ -5,7 +5,7 @@
 - `docs/reading-garden-editor-详细设计文档.md`（v1.1）
 
 ## 当前任务目标
-- 在 Sprint 1 基础上推进 Sprint 2：新建书向导 + 校验增强 + 交换包骨架。
+- 在 Sprint 3 已完成基础上推进 Sprint 4：`rgbook` 安全校验增强 + `rgsite` 可部署导出链路。
 - 强制执行“关键节点写盘”策略：`task_plan.md`、`findings.md`、`progress.md` 同步更新。
 - 用户已批准对 `reading-garden-v3` 本体进行改造，但要求必须具备清晰回滚策略。
 
@@ -23,6 +23,8 @@
 | 校验层先做“基础规则校验”，后续接入完整 schema | Sprint 1 聚焦打通主链路 |
 | 所有文件操作经统一 filesystem/path-resolver 层 | 为后续导入导出、路径重写做基础 |
 | 写操作设计“备份优先” | 满足用户对回滚策略的要求 |
+| `rgbook` 导入默认“严格校验失败即阻断” | 防止异常包污染本地书架 |
+| `rgsite` 导出采用运行时白名单 | 优先保证 EdgeOne 可部署正确性 |
 
 ## 已完成实现（当前节点）
 - 已创建独立子应用：`reading-garden-editor/`
@@ -60,7 +62,7 @@
     - `editor/js/packaging/book-pack-service.js`
     - `editor/js/packaging/import-merge-service.js`
     - `editor/js/packaging/site-pack-service.js`
-- Sprint 3 已完成实现（当前）：
+- Sprint 3 已完成实现：
   - 引入本地依赖：`editor/js/vendor/jszip.min.js`
   - `BookPackService` 已支持：
     - 导出 `*.rgbook.zip`（book.json / registry / data / assets / manifest）
@@ -69,19 +71,36 @@
   - `ImportMergeService` 已支持 `applyMergePlan`
   - `FileSystemAdapter` 已支持二进制读写（用于资产打包导入）
   - Dashboard 已接入 rgbook 导入导出入口
+- Sprint 4 已完成实现（本轮）：
+  - 新增 `editor/js/packaging/pack-utils.js`（checksum、ZIP 安全路径校验、下载工具）
+  - `BookPackService` 增强：
+    - 导出写入 `manifest.checksums`（SHA-256）
+    - 导入前执行压缩包安全门禁（路径合法性、前缀白名单、文件数/体积限制）
+    - 导入时校验 manifest checksum，一致性失败即阻断
+  - `SitePackService` 从骨架升级为可用导出：
+    - 导出前校验结构、书架、registry/module 关键引用
+    - 校验模块 `entry/data` 空配置并阻断导出
+    - 按运行时白名单收集站点文件并打包为 `*.rgsite.zip`
+    - 生成 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
+    - 对 JSON 中潜在敏感键做导出时脱敏
+  - Dashboard 与应用流程：
+    - 新增 `Export rgsite` 表单（可选包含 `reading-garden-editor`）
+    - `app.js` 新增发布包导出流与反馈信息
+  - 文档同步：
+    - `README.md` 与 `reading-garden-editor/README.md` 已更新到 Sprint 4 状态
 
 ## Risks & Watchpoints
 - 浏览器不支持 File System Access API 时需要明确降级提示。
 - `books.json`/目录结构异常时要给出可理解错误，避免静默失败。
 - 状态管理若无订阅机制，后续 UI 扩展会快速失控。
 - 新建书回滚当前仅处理“本次新建路径”删除，尚未实现“基于备份自动恢复覆盖文件”流程。
-- `rgbook` 导入当前未实现 checksum 校验与压缩包安全策略（路径穿越/大小限制）硬校验。
-- `rgsite` 导出仍是骨架，尚未进入真实打包流程。
+- `rgbook` 安全校验加入后需注意性能：大包 checksum 可能导致导入等待变长。
+- `rgsite` 首版白名单若漏文件会造成线上 404，需要补充分层校验与提示。
 
-## Sprint 3 预规划
-- 目标 1：将 `rgbook` 从骨架接口升级为可导出/可导入链路（先 JSON bundle，再接 ZIP）。
-- 目标 2：落地 `ImportMergeService.applyMergePlan` 事务化合并。
-- 目标 3：补充导入安全检查（路径穿越/文件大小）与失败回滚日志。
+## Sprint 4 后续建议
+- 目标 1：补充 `rgsite` 引用扫描深度（静态资源跨文件依赖、死链清单）。
+- 目标 2：增加导入导出自动化回归测试（安全门禁、回滚路径、manifest 一致性）。
+- 目标 3：增加“导入/导出步骤日志面板”便于教学场景问题排查。
 
 ## Resources
 - `reading-garden-v3/`

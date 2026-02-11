@@ -11,10 +11,12 @@ import { buildNewBookArtifacts } from "./book-template.js";
 import { renderDashboard } from "../ui/dashboard.js";
 import { ImportMergeService } from "../packaging/import-merge-service.js";
 import { BookPackService } from "../packaging/book-pack-service.js";
+import { SitePackService } from "../packaging/site-pack-service.js";
 
 const fs = createFileSystemAdapter();
 const mergeService = new ImportMergeService();
 const bookPackService = new BookPackService({ fs, mergeService });
+const sitePackService = new SitePackService({ fs });
 
 function qs(sel) {
   return document.querySelector(sel);
@@ -48,6 +50,7 @@ function render() {
       onCreateBook: createBookFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
+      onExportSite: exportSiteFlow,
     });
     return;
   }
@@ -103,8 +106,20 @@ async function inspectBookHealth(book) {
 
       for (const mod of modules) {
         const modId = String(mod?.id || "(unknown)");
-        const entryPath = resolveFromBookDir(id, mod?.entry);
-        const dataPath = resolveFromBookDir(id, mod?.data);
+        const entryRaw = String(mod?.entry || "").trim();
+        const dataRaw = String(mod?.data || "").trim();
+
+        if (!entryRaw) {
+          moduleIssues.push(`模块 ${modId} 缺失 entry 配置`);
+          continue;
+        }
+        if (!dataRaw) {
+          moduleIssues.push(`模块 ${modId} 缺失 data 配置`);
+          continue;
+        }
+
+        const entryPath = resolveFromBookDir(id, entryRaw);
+        const dataPath = resolveFromBookDir(id, dataRaw);
 
         // eslint-disable-next-line no-await-in-loop
         const entryExists = await fs.exists(entryPath);
@@ -373,7 +388,7 @@ async function exportPackFlow(bookId) {
     setState({
       packFeedback: {
         type: "ok",
-        message: `导出成功：${result.filename}（data ${result.dataFiles}，assets ${result.assets}）`,
+        message: `导出成功：${result.filename}（data ${result.dataFiles}，assets ${result.assets}，checksum ${result.checksums}）`,
       },
     });
     setStatus("rgbook exported");
@@ -439,6 +454,35 @@ async function importPackFlow(file, strategy) {
       },
     });
     setStatus("Import failed");
+  }
+
+  setState({ busy: false });
+}
+
+async function exportSiteFlow(options = {}) {
+  setState({ busy: true, packFeedback: null });
+  setStatus("Exporting rgsite...");
+
+  try {
+    const result = await sitePackService.exportSitePack({
+      includeEditor: Boolean(options.includeEditor),
+    });
+
+    setState({
+      packFeedback: {
+        type: "ok",
+        message: `发布包导出成功：${result.filename}（files ${result.files}，books ${result.books}）`,
+      },
+    });
+    setStatus("rgsite exported");
+  } catch (err) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: `发布包导出失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("rgsite export failed");
   }
 
   setState({ busy: false });

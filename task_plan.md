@@ -1,51 +1,52 @@
-# Task Plan: Reading Garden Editor 开发实施（Sprint 3）
+# Task Plan: Reading Garden Editor 开发实施（Sprint 4）
 
 ## Goal
-把 `rgbook` 从骨架升级为可用能力：支持单书导出/导入、冲突策略合并、基础回滚，并继续保持文档可恢复。
+补齐 `rgbook` 安全校验与 `rgsite` 发布包导出能力，形成可直接上传腾讯云 EdgeOne 的稳定打包链路，并保持断点恢复文档持续同步。
 
 ## Current Phase
-Phase 4
+Phase 5
 
 ## Phases
-### Phase 1: Sprint 3 设计落地准备
-- [x] 选择本地打包方案（JSZip 本地 vendor）
-- [x] 明确导入冲突策略（rename/overwrite/skip）
+### Phase 1: Sprint 3 收尾同步
+- [x] 核对 Sprint 3 已推送 checkpoint 状态
+- [x] 更新计划文件到 Sprint 4 基线
+- [x] 在 `progress.md` 标记 Sprint 3 完结并开启 Sprint 4 记录
 - **Status:** complete
 
-### Phase 2: 打包服务实现
-- [x] 实现 `BookPackService.exportBookPack`
-- [x] 实现 `BookPackService.inspectBookPack`
-- [x] 实现 `BookPackService.importBookPack`
-- [x] 扩展 `FileSystemAdapter` 二进制读写能力
+### Phase 2: rgbook 安全校验增强
+- [x] 导出时生成 `manifest.checksums`（SHA-256）
+- [x] 导入时校验 checksum 一致性
+- [x] 增加压缩包安全限制（路径穿越/文件数量/体积上限）
+- [x] 错误分层（格式错误 vs 安全错误）并输出可读提示
 - **Status:** complete
 
-### Phase 3: UI 流程接入
-- [x] Dashboard 增加 rgbook 导出表单
-- [x] Dashboard 增加 rgbook 导入表单 + 冲突策略
-- [x] `app.js` 接入导出/导入处理流程
+### Phase 3: rgsite 导出链路实现
+- [x] 实现 `SitePackService.exportSitePack`
+- [x] 发布白名单收集（运行时必需文件）
+- [x] 导出前校验（结构、书籍索引、关键引用）
+- [x] 生成 `rgsite-manifest.json` + 下载 `*.rgsite.zip`
 - **Status:** complete
 
-### Phase 4: 校验与文档同步
-- [x] JS 语法检查（编辑器代码）
-- [x] 模块级 smoke test（merge/path）
-- [ ] 同步 `findings.md` / `progress.md` 记录
-- [ ] checkpoint 提交与推送
+### Phase 4: UI 接入与自检
+- [x] Dashboard 增加 rgsite 导出入口
+- [x] `app.js` 接入导出流程与反馈
+- [x] JS 语法检查与模块级 smoke test
+- **Status:** complete
+
+### Phase 5: 文档同步与 checkpoint
+- [x] 同步 `findings.md` / `progress.md` / `reading-garden-editor/README.md`
+- [ ] 提交 checkpoint commit（含回滚点）
+- [ ] 推送 `origin/master`
 - **Status:** in_progress
 
-### Phase 5: 下一迭代规划
-- [ ] 规划 `rgsite` 真正导出链路
-- [ ] 规划 rgbook 校验增强（checksum、恶意包检测）
-- [ ] 规划自动化回归测试
-- **Status:** pending
-
 ## Key Questions
-1. 当前 `rgbook` 导入回滚策略是否覆盖主要失败路径？
-2. 下一步应先做 `rgsite` 还是先补 `rgbook` 安全校验？
-3. 是否需要把导入过程可视化为步骤日志面板？
+1. `rgsite` 导出是否需要增加“仅当前选中书籍”子集打包模式？
+2. `rgbook` 导入校验失败时是否要提供可下载的诊断报告？
+3. 发布包是否需要附带 EdgeOne 缓存策略模板（如 HTML no-cache）？
 
 ## Decisions Made
 | Decision | Rationale |
 |----------|-----------|
-| 引入本地 `JSZip` vendor 文件 | 保持离线可用，避免运行时 CDN 依赖 |
-| 先实现 rgbook，再推进 rgsite | 优先满足“教师互相分享书籍”场景 |
-| 导入冲突默认推荐 `rename` | 最大限度降低覆盖风险 |
+| Sprint 4 先做安全再做发布 | 先降低错误导入风险，再推进部署链路 |
+| `rgbook` 校验默认严格失败即阻断 | 防止脏数据进入本地书架 |
+| `rgsite` 首版采用运行时白名单导出 | 先保证可部署正确性，再扩展可选内容 |
