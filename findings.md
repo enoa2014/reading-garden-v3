@@ -98,6 +98,7 @@
     - 支持将分析建议安全写入 `registry.suggested.json`（不覆盖原 `registry.json`）
     - 支持分析建议直接覆盖 `registry.json`（自动备份并返回 `backupPath` 便于回滚）
     - 覆盖模式支持补齐新增模块数据模板，避免新增模块缺少 data 文件
+    - 新建书支持图片策略基础落地（emoji/no-image 封面 + prompt-file 模板输出）
     - 诊断脱敏策略：隐藏项目名与原始文件名，保留错误码/策略/大小用于排障
     - 诊断支持自定义脱敏字段（按路径，如 `project.name,input.fileName`）
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）

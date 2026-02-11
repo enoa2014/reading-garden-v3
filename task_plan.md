@@ -90,6 +90,7 @@ Phase 9
 - [x] 支持分析建议安全落盘（`registry.suggested.json`）
 - [x] 支持分析建议一键覆盖 `registry.json`（自动备份）
 - [x] 覆盖模式自动补齐新增模块数据模板
+- [x] 新建书支持图片策略基础落地（emoji/none/prompt-file）
 - **Status:** in_progress
 
 ## Key Questions
@@ -133,3 +134,4 @@ Phase 9
 | 模块建议采用“安全落盘”到 `registry.suggested.json` | 保留原配置作为回滚点，降低误覆盖风险 |
 | 模块建议允许直接覆盖 `registry.json`，但必须自动备份并反馈备份路径 | 满足自动配置效率，同时保留快速回滚入口 |
 | 覆盖应用时自动补齐新增模块数据模板 | 避免模块配置已写入但对应 data 文件缺失导致运行异常 |
+| 新建书优先落地图片策略“可离线兜底”能力 | 即使无 AI 生图接口，也能通过 emoji/no-image/prompt-file 完成建书 |

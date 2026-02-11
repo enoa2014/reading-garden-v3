@@ -493,6 +493,7 @@ function renderNewBookPanel(state) {
   if (!state.structure?.ok) return "";
 
   const busy = state.busy ? "disabled" : "";
+  const imageMode = String(state.aiSettings?.image?.mode || "disabled");
   const feedback = state.newBookFeedback
     ? `<p class="${state.newBookFeedback.type === "error" ? "error-text" : "ok-text"}">${state.newBookFeedback.message}</p>`
     : "";
@@ -501,6 +502,7 @@ function renderNewBookPanel(state) {
     <section class="panel">
       <h3>Create New Book</h3>
       <p class="muted">创建最小可运行新书（支持阅读/人物/主题模块模板）。</p>
+      <p class="muted">当前图片策略：<code>${escapeHtml(imageMode)}</code>（可在 AI Settings 面板调整）。</p>
       <form id="newBookForm" class="form-grid">
         <label>
           书名

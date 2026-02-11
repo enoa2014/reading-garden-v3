@@ -38,6 +38,10 @@
   - 支持分析建议 JSON 导出（用于人工评审或后续自动配置）
   - 支持“安全应用建议”：输出 `data/<bookId>/registry.suggested.json`，不覆盖原配置
   - 支持“覆盖应用建议”：可直接写入 `data/<bookId>/registry.json`，自动备份并补齐新增模块数据模板
+  - 新建书流程支持图片策略基础落地：
+    - `emoji`：生成 emoji 风格封面
+    - `none`：生成 no-image 占位封面
+    - `prompt-file/api`：生成 `data/<bookId>/prompts/image-prompts.md`
   - 支持一键清空最近模板并在面板给出结果反馈
   - 支持最近模板导入/导出（JSON 文件）
   - 模板导入支持 `replace`（覆盖）/`merge`（合并去重）模式

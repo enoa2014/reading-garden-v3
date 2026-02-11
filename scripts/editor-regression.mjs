@@ -489,6 +489,10 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/analysis-assistant.js"),
     "utf8"
   );
+  const bookTemplateSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/book-template.js"),
+    "utf8"
+  );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(appSource.includes("saveAiSettingsFlow"), "app should support saving ai settings");
   assert(appSource.includes("exportAiSettingsFlow"), "app should support exporting ai settings");
@@ -501,6 +505,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("buildSuggestedModuleDataSeed"), "app should define default data seeds for suggested modules");
   assert(appSource.includes("registry.suggested.json"), "app should write safe suggested registry file");
   assert(appSource.includes("backupPath"), "app should surface overwrite backup path");
+  assert(appSource.includes("image-prompts.md"), "app should support image prompt template output");
   assert(appSource.includes("AI_SETTINGS_PATH"), "app should define ai settings path");
   assert(appSource.includes("clearRedactionTemplatesFlow"), "app should support clearing redaction templates");
   assert(appSource.includes("previewRedactionTemplatesFlow"), "app should support previewing redaction templates");
@@ -525,12 +530,16 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("import-redaction-templates-btn"), "dashboard should expose import-template action");
   assert(dashboardSource.includes("export-redaction-templates-btn"), "dashboard should expose export-template action");
   assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
+  assert(dashboardSource.includes("当前图片策略"), "dashboard should surface current image mode for new book flow");
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
   assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");
+  assert(bookTemplateSource.includes("cover-emoji.svg"), "book template should support emoji cover mode");
+  assert(bookTemplateSource.includes("cover-none.svg"), "book template should support no-image cover mode");
+  assert(bookTemplateSource.includes("imageMode: ${imageMode}"), "book template should include image mode in prompt template");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {

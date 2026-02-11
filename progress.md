@@ -159,6 +159,7 @@
 | 缺失资源回退检查 | 审查 `dashboard -> app -> site-pack-service` 参数链路 | 支持 `report-only/svg-placeholder` 回退策略 | 已接入 | ✓ |
 | AI 配置链路检查 | 审查 `dashboard(ai form) -> app(save/load) -> filesystem` | 支持本地保存/加载 LLM 与图片接口配置 | 已接入 | ✓ |
 | AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
+| 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议覆盖检查 | 审查 `analysisApplyMode=overwrite` 写入链路 | 支持覆盖 `registry.json` 且返回备份路径 | 已接入 | ✓ |
@@ -1558,6 +1559,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 93: Sprint 4 新建书图片策略基础落地
+- **Status:** complete
+- Actions taken:
+  - `book-template.js` 增加 `imageMode` 处理：`emoji`/`none`/`prompt-file`/`api`
+  - 新建书封面支持 `cover-emoji.svg` 与 `cover-none.svg`
+  - 新建书在 `prompt-file/api` 模式下自动生成 `data/<bookId>/prompts/image-prompts.md`
+  - `dashboard.js` 新建书面板显示当前图片策略
+  - 回归脚本增加图片策略关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/book-template.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1567,8 +1588,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 92 |
-| Where am I going? | Phase 92 -> checkpoint commit -> push |
+| Where am I? | Phase 93 |
+| Where am I going? | Phase 93 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 覆盖应用若不补齐 data 文件，会留下运行时缺失风险 |
-| What have I done? | 已完成覆盖模式自动备份，并继续增强为自动补齐模块数据 |
+| What have I learned? | 图片策略需要先提供离线兜底路径，避免绑定在线生图接口 |
+| What have I done? | 已完成覆盖建议回滚链路，并继续把图片策略接入新建书流程 |

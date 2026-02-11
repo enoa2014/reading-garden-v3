@@ -860,6 +860,7 @@ async function createBookFlow(rawInput) {
   const normalizedInput = {
     ...rawInput,
     id: sanitizeBookId(rawInput?.id || rawInput?.title),
+    imageMode: String(state.aiSettings?.image?.mode || "disabled"),
   };
 
   const inputCheck = validateNewBookInput(normalizedInput, state.books);
@@ -907,7 +908,11 @@ async function createBookFlow(rawInput) {
 
     await writeFileWithTrack(`data/${artifacts.bookId}/registry.json`, artifacts.registry, true);
     await writeFileWithTrack(`data/${artifacts.bookId}/chapters.json`, artifacts.chapters, true);
-    await writeFileWithTrack(`assets/images/${artifacts.bookId}/covers/cover.svg`, artifacts.coverSvg, false);
+    await writeFileWithTrack(
+      `assets/images/${artifacts.bookId}/covers/${artifacts.coverFileName || "cover.svg"}`,
+      artifacts.coverSvg,
+      false
+    );
 
     if (artifacts.includeCharacters) {
       await ensureDirWithTrack(`assets/images/${artifacts.bookId}/characters`);
@@ -923,14 +928,24 @@ async function createBookFlow(rawInput) {
       await writeFileWithTrack(`data/${artifacts.bookId}/themes.json`, artifacts.themes, true);
     }
 
+    if (artifacts.promptTemplateText) {
+      await ensureDirWithTrack(`data/${artifacts.bookId}/prompts`);
+      await writeFileWithTrack(
+        `data/${artifacts.bookId}/prompts/image-prompts.md`,
+        artifacts.promptTemplateText,
+        false
+      );
+    }
+
     booksWriteResult = await fs.writeJson("data/books.json", { books: nextBooks });
 
     await refreshProjectData();
+    const promptText = artifacts.promptTemplateText ? "，已生成 prompts/image-prompts.md" : "";
 
     setState({
       newBookFeedback: {
         type: "ok",
-        message: `书籍已创建：${artifacts.bookId}`,
+        message: `书籍已创建：${artifacts.bookId}${promptText}`,
       },
     });
 
