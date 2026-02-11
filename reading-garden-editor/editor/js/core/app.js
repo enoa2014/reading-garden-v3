@@ -896,6 +896,8 @@ function buildAutoCreateBookInputFromSuggestion(state, suggestion) {
     description: "由文本分析助手自动生成的初始书籍草稿。",
     includeCharacters: resolveSuggestionInclude(suggestion, "characters"),
     includeThemes: resolveSuggestionInclude(suggestion, "themes"),
+    includeTimeline: resolveSuggestionInclude(suggestion, "timeline"),
+    includeInteractive: resolveSuggestionInclude(suggestion, "interactive"),
   };
 }
 
@@ -1224,6 +1226,14 @@ async function createBookFlow(rawInput) {
 
     if (artifacts.includeThemes) {
       await writeFileWithTrack(`data/${artifacts.bookId}/themes.json`, artifacts.themes, true);
+    }
+
+    if (artifacts.includeTimeline) {
+      await writeFileWithTrack(`data/${artifacts.bookId}/timeline.json`, artifacts.timeline, true);
+    }
+
+    if (artifacts.includeInteractive) {
+      await writeFileWithTrack(`data/${artifacts.bookId}/scenarios.json`, artifacts.scenarios, true);
     }
 
     if (artifacts.promptTemplateText) {

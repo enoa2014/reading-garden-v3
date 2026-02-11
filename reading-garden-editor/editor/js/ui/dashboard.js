@@ -610,6 +610,14 @@ function renderNewBookPanel(state) {
           <input name="includeThemes" type="checkbox" checked ${busy} />
           包含主题模块模板
         </label>
+        <label class="checkbox-inline">
+          <input name="includeTimeline" type="checkbox" ${busy} />
+          包含时间线模块模板
+        </label>
+        <label class="checkbox-inline">
+          <input name="includeInteractive" type="checkbox" ${busy} />
+          包含情境模块模板
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>${state.busy ? "Creating..." : "Create Book"}</button>
         </div>
@@ -814,6 +822,8 @@ export function renderDashboard(root, state, handlers = {}) {
         description: String(fd.get("description") || ""),
         includeCharacters: fd.get("includeCharacters") === "on",
         includeThemes: fd.get("includeThemes") === "on",
+        includeTimeline: fd.get("includeTimeline") === "on",
+        includeInteractive: fd.get("includeInteractive") === "on",
       });
     });
   }

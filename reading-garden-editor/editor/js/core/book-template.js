@@ -85,6 +85,8 @@ export function buildNewBookArtifacts(input) {
 
   const includeCharacters = input?.includeCharacters !== false;
   const includeThemes = input?.includeThemes !== false;
+  const includeTimeline = input?.includeTimeline === true;
+  const includeInteractive = input?.includeInteractive === true;
 
   const bookId = sanitizeBookId(rawId || title);
   const coverFileName = imageMode === "emoji"
@@ -133,6 +135,26 @@ export function buildNewBookArtifacts(input) {
       icon: "🎯",
       entry: "../../js/modules/themes-module.js",
       data: "themes.json",
+    });
+  }
+
+  if (includeTimeline) {
+    modules.push({
+      id: "timeline",
+      title: "时间线",
+      icon: "📅",
+      entry: "../../js/modules/timeline-module.js",
+      data: "timeline.json",
+    });
+  }
+
+  if (includeInteractive) {
+    modules.push({
+      id: "interactive",
+      title: "情境",
+      icon: "🎯",
+      entry: "../../js/modules/interactive-module.js",
+      data: "scenarios.json",
     });
   }
 
@@ -186,6 +208,28 @@ export function buildNewBookArtifacts(input) {
     ],
   };
 
+  const timeline = {
+    events: [
+      {
+        id: "event-1",
+        title: "关键事件",
+        time: "",
+        description: "请补充时间线内容",
+      },
+    ],
+  };
+
+  const scenarios = {
+    scenarios: [
+      {
+        id: "scenario-1",
+        title: "互动问题",
+        prompt: "请补充互动问题",
+        options: [],
+      },
+    ],
+  };
+
   const coverSvg = buildCoverSvg({
     title: title || "Untitled Book",
     author: author || "Reading Garden",
@@ -211,12 +255,16 @@ export function buildNewBookArtifacts(input) {
     chapters,
     characters,
     themes,
+    timeline,
+    scenarios,
     coverSvg,
     coverFileName,
     protagonistSvg,
     promptTemplateText,
     includeCharacters,
     includeThemes,
+    includeTimeline,
+    includeInteractive,
     imageMode,
   };
 }

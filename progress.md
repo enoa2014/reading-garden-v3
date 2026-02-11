@@ -160,6 +160,7 @@
 | AI 配置链路检查 | 审查 `dashboard(ai form) -> app(save/load) -> filesystem` | 支持本地保存/加载 LLM 与图片接口配置 | 已接入 | ✓ |
 | AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
 | 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
+| 新建书模块扩展检查 | 审查 `newBookForm -> buildNewBookArtifacts(includeTimeline/includeInteractive)` | 支持 timeline/interactive 模块脚手架 | 已接入 | ✓ |
 | Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
 | Live Preview 自动刷新检查 | 审查 `touchPreviewAfterWrite` 与开关链路 | 导入/建书/覆盖写入后按设置自动刷新 iframe | 已接入 | ✓ |
 | 路径级校验检查 | 审查 `validator(validateBooksData/validateRegistryData)` | 输出 JSON 路径 + 原因 + 修复建议 | 已接入 | ✓ |
@@ -1762,6 +1763,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 103: Sprint 4 新建书模板扩展（timeline/interactive）
+- **Status:** complete
+- Actions taken:
+  - `book-template.js` 新增 `includeTimeline/includeInteractive` 模板分支
+  - 新建书流程支持写入 `timeline.json` / `scenarios.json`
+  - 分析自动建书支持将 timeline/interactive 建议映射到创建输入
+  - `dashboard.js` 新建书表单新增 timeline/interactive 复选项
+  - 回归脚本增加新模板选项关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/book-template.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1771,8 +1792,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 102 |
-| Where am I going? | Phase 102 -> checkpoint commit -> push |
+| Where am I? | Phase 103 |
+| Where am I going? | Phase 103 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 快照恢复若不按项目隔离，容易产生跨项目污染 |
-| What have I done? | 已完成会话快照清理入口，并继续补齐项目级恢复隔离 |
+| What have I learned? | 常见教学模块应在建书阶段直接可选，降低后续手工补文件成本 |
+| What have I done? | 已完成项目级快照隔离，并继续补齐新建书模块模板能力 |

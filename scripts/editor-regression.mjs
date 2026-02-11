@@ -532,6 +532,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
+  assert(appSource.includes("includeTimeline: resolveSuggestionInclude"), "app should include timeline suggestion in auto create");
+  assert(appSource.includes("includeInteractive: resolveSuggestionInclude"), "app should include interactive suggestion in auto create");
   assert(appSource.includes("confirmOverwrite"), "app should support overwrite confirmation flag");
   assert(appSource.includes("overwrite 模式需要先勾选确认项"), "app should block overwrite when confirmation is missing");
   assert(appSource.includes("ensureSuggestedModuleDataFiles"), "app should support seeding suggested module data");
@@ -574,6 +576,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("manual (preview plan only)"), "dashboard should expose manual merge strategy");
   assert(dashboardSource.includes("importTemplateMode"), "dashboard should expose template import mode");
   assert(dashboardSource.includes("当前图片策略"), "dashboard should surface current image mode for new book flow");
+  assert(dashboardSource.includes("includeTimeline"), "dashboard should expose timeline template option");
+  assert(dashboardSource.includes("includeInteractive"), "dashboard should expose interactive template option");
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
@@ -599,6 +603,10 @@ async function testDiagnosticSourceMarkers() {
   assert(bookTemplateSource.includes("cover-emoji.svg"), "book template should support emoji cover mode");
   assert(bookTemplateSource.includes("cover-none.svg"), "book template should support no-image cover mode");
   assert(bookTemplateSource.includes("imageMode: ${imageMode}"), "book template should include image mode in prompt template");
+  assert(bookTemplateSource.includes("includeTimeline"), "book template should support timeline module option");
+  assert(bookTemplateSource.includes("includeInteractive"), "book template should support interactive module option");
+  assert(bookTemplateSource.includes("timeline.json"), "book template should support timeline data output");
+  assert(bookTemplateSource.includes("scenarios.json"), "book template should support scenarios data output");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {
