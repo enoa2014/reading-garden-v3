@@ -797,6 +797,7 @@ function render() {
       onExportRedactionTemplates: exportRedactionTemplatesFlow,
       onPreviewRedactionTemplates: previewRedactionTemplatesFlow,
       onImportRedactionTemplates: importRedactionTemplatesFlow,
+      onNewBookPresetFeedback: newBookPresetFeedbackFlow,
     });
     return;
   }
@@ -2098,6 +2099,18 @@ function exportRedactionTemplatesFlow(count = 0) {
     packFeedback: {
       type: "ok",
       message: total > 0 ? `模板文件已导出（${total} 条）。` : "模板文件已导出（当前为空列表）。",
+    },
+  });
+}
+
+function newBookPresetFeedbackFlow(feedback = {}) {
+  const type = String(feedback?.type || "ok").trim() === "error" ? "error" : "ok";
+  const message = String(feedback?.message || "").trim();
+  if (!message) return;
+  setState({
+    newBookFeedback: {
+      type,
+      message,
     },
   });
 }

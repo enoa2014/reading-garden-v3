@@ -1982,6 +1982,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 114: Sprint 4 新建书自定义模板预设
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 新增新建书模板预设管理（保存/应用/导入/导出/清空）
+  - 自定义模板预设采用 localStorage 持久化（上限 12 条，按名称去重）
+  - 导入采用 merge 语义（同名优先导入版本），支持 JSON 文件迁移
+  - `app.js` 新增 `newBookPresetFeedbackFlow`，统一反馈到 New Book 面板
+  - 回归脚本新增模板预设相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1991,8 +2010,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 113 |
-| Where am I going? | Phase 113 -> checkpoint commit -> push |
+| Where am I? | Phase 114 |
+| Where am I going? | Phase 114 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 策略可配置后必须展示“当前生效来源”，否则用户难以判断配置作用域 |
-| What have I done? | 已完成会话快照策略来源可见化，并保持状态/流程/回归/文档一致更新 |
+| What have I learned? | 模板预设能力必须包含导入/导出，才能覆盖教师/家长跨设备协作场景 |
+| What have I done? | 已完成新建书自定义模板预设管理，并补齐反馈链路、回归与文档同步 |

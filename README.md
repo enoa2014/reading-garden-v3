@@ -44,6 +44,7 @@ python3 -m http.server 8080
 - 已实现：会话快照策略显示当前来源（项目覆盖/全局默认）
 - 已实现：新建书模板支持可选 `timeline/interactive` 模块脚手架
 - 已实现：新建书支持模板级别（`minimal/standard/teaching/custom`）一键套用
+- 已实现：新建书支持自定义模板预设（保存/应用/导入/导出/清空）
 - 已实现：`manual` 导入预检查支持一键应用推荐策略
 - 已实现：Validation Issues 支持下载结构化校验报告（JSON）
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路

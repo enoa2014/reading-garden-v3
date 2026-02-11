@@ -3,6 +3,8 @@ import { sanitizeBookId } from "../core/path-resolver.js";
 const DEFAULT_CUSTOM_REDACTION_FIELDS = "project.name,input.fileName";
 const CUSTOM_REDACTION_TEMPLATES_KEY = "rg.editor.customRedactionTemplates";
 const MAX_CUSTOM_REDACTION_TEMPLATES = 5;
+const NEW_BOOK_TEMPLATE_PRESETS_KEY = "rg.editor.newBookTemplatePresets";
+const MAX_NEW_BOOK_TEMPLATE_PRESETS = 12;
 const RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS = [
   { value: "0", label: "关闭自动清理" },
   { value: "7", label: "7 天" },
@@ -91,6 +93,178 @@ function matchesNewBookTemplatePreset(form, rawPreset = "standard") {
     && Boolean(includeTimeline?.checked) === Boolean(flags.includeTimeline)
     && Boolean(includeInteractive?.checked) === Boolean(flags.includeInteractive)
   );
+}
+
+function normalizeNewBookTemplatePresetName(rawValue = "") {
+  return String(rawValue || "").trim().slice(0, 40);
+}
+
+function normalizeSavedNewBookTemplatePreset(rawPreset) {
+  if (!rawPreset || typeof rawPreset !== "object") return null;
+  const name = normalizeNewBookTemplatePresetName(rawPreset.name);
+  if (!name) return null;
+  return {
+    name,
+    includeCharacters: rawPreset.includeCharacters !== false,
+    includeThemes: rawPreset.includeThemes !== false,
+    includeTimeline: rawPreset.includeTimeline === true,
+    includeInteractive: rawPreset.includeInteractive === true,
+  };
+}
+
+function readSavedNewBookTemplatePresets() {
+  try {
+    const raw = window.localStorage.getItem(NEW_BOOK_TEMPLATE_PRESETS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const seen = new Set();
+    const out = [];
+    parsed.forEach((item) => {
+      const normalized = normalizeSavedNewBookTemplatePreset(item);
+      if (!normalized || seen.has(normalized.name)) return;
+      seen.add(normalized.name);
+      out.push(normalized);
+    });
+    return out.slice(0, MAX_NEW_BOOK_TEMPLATE_PRESETS);
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedNewBookTemplatePresets(list) {
+  const safeList = (Array.isArray(list) ? list : [])
+    .map((item) => normalizeSavedNewBookTemplatePreset(item))
+    .filter(Boolean)
+    .slice(0, MAX_NEW_BOOK_TEMPLATE_PRESETS);
+  try {
+    window.localStorage.setItem(
+      NEW_BOOK_TEMPLATE_PRESETS_KEY,
+      JSON.stringify(safeList)
+    );
+  } catch {
+    // ignore storage errors in private mode or blocked storage contexts
+  }
+  return safeList;
+}
+
+function upsertSavedNewBookTemplatePreset(rawPreset) {
+  const normalized = normalizeSavedNewBookTemplatePreset(rawPreset);
+  if (!normalized) {
+    return {
+      ok: false,
+      error: "模板名称不能为空。",
+      presets: readSavedNewBookTemplatePresets(),
+    };
+  }
+  const current = readSavedNewBookTemplatePresets();
+  const existed = current.some((item) => item.name === normalized.name);
+  const deduped = current.filter((item) => item.name !== normalized.name);
+  const next = writeSavedNewBookTemplatePresets([normalized, ...deduped]);
+  return {
+    ok: true,
+    existed,
+    preset: normalized,
+    presets: next,
+  };
+}
+
+function clearSavedNewBookTemplatePresets() {
+  const existing = readSavedNewBookTemplatePresets();
+  writeSavedNewBookTemplatePresets([]);
+  return existing.length;
+}
+
+function applySavedNewBookTemplatePresetToForm(form, rawPreset) {
+  const preset = normalizeSavedNewBookTemplatePreset(rawPreset);
+  if (!preset || !form) return false;
+  const includeCharacters = form.querySelector('input[name="includeCharacters"]');
+  const includeThemes = form.querySelector('input[name="includeThemes"]');
+  const includeTimeline = form.querySelector('input[name="includeTimeline"]');
+  const includeInteractive = form.querySelector('input[name="includeInteractive"]');
+  if (includeCharacters) includeCharacters.checked = Boolean(preset.includeCharacters);
+  if (includeThemes) includeThemes.checked = Boolean(preset.includeThemes);
+  if (includeTimeline) includeTimeline.checked = Boolean(preset.includeTimeline);
+  if (includeInteractive) includeInteractive.checked = Boolean(preset.includeInteractive);
+  const templateSelect = form.querySelector('select[name="templatePreset"]');
+  if (templateSelect) templateSelect.value = "custom";
+  return true;
+}
+
+function buildNewBookTemplatePresetsDownloadName() {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return `new-book-template-presets-${stamp}.json`;
+}
+
+function exportSavedNewBookTemplatePresets() {
+  const presets = readSavedNewBookTemplatePresets();
+  const payload = {
+    format: "rg-new-book-template-presets",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    presets,
+  };
+  const text = `${JSON.stringify(payload, null, 2)}\n`;
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = buildNewBookTemplatePresetsDownloadName();
+  link.click();
+  URL.revokeObjectURL(url);
+  return presets.length;
+}
+
+function parseImportedNewBookTemplatePresetPayload(parsed) {
+  if (!parsed || typeof parsed !== "object") return [];
+  const rawPresets = Array.isArray(parsed.presets) ? parsed.presets : [];
+  const seen = new Set();
+  const out = [];
+  rawPresets.forEach((item) => {
+    const normalized = normalizeSavedNewBookTemplatePreset(item);
+    if (!normalized || seen.has(normalized.name)) return;
+    seen.add(normalized.name);
+    out.push(normalized);
+  });
+  return out.slice(0, MAX_NEW_BOOK_TEMPLATE_PRESETS);
+}
+
+async function importSavedNewBookTemplatePresets(file) {
+  if (!file) {
+    return {
+      ok: false,
+      error: "未选择模板文件。",
+    };
+  }
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const imported = parseImportedNewBookTemplatePresetPayload(parsed);
+    if (!imported.length) {
+      return {
+        ok: false,
+        error: "模板文件为空或格式不正确。",
+      };
+    }
+    const current = readSavedNewBookTemplatePresets();
+    const mergedMap = new Map();
+    [...imported, ...current].forEach((item) => {
+      if (!mergedMap.has(item.name)) {
+        mergedMap.set(item.name, item);
+      }
+    });
+    const next = writeSavedNewBookTemplatePresets(Array.from(mergedMap.values()));
+    return {
+      ok: true,
+      imported: imported.length,
+      total: next.length,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: `导入模板失败：${err?.message || String(err)}`,
+    };
+  }
 }
 
 function readCustomRedactionTemplates() {
@@ -680,6 +854,11 @@ function renderNewBookPanel(state) {
 
   const busy = state.busy ? "disabled" : "";
   const imageMode = String(state.aiSettings?.image?.mode || "disabled");
+  const savedTemplatePresets = readSavedNewBookTemplatePresets();
+  const savedTemplatePresetOptions = savedTemplatePresets
+    .map((item) => `<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)}</option>`)
+    .join("");
+  const savedTemplatePresetDisabled = savedTemplatePresets.length ? "" : "disabled";
   const feedback = state.newBookFeedback
     ? `<p class="${state.newBookFeedback.type === "error" ? "error-text" : "ok-text"}">${state.newBookFeedback.message}</p>`
     : "";
@@ -732,6 +911,24 @@ function renderNewBookPanel(state) {
           <input name="includeInteractive" type="checkbox" ${busy} />
           包含情境模块模板
         </label>
+        <label class="full">
+          已保存模板
+          <select name="savedTemplatePreset" ${busy} ${savedTemplatePresetDisabled}>
+            ${savedTemplatePresetOptions || '<option value="">暂无保存模板</option>'}
+          </select>
+        </label>
+        <label>
+          保存模板名称
+          <input name="savedTemplatePresetName" type="text" placeholder="例如：课堂全模块" ${busy} />
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-secondary save-template-preset-btn" type="button" ${busy}>Save Preset</button>
+          <button class="btn btn-secondary apply-template-preset-btn" type="button" ${busy} ${savedTemplatePresetDisabled}>Apply Preset</button>
+          <button class="btn btn-secondary export-template-presets-btn" type="button" ${busy}>Export Presets</button>
+          <button class="btn btn-secondary import-template-presets-btn" type="button" ${busy}>Import Presets</button>
+          <button class="btn btn-secondary clear-template-presets-btn" type="button" ${busy}>Clear Presets</button>
+          <input class="import-template-presets-input" type="file" accept=".json,application/json" hidden ${busy} />
+        </div>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>${state.busy ? "Creating..." : "Create Book"}</button>
         </div>
@@ -995,6 +1192,89 @@ export function renderDashboard(root, state, handlers = {}) {
           presetSelect.value = "custom";
         }
       });
+    });
+
+    const notifyNewBookPresetFeedback = (type, message) => {
+      if (handlers.onNewBookPresetFeedback) {
+        handlers.onNewBookPresetFeedback({
+          type,
+          message,
+        });
+      }
+    };
+
+    const savedPresetSelect = form.querySelector('select[name="savedTemplatePreset"]');
+    const savedPresetNameInput = form.querySelector('input[name="savedTemplatePresetName"]');
+    const savePresetBtn = form.querySelector(".save-template-preset-btn");
+    const applyPresetBtn = form.querySelector(".apply-template-preset-btn");
+    const exportPresetBtn = form.querySelector(".export-template-presets-btn");
+    const importPresetBtn = form.querySelector(".import-template-presets-btn");
+    const importPresetInput = form.querySelector(".import-template-presets-input");
+    const clearPresetBtn = form.querySelector(".clear-template-presets-btn");
+
+    savePresetBtn?.addEventListener("click", () => {
+      const presetName = normalizeNewBookTemplatePresetName(savedPresetNameInput?.value || "");
+      const result = upsertSavedNewBookTemplatePreset({
+        name: presetName,
+        includeCharacters: form.querySelector('input[name="includeCharacters"]')?.checked === true,
+        includeThemes: form.querySelector('input[name="includeThemes"]')?.checked === true,
+        includeTimeline: form.querySelector('input[name="includeTimeline"]')?.checked === true,
+        includeInteractive: form.querySelector('input[name="includeInteractive"]')?.checked === true,
+      });
+      if (!result.ok) {
+        notifyNewBookPresetFeedback("error", result.error || "保存模板失败。");
+        return;
+      }
+      if (savedPresetNameInput) savedPresetNameInput.value = result.preset.name;
+      notifyNewBookPresetFeedback(
+        "ok",
+        result.existed
+          ? `模板已更新：${result.preset.name}`
+          : `模板已保存：${result.preset.name}`
+      );
+    });
+
+    applyPresetBtn?.addEventListener("click", () => {
+      const selectedName = String(savedPresetSelect?.value || "").trim();
+      const preset = readSavedNewBookTemplatePresets()
+        .find((item) => item.name === selectedName);
+      if (!preset) {
+        notifyNewBookPresetFeedback("error", "请选择要应用的保存模板。");
+        return;
+      }
+      applySavedNewBookTemplatePresetToForm(form, preset);
+      if (savedPresetNameInput) savedPresetNameInput.value = preset.name;
+      notifyNewBookPresetFeedback("ok", `已应用模板：${preset.name}`);
+    });
+
+    clearPresetBtn?.addEventListener("click", () => {
+      const count = clearSavedNewBookTemplatePresets();
+      notifyNewBookPresetFeedback(
+        "ok",
+        count > 0 ? `已清空保存模板（${count} 条）。` : "保存模板已为空。"
+      );
+    });
+
+    exportPresetBtn?.addEventListener("click", () => {
+      const count = exportSavedNewBookTemplatePresets();
+      notifyNewBookPresetFeedback(
+        "ok",
+        count > 0 ? `模板已导出（${count} 条）。` : "模板已导出（当前为空列表）。"
+      );
+    });
+
+    importPresetBtn?.addEventListener("click", () => {
+      importPresetInput?.click();
+    });
+    importPresetInput?.addEventListener("change", async () => {
+      const file = importPresetInput.files?.[0];
+      if (importPresetInput) importPresetInput.value = "";
+      const result = await importSavedNewBookTemplatePresets(file || null);
+      if (!result.ok) {
+        notifyNewBookPresetFeedback("error", result.error || "导入模板失败。");
+        return;
+      }
+      notifyNewBookPresetFeedback("ok", `模板已导入：新增 ${result.imported} 条，当前 ${result.total} 条。`);
     });
   }
 

@@ -116,6 +116,7 @@
     - 会话快照策略支持一键清除项目覆盖并回退全局默认
     - 会话快照策略在 UI 显示来源标签（项目覆盖/全局默认）
     - 新建书支持模板级别（minimal/standard/teaching/custom）并支持手动切换 custom
+    - 新建书支持自定义模板预设（保存/应用/导入/导出/清空）
     - 新建书模板扩展：支持 `timeline/interactive` 可选模块与数据脚手架
     - `manual` 导入预检查新增“一键应用推荐策略”入口
     - Validation Issues 支持导出结构化校验报告（JSON）

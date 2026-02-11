@@ -547,6 +547,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
   assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");
+  assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
+  assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
   assert(appSource.includes("payload.projects"), "app should persist per-project recovery policy entries");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
@@ -589,6 +591,12 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("关闭自动清理"), "dashboard should expose disable history cleanup option");
   assert(dashboardSource.includes("当前来源："), "dashboard should show recovery policy source");
   assert(dashboardSource.includes("Use Global Default"), "dashboard should expose global-default reset button");
+  assert(dashboardSource.includes("NEW_BOOK_TEMPLATE_PRESETS_KEY"), "dashboard should persist custom new-book presets");
+  assert(dashboardSource.includes("save-template-preset-btn"), "dashboard should expose save preset action");
+  assert(dashboardSource.includes("apply-template-preset-btn"), "dashboard should expose apply preset action");
+  assert(dashboardSource.includes("export-template-presets-btn"), "dashboard should expose export preset action");
+  assert(dashboardSource.includes("import-template-presets-btn"), "dashboard should expose import preset action");
+  assert(dashboardSource.includes("clear-template-presets-btn"), "dashboard should expose clear preset action");
   assert(dashboardSource.includes("recoverySavedAt"), "dashboard should expose recovery history selector");
   assert(dashboardSource.includes("Restore Selected Snapshot"), "dashboard should expose restore snapshot button label");
   assert(dashboardSource.includes("Delete Selected Snapshot"), "dashboard should expose remove snapshot button label");
