@@ -497,6 +497,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("downloadAnalysisSuggestionFlow"), "app should support analysis suggestion download");
   assert(appSource.includes("applyAnalysisSuggestionFlow"), "app should support applying analysis suggestion");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
+  assert(appSource.includes("ensureSuggestedModuleDataFiles"), "app should support seeding suggested module data");
+  assert(appSource.includes("buildSuggestedModuleDataSeed"), "app should define default data seeds for suggested modules");
   assert(appSource.includes("registry.suggested.json"), "app should write safe suggested registry file");
   assert(appSource.includes("backupPath"), "app should surface overwrite backup path");
   assert(appSource.includes("AI_SETTINGS_PATH"), "app should define ai settings path");

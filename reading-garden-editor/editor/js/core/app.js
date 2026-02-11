@@ -58,6 +58,108 @@ const MODULE_TEMPLATE_MAP = {
   },
 };
 
+function buildSuggestedModuleDataSeed(moduleId, bookId) {
+  if (moduleId === "reading") {
+    return {
+      chapters: [
+        {
+          id: 1,
+          title: "第一章",
+          content: ["请补充章节内容。"],
+        },
+      ],
+    };
+  }
+  if (moduleId === "characters") {
+    return {
+      nodes: [
+        {
+          data: {
+            id: "protagonist",
+            name: "主角",
+            role: "protagonist",
+            description: "请补充人物信息",
+            avatar: `../assets/images/${bookId}/characters/protagonist.svg`,
+            traits: [],
+            quote: "",
+          },
+        },
+      ],
+      edges: [],
+    };
+  }
+  if (moduleId === "themes") {
+    return {
+      themes: [
+        {
+          id: "theme-1",
+          title: "核心主题",
+          description: "请补充主题解读",
+        },
+      ],
+    };
+  }
+  if (moduleId === "timeline") {
+    return {
+      events: [
+        {
+          id: "event-1",
+          title: "关键事件",
+          time: "",
+          description: "请补充时间线内容",
+        },
+      ],
+    };
+  }
+  if (moduleId === "interactive") {
+    return {
+      scenarios: [
+        {
+          id: "scenario-1",
+          title: "互动问题",
+          prompt: "请补充互动问题",
+          options: [],
+        },
+      ],
+    };
+  }
+  return null;
+}
+
+async function ensureSuggestedModuleDataFiles(bookId, moduleIds = []) {
+  const uniqueIds = Array.from(
+    new Set(
+      (Array.isArray(moduleIds) ? moduleIds : [])
+        .map((item) => String(item || "").trim())
+        .filter(Boolean)
+    )
+  );
+  const created = [];
+  const skipped = [];
+
+  for (const moduleId of uniqueIds) {
+    const template = MODULE_TEMPLATE_MAP[moduleId];
+    if (!template?.data) continue;
+    const payload = buildSuggestedModuleDataSeed(moduleId, bookId);
+    if (!payload) continue;
+    const path = resolveFromBookDir(bookId, template.data);
+    // eslint-disable-next-line no-await-in-loop
+    const exists = await fs.exists(path);
+    if (exists) {
+      skipped.push(path);
+      continue;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await fs.writeJson(path, payload);
+    created.push(path);
+  }
+
+  return {
+    created,
+    skipped,
+  };
+}
+
 function buildDefaultAiSettings() {
   return {
     analysis: {
@@ -534,6 +636,7 @@ function buildSuggestedRegistry(registry, suggestion) {
 
   const outModules = currentModules.map((item) => ({ ...item }));
   let added = 0;
+  const addedModuleIds = [];
   const skippedUnknown = [];
   const considered = Array.isArray(suggestion?.moduleSuggestions) ? suggestion.moduleSuggestions : [];
   considered.forEach((item) => {
@@ -547,6 +650,7 @@ function buildSuggestedRegistry(registry, suggestion) {
     outModules.push({ ...template });
     currentMap.set(id, template);
     added += 1;
+    addedModuleIds.push(id);
   });
 
   return {
@@ -560,6 +664,7 @@ function buildSuggestedRegistry(registry, suggestion) {
       },
     },
     added,
+    addedModuleIds,
     skippedUnknown,
   };
 }
@@ -615,11 +720,13 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
       : "";
     if (mode === "overwrite") {
       const writeResult = await fs.writeJson(registryPath, next.registry);
+      const seedResult = await ensureSuggestedModuleDataFiles(targetBookId, next.addedModuleIds);
       const backupText = writeResult?.backupPath ? `，备份：${writeResult.backupPath}` : "";
+      const seedText = seedResult.created.length ? `，补齐数据模板 ${seedResult.created.length} 个` : "";
       setState({
         analysisFeedback: {
           type: "ok",
-          message: `建议已覆盖写入：${registryPath}（新增 ${next.added}）${skippedText}${backupText}`,
+          message: `建议已覆盖写入：${registryPath}（新增 ${next.added}）${seedText}${skippedText}${backupText}`,
         },
       });
       setStatus("Suggestion applied (overwrite)");

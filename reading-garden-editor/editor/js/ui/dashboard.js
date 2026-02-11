@@ -418,7 +418,7 @@ function renderAnalysisPanel(state) {
       <h3>Text Analysis Assistant</h3>
       <p class="muted">导入书本原文（txt/md）后生成模块建议，支持 LLM（可选）与本地回退。</p>
       <p class="muted">可将建议安全落盘为 <code>registry.suggested.json</code>，不会覆盖现有配置。</p>
-      <p class="muted">也支持覆盖 <code>registry.json</code>，会自动生成备份用于回滚。</p>
+      <p class="muted">也支持覆盖 <code>registry.json</code>，会自动备份并补齐新增模块的数据模板。</p>
       <form id="analysisForm" class="form-grid">
         <label class="full">
           原文文件

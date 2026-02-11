@@ -162,6 +162,7 @@
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议覆盖检查 | 审查 `analysisApplyMode=overwrite` 写入链路 | 支持覆盖 `registry.json` 且返回备份路径 | 已接入 | ✓ |
+| 覆盖补齐数据检查 | 审查 `ensureSuggestedModuleDataFiles` | 覆盖模式自动补齐新增模块 data 文件 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
@@ -1539,6 +1540,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 92: Sprint 4 覆盖应用自动补齐模块数据
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `buildSuggestedModuleDataSeed/ensureSuggestedModuleDataFiles`
+  - 覆盖应用时自动创建新增模块缺失的 data 文件（reading/characters/themes/timeline/interactive）
+  - `dashboard.js` 同步补充覆盖模式说明文案
+  - 回归脚本增加“补齐数据模板”关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1548,8 +1567,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 91 |
-| Where am I going? | Phase 91 -> checkpoint commit -> push |
+| Where am I? | Phase 92 |
+| Where am I going? | Phase 92 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 覆盖写入必须绑定自动备份反馈，才能满足可回滚要求 |
-| What have I done? | 已完成安全落盘与覆盖模式双路径应用能力 |
+| What have I learned? | 覆盖应用若不补齐 data 文件，会留下运行时缺失风险 |
+| What have I done? | 已完成覆盖模式自动备份，并继续增强为自动补齐模块数据 |
