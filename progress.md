@@ -2289,18 +2289,40 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 130: Sprint 4 EdgeOne checksum 规则收口（required + format）
+- **Status:** complete
+- Actions taken:
+  - `scripts/edgeone-preflight.mjs` 新增 `sha256` 模式下关键文件 checksum 必填校验（`index.html/book.html/data/books.json/DEPLOY-EDGEONE.md`）
+  - `scripts/edgeone-preflight.mjs` 新增 checksum 哈希格式校验（必须为 64 位十六进制）
+  - 当 `checksumMode=none` 或缺失时输出显式告警；未知模式输出 unsupported 告警
+  - `scripts/edgeone-preflight-selftest.sh` 新增两类失败断言：
+    - `checksum missing for required file`
+    - `invalid checksum format`
+  - `scripts/editor-regression.mjs` 新增预检与 selftest 源码标记断言，防止规则退化
+  - 运行 `node --check`（`edgeone-preflight.mjs` / `editor-regression.mjs`）通过
+  - 运行 `bash -n scripts/edgeone-preflight-selftest.sh`、`./scripts/edgeone-preflight-selftest.sh`、`./scripts/editor-regression.sh` 均通过
+  - 同步 `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `scripts/edgeone-preflight.mjs` (updated)
+  - `scripts/edgeone-preflight-selftest.sh` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
 | 2026-02-11 | `apply_patch` 上下文不匹配（`progress.md` 片段更新失败） | 1 | 使用 `nl -ba progress.md` 定位准确行后重试补丁成功 |
 | 2026-02-11 | `git commit` 在并行执行中先于 `git add` 触发“no changes added” | 1 | 改为顺序执行 `git add && git commit` 并成功提交 |
 | 2026-02-11 | 首版 checksum 自测样例触发预检失败（缺少 `css/js`、manifest 必填字段不完整） | 1 | 按预检规则补齐目录与 manifest 字段后重测通过，并补充 checksum mismatch 反例验证 |
+| 2026-02-12 | checksum 自测 unsafe-path 用例首次断言失败（被 required-checksum/format 校验提前拦截） | 1 | 调整用例为“先保留合法 required checksums，再注入 `../` 路径”后断言通过 |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 129 |
-| Where am I going? | Phase 129 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
+| Where am I? | Phase 130 |
+| Where am I going? | Phase 130 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 仅最小样例不足以覆盖真实发布复杂度，需将真实资产样例与失败断言纳入统一自测 |
-| What have I done? | 已完成多场景 EdgeOne 预检自测脚本、CI 接入与文档同步，可进入提交推送阶段 |
+| What have I learned? | checksum 规则需同时覆盖“存在性 + 格式 + 路径安全”，否则仍可能出现完整性漏检 |
+| What have I done? | 已完成 checksum 规则收口与失败断言补齐，并通过本地 selftest/回归验证 |

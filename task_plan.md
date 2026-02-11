@@ -106,6 +106,7 @@ Phase 9
 - [x] CI 接入 EdgeOne 预检脚本自测（最小样例包）
 - [x] EdgeOne 预检脚本支持 manifest checksum 校验（`checksumMode=sha256`）
 - [x] EdgeOne 预检自测扩展为“最小样例 + 真实资产样例 + 失败断言”
+- [x] EdgeOne 预检脚本校验 required checksums 与 hash 格式（`sha256`）
 - [x] 校验层支持路径级错误提示（books/registry）
 - [x] `rgbook` 导入支持 manual 预检查策略
 - [x] IndexedDB 会话快照与重开恢复
@@ -204,6 +205,7 @@ Phase 9
 | CI 新增 EdgeOne 预检脚本自测步骤（最小样例包） | 保证预检脚本在流水线持续可用，减少脚本失效风险 |
 | EdgeOne 预检脚本增加 `sha256` checksum 校验并阻断 unsafe 路径 | 在上传前发现包体篡改/传输损坏与路径越界风险，降低线上不可预期错误风险 |
 | EdgeOne 预检自测扩展到真实资产样例并增加失败断言 | 提升与真实发布包一致性，防止“仅最小样例通过”带来的漏检 |
+| EdgeOne 预检在 `sha256` 模式强制 required checksums 与哈希格式校验 | 防止“部分文件未校验”或“伪造哈希格式”绕过完整性检查 |
 | 新建书模板扩展到 timeline/interactive 可选项 | 缩短常见教学模块的初始化步骤，减少手工补配置成本 |
 | manual 预检查增加“一键应用推荐策略” | 保留人工确认同时减少重复操作，提升导入效率 |
 | Validation Issues 增加报告下载能力 | 支持排障留档、跨角色协作与离线问题复现 |

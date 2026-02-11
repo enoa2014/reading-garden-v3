@@ -209,23 +209,47 @@ build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "checksum mismatch:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
 
 echo "[edgeone-selftest] unsafe checksum path sample (expected fail)"
-cat > "$MINIMAL_ROOT/rgsite-manifest.json" <<'JSON'
-{
-  "format": "rgsite",
-  "scope": "full",
-  "books": 1,
-  "files": 7,
-  "totalBytes": 128,
-  "missingAssets": 0,
-  "selectedBookIds": [],
-  "checksumMode": "sha256",
-  "checksums": {
-    "../outside.txt": "1234"
-  }
+build_minimal_sample "$MINIMAL_ROOT"
+node - "$MINIMAL_ROOT/rgsite-manifest.json" <<'NODE'
+const fs = require("node:fs");
+const manifestPath = process.argv[2];
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+if (!manifest.checksums || typeof manifest.checksums !== "object") {
+  manifest.checksums = {};
 }
-JSON
+manifest.checksums["../outside.txt"] = "0".repeat(64);
+fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+NODE
 build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
 assert_failure_contains "invalid checksum target path:" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+
+echo "[edgeone-selftest] missing required checksum entry sample (expected fail)"
+build_minimal_sample "$MINIMAL_ROOT"
+node - "$MINIMAL_ROOT/rgsite-manifest.json" <<'NODE'
+const fs = require("node:fs");
+const manifestPath = process.argv[2];
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+if (manifest.checksums && typeof manifest.checksums === "object") {
+  delete manifest.checksums["index.html"];
+}
+fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+NODE
+build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
+assert_failure_contains "checksum missing for required file: index.html" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
+
+echo "[edgeone-selftest] invalid checksum format sample (expected fail)"
+build_minimal_sample "$MINIMAL_ROOT"
+node - "$MINIMAL_ROOT/rgsite-manifest.json" <<'NODE'
+const fs = require("node:fs");
+const manifestPath = process.argv[2];
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+if (manifest.checksums && typeof manifest.checksums === "object") {
+  manifest.checksums["index.html"] = "not-a-sha256-hash";
+}
+fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+NODE
+build_zip_from_site "$MINIMAL_ROOT" "$MINIMAL_ZIP"
+assert_failure_contains "invalid checksum format: index.html" ./scripts/edgeone-preflight.sh "$MINIMAL_ZIP"
 
 echo "[edgeone-selftest] real-asset sample"
 REAL_ROOT="$WORK_DIR/real-site"

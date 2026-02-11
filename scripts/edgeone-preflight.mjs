@@ -127,12 +127,32 @@ async function validateExtractedSiteRoot(siteRoot) {
       if (!checksums) {
         errors.push("manifest.checksumMode=sha256 but checksums is missing");
       } else {
+        const requiredChecksumTargets = [
+          "index.html",
+          "book.html",
+          "data/books.json",
+          "DEPLOY-EDGEONE.md",
+        ];
+        if (missingAssetsCount > 0) {
+          requiredChecksumTargets.push("MISSING-ASSETS.txt");
+        }
+        requiredChecksumTargets.forEach((requiredPath) => {
+          if (!(requiredPath in checksums)) {
+            errors.push(`checksum missing for required file: ${requiredPath}`);
+          }
+        });
+
         const checksumEntries = Object.entries(checksums);
         for (const [relPath, expected] of checksumEntries) {
           const normalizedRelPath = String(relPath || "").trim();
           const expectedHash = String(expected || "").trim().toLowerCase();
           if (!normalizedRelPath || !expectedHash) {
             errors.push(`invalid checksum entry: ${String(relPath)}`);
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          if (!/^[a-f0-9]{64}$/.test(expectedHash)) {
+            errors.push(`invalid checksum format: ${normalizedRelPath}`);
             // eslint-disable-next-line no-continue
             continue;
           }
@@ -155,6 +175,10 @@ async function validateExtractedSiteRoot(siteRoot) {
           }
         }
       }
+    } else if (manifest.checksumMode === "none" || manifest.checksumMode == null) {
+      warnings.push("manifest checksum verification is disabled (checksumMode=none)");
+    } else {
+      warnings.push(`manifest checksum mode is unsupported: ${String(manifest.checksumMode)}`);
     }
   }
 
