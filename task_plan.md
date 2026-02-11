@@ -76,12 +76,13 @@ Phase 9
 - [x] `workflow_dispatch` 支持输入覆盖严格校验开关
 - [x] 严格模式增加抽样 ID 格式校验
 - [x] 支持 missing-assets 可配置失败阈值
+- [x] 支持 `book-module` 分类阈值
 - **Status:** in_progress
 
 ## Key Questions
 1. missing-assets 阈值是否需要按导出模式（full/subset）分别配置？
 2. 最近模板导入模式是否需要支持“预览差异”？
-3. 分类级 missing-assets 是否需要单独阈值（如 book-module > 0 直接 fail）？
+3. 分类级阈值是否需要扩展到 `book-cover`/`file-ref`？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -105,3 +106,4 @@ Phase 9
 | CI summary 增加 missing-assets 告警状态 | 先提供可见性，再评估是否升级为 fail 阈值 |
 | missing-assets 阈值策略默认值设为 1 | 与当前样本数据兼容，同时对新增缺失保持敏感 |
 | CI summary 增加 missing-assets 分类统计输出 | 便于定位问题来源并支持后续分类阈值策略 |
+| `book-module` 分类阈值默认值设为 0 | 优先阻断关键模块资源缺失，避免线上功能断裂 |

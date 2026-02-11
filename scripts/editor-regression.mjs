@@ -55,6 +55,16 @@ function enforceMissingAssetsThreshold(missingAssetsCount, maxMissingAssets) {
   }
 }
 
+function enforceCategoryMissingAssetsThreshold(category, missingAssetsCount, maxMissingAssets) {
+  if (maxMissingAssets == null) return;
+  const missing = Number(missingAssetsCount || 0);
+  if (missing > maxMissingAssets) {
+    throw new Error(
+      `ASSERT_FAILED: missingAssetsByCategory.${category} ${missing} exceeds threshold ${maxMissingAssets}`
+    );
+  }
+}
+
 function normalizePathValue(input) {
   const raw = String(input || "").replaceAll("\\", "/");
   const out = [];
@@ -580,6 +590,9 @@ async function estimateSitePackStats() {
 
   const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
   const maxMissingAssets = parseMaxMissingAssetsThreshold(process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS);
+  const maxMissingBookModule = parseMaxMissingAssetsThreshold(
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE
+  );
   if (requireValidSelection && selectionMeta.invalidFormatBookIds.length) {
     throw new Error(
       `ASSERT_FAILED: invalid pack stats selected book id format -> ${selectionMeta.invalidFormatBookIds.join(", ")}`
@@ -670,6 +683,8 @@ async function estimateSitePackStats() {
     includeSubsetBooksJson: true,
   });
   enforceMissingAssetsThreshold(subsetMinimalStats.missingAssets, maxMissingAssets);
+  const missingBookModule = Number(subsetMinimalStats.missingAssetsByCategory?.["book-module"] || 0);
+  enforceCategoryMissingAssetsThreshold("book-module", missingBookModule, maxMissingBookModule);
 
   return {
     sampleSelectedBookIds: selectedBookIds,
@@ -678,6 +693,12 @@ async function estimateSitePackStats() {
     missingAssetsThreshold: {
       enabled: maxMissingAssets != null,
       maxMissingAssets: maxMissingAssets == null ? null : maxMissingAssets,
+    },
+    missingAssetsCategoryThresholds: {
+      "book-module": {
+        enabled: maxMissingBookModule != null,
+        maxMissingAssets: maxMissingBookModule == null ? null : maxMissingBookModule,
+      },
     },
     full: fullStats,
     subsetBalanced: subsetBalancedStats,
@@ -776,6 +797,17 @@ function testPackStatsThresholdConfig() {
   enforceMissingAssetsThreshold(1, 1);
 }
 
+function testPackStatsCategoryThresholdConfig() {
+  enforceCategoryMissingAssetsThreshold("book-module", 0, 0);
+  let exceededFailed = false;
+  try {
+    enforceCategoryMissingAssetsThreshold("book-module", 2, 1);
+  } catch (err) {
+    exceededFailed = String(err?.message || "").includes("missingAssetsByCategory.book-module");
+  }
+  assert(exceededFailed, "category threshold guard should fail when category missing exceeds limit");
+}
+
 async function writeReport(report) {
   await mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -790,6 +822,7 @@ async function runChecks() {
     { name: "pack-size-strict-selection", run: testPackStatsStrictSelection },
     { name: "pack-size-strict-format", run: testPackStatsStrictFormat },
     { name: "pack-size-threshold-config", run: testPackStatsThresholdConfig },
+    { name: "pack-size-category-threshold-config", run: testPackStatsCategoryThresholdConfig },
     { name: "pack-size-stats", run: testPackSizeStats },
   ];
 

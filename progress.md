@@ -151,6 +151,7 @@
 | summary 告警检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 告警状态 | 已接入（warning/ok） | ✓ |
 | missing-assets 阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_ASSETS=0 ./scripts/editor-regression.sh` | 超阈值时回归失败 | 已接入 | ✓ |
 | summary 分类统计检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 分类统计 | 已接入 | ✓ |
+| 分类阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE=0 ./scripts/editor-regression.sh` | 模块缺失分类按阈值校验 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 
@@ -1119,6 +1120,39 @@
   - `progress.md` (updated)
 
 ### Phase 68: Sprint 4 checkpoint（summary-category 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`9158d48`（summary category stats）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 69: Sprint 4 分类阈值（book-module）
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加 `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE`
+  - 严格校验 `missingAssetsByCategory.book-module` 超阈值失败
+  - workflow_dispatch 增加 `pack_stats_max_missing_book_module` 输入
+  - workflow summary 增加模块阈值与模块缺失告警字段
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 70: Sprint 4 checkpoint（category-threshold 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -1136,8 +1170,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 68 |
-| Where am I going? | Phase 68 -> checkpoint commit -> push |
+| Where am I? | Phase 70 |
+| Where am I going? | Phase 70 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 summary 分类统计并等待增量 checkpoint |
+| What have I done? | 已完成分类阈值（book-module）并等待增量 checkpoint |
