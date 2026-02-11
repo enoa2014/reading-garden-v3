@@ -98,6 +98,7 @@
     - 支持一键清空最近模板并显示清空结果反馈
     - 支持最近模板导入/导出（JSON）
     - 模板导入支持 `replace` / `merge` 模式（默认 replace）
+    - 模板导入支持“预览差异”（统计当前/导入/结果数量与新增/移除/保留）
     - `rgsite` 导出反馈增加缺失资源分组数量（groups）与分类数量（categories）
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`

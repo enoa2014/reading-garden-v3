@@ -155,6 +155,7 @@
 | 分类阈值扩展检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER=1 EDITOR_PACK_STATS_MAX_MISSING_FILE_REF=1 ./scripts/editor-regression.sh` | 封面/文件引用分类支持独立阈值 | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
+| 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -1187,13 +1188,48 @@
   - `progress.md` (updated)
 
 ### Phase 72: Sprint 4 checkpoint（category-threshold-extension 增量）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
-  - 已完成功能实现，待跑最终回归
-  - 待创建 checkpoint commit 并推送
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`9058724`（cover/file-ref category thresholds）
+  - 推送到远端 `origin/master`
 - Files created/modified:
   - `scripts/editor-regression.mjs` (updated)
   - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 73: Sprint 4 模板导入预览差异
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 增加模板导入“Preview Import”按钮与文件选择流程
+  - 抽象模板导入计划逻辑，预览与实际导入共用同一差异计算
+  - 预览结果输出当前/导入/结果数量与新增/移除/保留统计
+  - 导入反馈补充差异统计与截断提示
+  - 回归脚本增加 preview 功能标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 74: Sprint 4 checkpoint（template-preview-diff 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 已完成功能实现与回归验证
+  - 待创建 checkpoint commit 并推送
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
   - `README.md` (updated)
   - `reading-garden-editor/README.md` (updated)
   - `task_plan.md` (updated)
@@ -1209,8 +1245,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 72 |
-| Where am I going? | Phase 72 -> checkpoint commit -> push |
+| Where am I? | Phase 74 |
+| Where am I going? | Phase 74 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成分类阈值扩展（book-cover/file-ref）并等待增量 checkpoint |
+| What have I done? | 已完成模板导入预览差异并等待增量 checkpoint |

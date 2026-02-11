@@ -54,6 +54,7 @@ function render() {
       onDownloadImportReport: downloadImportReportFlow,
       onClearRedactionTemplates: clearRedactionTemplatesFlow,
       onExportRedactionTemplates: exportRedactionTemplatesFlow,
+      onPreviewRedactionTemplates: previewRedactionTemplatesFlow,
       onImportRedactionTemplates: importRedactionTemplatesFlow,
     });
     return;
@@ -630,6 +631,34 @@ function exportRedactionTemplatesFlow(count = 0) {
   });
 }
 
+function previewRedactionTemplatesFlow(result) {
+  if (!result?.ok) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: result?.error || "预览模板失败。",
+      },
+    });
+    return;
+  }
+
+  const mode = result.mode === "merge" ? "merge" : "replace";
+  const currentCount = Number(result.currentCount || 0);
+  const importedCount = Number(result.importedCount || 0);
+  const nextCount = Number(result.nextCount || 0);
+  const addedCount = Number(result.addedCount || 0);
+  const removedCount = Number(result.removedCount || 0);
+  const unchangedCount = Number(result.unchangedCount || 0);
+  const truncated = result.truncated ? "，超出上限部分将被截断" : "";
+
+  setState({
+    packFeedback: {
+      type: "ok",
+      message: `模板导入预览（mode ${mode}）：当前 ${currentCount} 条，导入 ${importedCount} 条，结果 ${nextCount} 条（新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}）${truncated}。`,
+    },
+  });
+}
+
 function importRedactionTemplatesFlow(result) {
   if (!result?.ok) {
     setState({
@@ -642,10 +671,14 @@ function importRedactionTemplatesFlow(result) {
   }
   const count = Number(result.count || 0);
   const mode = result.mode === "merge" ? "merge" : "replace";
+  const addedCount = Number(result.addedCount || 0);
+  const removedCount = Number(result.removedCount || 0);
+  const unchangedCount = Number(result.unchangedCount || 0);
+  const truncated = result.truncated ? "，超出上限部分已截断" : "";
   setState({
     packFeedback: {
       type: "ok",
-      message: `模板导入完成（${count} 条，mode ${mode}）。`,
+      message: `模板导入完成（${count} 条，mode ${mode}，新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}${truncated}）。`,
     },
   });
 }

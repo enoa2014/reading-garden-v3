@@ -105,6 +105,69 @@ function parseImportedTemplatePayload(parsed) {
   return deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
 }
 
+function buildTemplateImportPlan(importedTemplates, mode = "replace") {
+  const normalizedMode = mode === "merge" ? "merge" : "replace";
+  const current = readCustomRedactionTemplates();
+  const merged = normalizedMode === "merge"
+    ? [...current, ...importedTemplates]
+    : importedTemplates;
+  const deduped = [];
+  const seen = new Set();
+  merged.forEach((item) => {
+    const normalized = normalizeCustomRedactionFields(item);
+    if (!normalized || seen.has(normalized)) return;
+    seen.add(normalized);
+    deduped.push(normalized);
+  });
+  const templates = deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
+  const currentSet = new Set(current);
+  const nextSet = new Set(templates);
+  const addedCount = templates.filter((item) => !currentSet.has(item)).length;
+  const removedCount = current.filter((item) => !nextSet.has(item)).length;
+  const unchangedCount = templates.filter((item) => currentSet.has(item)).length;
+  return {
+    mode: normalizedMode,
+    current,
+    templates,
+    addedCount,
+    removedCount,
+    unchangedCount,
+    truncated: deduped.length > MAX_CUSTOM_REDACTION_TEMPLATES,
+  };
+}
+
+async function previewCustomRedactionTemplates(file, mode = "replace") {
+  if (!file) {
+    return {
+      ok: false,
+      error: "未选择模板文件。",
+    };
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const imported = parseImportedTemplatePayload(parsed);
+    const plan = buildTemplateImportPlan(imported, mode);
+    return {
+      ok: true,
+      mode: plan.mode,
+      currentCount: plan.current.length,
+      importedCount: imported.length,
+      nextCount: plan.templates.length,
+      addedCount: plan.addedCount,
+      removedCount: plan.removedCount,
+      unchangedCount: plan.unchangedCount,
+      truncated: plan.truncated,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: `预览模板失败：${err?.message || String(err)}`,
+    };
+  }
+}
+
 async function importCustomRedactionTemplates(file, mode = "replace") {
   if (!file) {
     return {
@@ -117,26 +180,19 @@ async function importCustomRedactionTemplates(file, mode = "replace") {
     const text = await file.text();
     const parsed = JSON.parse(text);
     const imported = parseImportedTemplatePayload(parsed);
-    const normalizedMode = mode === "merge" ? "merge" : "replace";
-    const current = readCustomRedactionTemplates();
-    const merged = normalizedMode === "merge"
-      ? [...current, ...imported]
-      : imported;
-    const deduped = [];
-    const seen = new Set();
-    merged.forEach((item) => {
-      const normalized = normalizeCustomRedactionFields(item);
-      if (!normalized || seen.has(normalized)) return;
-      seen.add(normalized);
-      deduped.push(normalized);
-    });
-    const templates = deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
-    writeCustomRedactionTemplates(templates);
+    const plan = buildTemplateImportPlan(imported, mode);
+    writeCustomRedactionTemplates(plan.templates);
     return {
       ok: true,
-      count: templates.length,
-      templates,
-      mode: normalizedMode,
+      count: plan.templates.length,
+      templates: plan.templates,
+      mode: plan.mode,
+      currentCount: plan.current.length,
+      importedCount: imported.length,
+      addedCount: plan.addedCount,
+      removedCount: plan.removedCount,
+      unchangedCount: plan.unchangedCount,
+      truncated: plan.truncated,
     };
   } catch (err) {
     return {
@@ -313,30 +369,31 @@ function renderPackPanel(state) {
   const templateOptions = templates
     .map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`)
     .join("");
-  const templateSelect = templates.length
-    ? `
-      <label class="full">
-        最近使用模板
-        <select name="recentRedactionTemplate" class="diag-input" ${busy}>
-          <option value="">请选择历史模板</option>
-          ${templateOptions}
-        </select>
-      </label>
-      <div class="actions-row">
-        <button class="btn btn-secondary clear-redaction-templates-btn" type="button" ${busy}>Clear Recent Templates</button>
-        <button class="btn btn-secondary export-redaction-templates-btn" type="button" ${busy}>Export Templates</button>
-        <button class="btn btn-secondary import-redaction-templates-btn" type="button" ${busy}>Import Templates</button>
-        <input class="import-redaction-templates-input" type="file" accept=".json,application/json" hidden ${busy} />
-      </div>
-      <label class="full">
-        模板导入模式
-        <select name="importTemplateMode" class="diag-input" ${busy}>
-          <option value="replace">replace（覆盖本地）</option>
-          <option value="merge">merge（合并去重）</option>
-        </select>
-      </label>
-    `
-    : "";
+  const clearDisabled = state.busy || !templates.length ? "disabled" : "";
+  const templateTools = `
+    <label class="full">
+      最近使用模板
+      <select name="recentRedactionTemplate" class="diag-input" ${busy}>
+        <option value="">请选择历史模板</option>
+        ${templateOptions}
+      </select>
+    </label>
+    <div class="actions-row">
+      <button class="btn btn-secondary clear-redaction-templates-btn" type="button" ${clearDisabled}>Clear Recent Templates</button>
+      <button class="btn btn-secondary export-redaction-templates-btn" type="button" ${busy}>Export Templates</button>
+      <button class="btn btn-secondary preview-redaction-templates-btn" type="button" ${busy}>Preview Import</button>
+      <button class="btn btn-secondary import-redaction-templates-btn" type="button" ${busy}>Import Templates</button>
+      <input class="preview-redaction-templates-input" type="file" accept=".json,application/json" hidden ${busy} />
+      <input class="import-redaction-templates-input" type="file" accept=".json,application/json" hidden ${busy} />
+    </div>
+    <label class="full">
+      模板导入模式
+      <select name="importTemplateMode" class="diag-input" ${busy}>
+        <option value="replace">replace（覆盖本地）</option>
+        <option value="merge">merge（合并去重）</option>
+      </select>
+    </label>
+  `;
 
   const feedback = state.packFeedback
     ? `<p class="${state.packFeedback.type === "error" ? "error-text" : "ok-text"}">${state.packFeedback.message}</p>`
@@ -358,7 +415,7 @@ function renderPackPanel(state) {
             ${busy}
           />
         </label>
-        ${templateSelect}
+        ${templateTools}
         <div class="actions-row">
           <button class="btn btn-secondary download-report-btn" data-mode="full" type="button" ${busy}>Download Report</button>
           <button class="btn btn-secondary download-report-btn" data-mode="redacted" type="button" ${busy}>Download Redacted</button>
@@ -535,6 +592,8 @@ export function renderDashboard(root, state, handlers = {}) {
     const templateSelect = root.querySelector('select[name="recentRedactionTemplate"]');
     const clearTemplatesBtn = root.querySelector(".clear-redaction-templates-btn");
     const exportTemplatesBtn = root.querySelector(".export-redaction-templates-btn");
+    const previewTemplatesBtn = root.querySelector(".preview-redaction-templates-btn");
+    const previewTemplatesInput = root.querySelector(".preview-redaction-templates-input");
     const importTemplatesBtn = root.querySelector(".import-redaction-templates-btn");
     const importTemplatesInput = root.querySelector(".import-redaction-templates-input");
     const importTemplateModeEl = root.querySelector('select[name="importTemplateMode"]');
@@ -573,6 +632,22 @@ export function renderDashboard(root, state, handlers = {}) {
 
     importTemplatesBtn?.addEventListener("click", () => {
       importTemplatesInput?.click();
+    });
+
+    previewTemplatesBtn?.addEventListener("click", () => {
+      previewTemplatesInput?.click();
+    });
+
+    previewTemplatesInput?.addEventListener("change", async () => {
+      const file = previewTemplatesInput.files?.[0];
+      const importTemplateMode = String(importTemplateModeEl?.value || "replace");
+      const result = await previewCustomRedactionTemplates(file, importTemplateMode);
+      if (previewTemplatesInput) {
+        previewTemplatesInput.value = "";
+      }
+      if (handlers.onPreviewRedactionTemplates) {
+        handlers.onPreviewRedactionTemplates(result);
+      }
     });
 
     importTemplatesInput?.addEventListener("change", async () => {
