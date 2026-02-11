@@ -2210,6 +2210,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 126: Sprint 4 EdgeOne 发布包预检脚本化
+- **Status:** complete
+- Actions taken:
+  - 新增 `scripts/edgeone-preflight.sh`（zip 解压 + 预检入口）与 `scripts/edgeone-preflight.mjs`（结构与 manifest 校验）
+  - 预检覆盖：核心文件结构、`books.json`、`registry.json`、`rgsite-manifest.json`、`MISSING-ASSETS.txt` 一致性检查
+  - `editor-regression.mjs` 新增预检脚本关键标记断言，避免脚本回归
+  - 对脚本执行本地样例包自测，输出 `edgeone-preflight: ok`
+  - 运行 `node --check`（`edgeone-preflight.mjs/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / editor README / task_plan / findings / progress
+- Files created/modified:
+  - `scripts/edgeone-preflight.sh` (created)
+  - `scripts/edgeone-preflight.mjs` (created)
+  - `scripts/editor-regression.mjs` (updated)
+  - `docs/edgeone-手动部署验收与回滚清单.md` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2219,8 +2239,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 125 |
-| Where am I going? | Phase 125 -> checkpoint commit -> push |
+| Where am I? | Phase 126 |
+| Where am I going? | Phase 126 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 手动上传发布场景必须把“验收/回滚”流程固化成清单，才能降低临场遗漏概率 |
-| What have I done? | 已完成 EdgeOne 发布验收与回滚清单文档化，并接入项目文档入口 |
+| What have I learned? | 手动上传流程在文档之外还需要可执行预检脚本，才能进一步降低漏检概率 |
+| What have I done? | 已完成 EdgeOne 发布包预检脚本化，并接入回归与文档流程 |

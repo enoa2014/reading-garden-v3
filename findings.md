@@ -125,6 +125,7 @@
     - 支持组合策略包导入/导出（会话快照策略 + 自动刷新策略）
     - 组合策略包导入兼容旧单策略文件（`rg-recovery-history-policy` / `rg-preview-auto-refresh-policy`）
     - 新增 EdgeOne 手动部署验收与回滚清单（文档化发布前检查与回滚步骤）
+    - 新增 EdgeOne 发布包预检脚本（`scripts/edgeone-preflight.sh` + `scripts/edgeone-preflight.mjs`）
     - 用户确认：新建书模板预设按项目隔离暂不做；组合策略包加密/脱敏暂不做
     - 新建书模板扩展：支持 `timeline/interactive` 可选模块与数据脚手架
     - `manual` 导入预检查新增“一键应用推荐策略”入口

@@ -78,6 +78,12 @@ EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.s
 EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 ```
 
+发布包预检脚本（EdgeOne 手动上传前）：
+
+```bash
+./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip
+```
+
 CI 门禁：
 
 - `.github/workflows/editor-regression.yml` 已接入回归检查（push/PR 自动执行）

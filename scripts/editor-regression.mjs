@@ -509,6 +509,14 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/book-template.js"),
     "utf8"
   );
+  const edgeonePreflightSource = await readFile(
+    path.resolve(ROOT, "scripts/edgeone-preflight.mjs"),
+    "utf8"
+  );
+  const edgeonePreflightShellSource = await readFile(
+    path.resolve(ROOT, "scripts/edgeone-preflight.sh"),
+    "utf8"
+  );
   assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
   assert(appSource.includes("saveAiSettingsFlow"), "app should support saving ai settings");
   assert(appSource.includes("exportAiSettingsFlow"), "app should support exporting ai settings");
@@ -727,6 +735,10 @@ async function testDiagnosticSourceMarkers() {
   assert(bookTemplateSource.includes("includeInteractive"), "book template should support interactive module option");
   assert(bookTemplateSource.includes("timeline.json"), "book template should support timeline data output");
   assert(bookTemplateSource.includes("scenarios.json"), "book template should support scenarios data output");
+  assert(edgeonePreflightSource.includes("edgeone-preflight: ok"), "edgeone preflight script should output success marker");
+  assert(edgeonePreflightSource.includes("rgsite-manifest.json"), "edgeone preflight script should validate rgsite manifest");
+  assert(edgeonePreflightSource.includes("MISSING-ASSETS.txt"), "edgeone preflight script should check missing-assets report");
+  assert(edgeonePreflightShellSource.includes("edgeone-preflight.mjs"), "edgeone preflight shell wrapper should call node script");
 }
 
 async function collectReferencedAssetsFromBook(book, assetSet, assetSources = null) {

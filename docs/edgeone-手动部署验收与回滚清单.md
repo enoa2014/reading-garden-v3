@@ -37,6 +37,7 @@ releases/
 |---|---|---|
 | 编辑器回归 | `./scripts/editor-regression.sh` | 输出 `editor-regression: ok` |
 | 生成发布包 | 编辑器 `Export rgsite` | 成功下载 `*.rgsite.zip` |
+| 发布包预检 | `./scripts/edgeone-preflight.sh /path/to/*.rgsite.zip` | 输出 `edgeone-preflight: ok` |
 | Manifest 校验 | 解压后检查 `rgsite-manifest.json` | `format` 为 `rgsite`，字段完整 |
 | 缺失资源评估 | 检查 `MISSING-ASSETS.txt`（若存在） | 已确认可接受或已修复 |
 

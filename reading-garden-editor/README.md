@@ -95,6 +95,8 @@ python3 -m http.server 8080
 EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.sh
 # 可选：要求样本书籍 ID 全部有效（有缺失即失败）
 EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
+# 可选：对导出的 rgsite 包做发布前预检
+./scripts/edgeone-preflight.sh /path/to/reading-garden-*.rgsite.zip
 ```
 
 4. CI 门禁：
