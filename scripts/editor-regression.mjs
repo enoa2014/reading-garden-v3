@@ -630,6 +630,9 @@ async function testDiagnosticSourceMarkers() {
   assert(recoveryStoreSource.includes("removeProjectHistorySnapshot"), "recovery store should support removing selected project history");
   assert(recoveryStoreSource.includes("project-history:"), "recovery store should persist project history namespace");
   assert(recoveryStoreSource.includes("HISTORY_LIMIT"), "recovery store should enforce history limit");
+  assert(recoveryStoreSource.includes("HISTORY_MAX_AGE_MS"), "recovery store should enforce history max age");
+  assert(recoveryStoreSource.includes("pruneRecoveryHistory"), "recovery store should prune stale recovery history");
+  assert(recoveryStoreSource.includes("historyMaxAgeMs"), "recovery store should support configurable history max age");
   assert(recoveryStoreSource.includes("clearByProject"), "recovery store should support clearing project snapshot");
   assert(recoveryStoreSource.includes("clearLatest"), "recovery store should support snapshot clear");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");

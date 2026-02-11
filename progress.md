@@ -1887,6 +1887,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 109: Sprint 4 会话快照自动清理（30 天）
+- **Status:** complete
+- Actions taken:
+  - `recovery-store.js` 新增历史清理规则：默认仅保留最近 30 天快照
+  - 新增 `pruneRecoveryHistory` 与 `sameHistoryOrder`，统一处理去重/排序/过期过滤
+  - `loadProjectHistory` 自动落库清理结果，避免脏历史重复加载
+  - `saveLatest`/`removeProjectHistorySnapshot` 接入统一清理逻辑，维持历史窗口稳定
+  - 回归脚本增加历史过期清理相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1896,8 +1914,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 108 |
-| Where am I going? | Phase 108 -> checkpoint commit -> push |
+| Where am I? | Phase 109 |
+| Where am I going? | Phase 109 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 快照治理需要“清空全部 + 删除单条”双通道，才能兼顾便捷与精细化控制 |
-| What have I done? | 已完成删除选中历史快照能力，并补齐存储一致性处理、回归与文档同步 |
+| What have I learned? | 历史快照治理要同时控制“数量上限 + 时间窗口”，才能长期稳定运行 |
+| What have I done? | 已完成 30 天自动清理策略，并在加载/保存/删除路径统一落地与回归校验 |

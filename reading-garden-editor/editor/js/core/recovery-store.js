@@ -2,6 +2,7 @@ const DEFAULT_DB_NAME = "rg-editor-recovery";
 const DEFAULT_STORE_NAME = "snapshots";
 const LATEST_KEY = "latest";
 const HISTORY_LIMIT = 5;
+const HISTORY_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
 function projectKey(projectName = "") {
   const safe = String(projectName || "").trim();
@@ -59,9 +60,54 @@ function deleteValue(db, storeName, key) {
   });
 }
 
+function resolveSavedAtMs(item) {
+  const stamp = Date.parse(String(item?.savedAt || ""));
+  if (!Number.isFinite(stamp)) return null;
+  return stamp;
+}
+
+function pruneRecoveryHistory(history, { limit = HISTORY_LIMIT, maxAgeMs = HISTORY_MAX_AGE_MS } = {}) {
+  const now = Date.now();
+  const seen = new Set();
+  const valid = (Array.isArray(history) ? history : [])
+    .filter((item) => item && typeof item === "object")
+    .map((item) => {
+      const savedAtMs = resolveSavedAtMs(item);
+      return {
+        item,
+        savedAtMs,
+      };
+    })
+    .filter(({ item, savedAtMs }) => {
+      const stamp = String(item?.savedAt || "").trim();
+      if (!stamp || savedAtMs == null) return false;
+      if (maxAgeMs != null && maxAgeMs >= 0 && now - savedAtMs > maxAgeMs) return false;
+      if (seen.has(stamp)) return false;
+      seen.add(stamp);
+      return true;
+    })
+    .sort((a, b) => b.savedAtMs - a.savedAtMs)
+    .map(({ item }) => item);
+  const maxItems = Number.isFinite(limit) && limit > 0 ? Math.floor(limit) : HISTORY_LIMIT;
+  return valid.slice(0, maxItems);
+}
+
+function sameHistoryOrder(left, right) {
+  if (!Array.isArray(left) || !Array.isArray(right)) return false;
+  if (left.length !== right.length) return false;
+  for (let i = 0; i < left.length; i += 1) {
+    if (String(left[i]?.savedAt || "") !== String(right[i]?.savedAt || "")) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function createRecoveryStore({
   dbName = DEFAULT_DB_NAME,
   storeName = DEFAULT_STORE_NAME,
+  historyLimit = HISTORY_LIMIT,
+  historyMaxAgeMs = HISTORY_MAX_AGE_MS,
 } = {}) {
   let dbPromise = null;
 
@@ -75,23 +121,79 @@ export function createRecoveryStore({
     return dbPromise;
   };
 
+  const loadAndPruneProjectHistory = async (db, safeProject) => {
+    const historyKey = projectHistoryKey(safeProject);
+    if (!historyKey) return [];
+    const history = await readValue(db, storeName, historyKey);
+    const safeHistory = Array.isArray(history) ? history : [];
+    const pruned = pruneRecoveryHistory(safeHistory, {
+      limit: historyLimit,
+      maxAgeMs: historyMaxAgeMs,
+    });
+    if (!sameHistoryOrder(safeHistory, pruned)) {
+      if (pruned.length) {
+        await writeValue(db, storeName, historyKey, pruned);
+      } else {
+        await deleteValue(db, storeName, historyKey);
+      }
+    }
+    return pruned;
+  };
+
+  const syncProjectPointer = async (db, safeProject, history = []) => {
+    const key = projectKey(safeProject);
+    if (!key) return null;
+    if (Array.isArray(history) && history.length) {
+      await writeValue(db, storeName, key, history[0]);
+      return history[0];
+    }
+    await deleteValue(db, storeName, key);
+    return null;
+  };
+
   return {
     async loadLatest() {
       const db = await getDb();
-      return readValue(db, storeName, LATEST_KEY);
+      const snapshot = await readValue(db, storeName, LATEST_KEY);
+      if (!snapshot || typeof snapshot !== "object") return null;
+      const stamp = resolveSavedAtMs(snapshot);
+      const stale = stamp == null
+        || (historyMaxAgeMs != null && historyMaxAgeMs >= 0 && Date.now() - stamp > historyMaxAgeMs);
+      if (!stale) return snapshot;
+
+      const safeProject = String(snapshot?.projectName || "").trim();
+      if (!safeProject) {
+        await deleteValue(db, storeName, LATEST_KEY);
+        return null;
+      }
+      const history = await loadAndPruneProjectHistory(db, safeProject);
+      const fallback = await syncProjectPointer(db, safeProject, history);
+      if (fallback) {
+        await writeValue(db, storeName, LATEST_KEY, fallback);
+        return fallback;
+      }
+      await deleteValue(db, storeName, LATEST_KEY);
+      return null;
     },
     async loadByProject(projectName) {
-      const key = projectKey(projectName);
+      const safeProject = String(projectName || "").trim();
+      const key = projectKey(safeProject);
       if (!key) return null;
       const db = await getDb();
-      return readValue(db, storeName, key);
+      const snapshot = await readValue(db, storeName, key);
+      if (!snapshot || typeof snapshot !== "object") return null;
+      const stamp = resolveSavedAtMs(snapshot);
+      const stale = stamp == null
+        || (historyMaxAgeMs != null && historyMaxAgeMs >= 0 && Date.now() - stamp > historyMaxAgeMs);
+      if (!stale) return snapshot;
+      const history = await loadAndPruneProjectHistory(db, safeProject);
+      return syncProjectPointer(db, safeProject, history);
     },
     async loadProjectHistory(projectName) {
-      const key = projectHistoryKey(projectName);
-      if (!key) return [];
+      const safeProject = String(projectName || "").trim();
+      if (!safeProject) return [];
       const db = await getDb();
-      const history = await readValue(db, storeName, key);
-      return Array.isArray(history) ? history : [];
+      return loadAndPruneProjectHistory(db, safeProject);
     },
     async removeProjectHistorySnapshot(projectName, savedAt) {
       const safeProject = String(projectName || "").trim();
@@ -107,7 +209,10 @@ export function createRecoveryStore({
 
       const db = await getDb();
       const history = await readValue(db, storeName, historyKey);
-      const safeHistory = Array.isArray(history) ? history : [];
+      const safeHistory = pruneRecoveryHistory(Array.isArray(history) ? history : [], {
+        limit: historyLimit,
+        maxAgeMs: historyMaxAgeMs,
+      });
       const nextHistory = safeHistory.filter((item) => String(item?.savedAt || "") !== stamp);
       if (nextHistory.length === safeHistory.length) {
         return {
@@ -162,15 +267,12 @@ export function createRecoveryStore({
         await writeValue(db, storeName, key, payload);
         const historyKey = projectHistoryKey(payload.projectName);
         if (historyKey) {
-          const history = await readValue(db, storeName, historyKey);
+        const history = await readValue(db, storeName, historyKey);
           const safeHistory = Array.isArray(history) ? history : [];
-          const nextHistory = [payload, ...safeHistory]
-            .filter((item, index, list) => {
-              const stamp = String(item?.savedAt || "");
-              if (!stamp) return false;
-              return list.findIndex((cursor) => String(cursor?.savedAt || "") === stamp) === index;
-            })
-            .slice(0, HISTORY_LIMIT);
+          const nextHistory = pruneRecoveryHistory([payload, ...safeHistory], {
+            limit: historyLimit,
+            maxAgeMs: historyMaxAgeMs,
+          });
           await writeValue(db, storeName, historyKey, nextHistory);
         }
       }
