@@ -83,10 +83,11 @@ Phase 9
 - [x] 支持 `unclassified` 分类阈值
 - [x] subset minimal 支持缺失资源 `svg-placeholder` 回退
 - [x] 支持分类阈值预设（`custom/balanced/strict`）
+- [x] 支持 missing-assets 按导出模式独立阈值（balanced/minimal）
 - **Status:** in_progress
 
 ## Key Questions
-1. missing-assets 阈值是否需要按导出模式（full/subset）分别配置？
+1. 是否需要为 `subset-balanced` 和 `subset-minimal` 提供不同默认阈值？
 2. 预览差异是否需要支持“可展开全量明细列表”而非示例摘要？
 3. 阈值预设是否需要按导出范围（full/subset）自动切换默认值？
 
@@ -119,3 +120,4 @@ Phase 9
 | `unclassified` 分类阈值默认关闭 | 未分类来源噪声较大，先提供可选治理能力而非默认阻断 |
 | 缺失资源回退默认 `report-only` | 保持导出结果可解释、可审计，按需启用 `svg-placeholder` |
 | 新增分类阈值预设 `custom/balanced/strict` | 提升手动回归可用性，减少逐项配置成本 |
+| missing-assets 阈值支持按模式覆盖 | 兼容全局默认，同时允许对 minimal 进行更严格门禁 |

@@ -52,7 +52,9 @@ CI 门禁：
 - CI 固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`，确保分支间报告可比
 - `workflow_dispatch` 可通过 `pack_stats_selected_books` 覆盖抽样书籍
 - `workflow_dispatch` 可通过 `pack_stats_require_valid_selection` 控制严格校验（默认 true）
-- `workflow_dispatch` 可通过 `pack_stats_max_missing_assets` 配置 missing-assets 失败阈值（默认 1）
+- `workflow_dispatch` 可通过 `pack_stats_max_missing_assets` 配置 missing-assets 全局阈值（默认 1）
+- `workflow_dispatch` 可通过 `pack_stats_max_missing_assets_subset_balanced` 配置 subset-balanced 阈值（默认继承全局）
+- `workflow_dispatch` 可通过 `pack_stats_max_missing_assets_subset_minimal` 配置 subset-minimal 阈值（默认继承全局）
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_book_module` 配置模块缺失阈值（默认 0）
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_book_cover` 配置封面缺失阈值（默认禁用）
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_file_ref` 配置文件引用缺失阈值（默认禁用）

@@ -26,9 +26,17 @@ on:
         required: false
         default: "true"
       pack_stats_max_missing_assets:
-        description: "Max allowed missing assets in subset-minimal (non-negative integer)"
+        description: "Global max allowed missing assets for subset modes (non-negative integer)"
         required: false
         default: "1"
+      pack_stats_max_missing_assets_subset_balanced:
+        description: "Max allowed missing assets in subset-balanced (non-negative integer, empty to inherit global)"
+        required: false
+        default: ""
+      pack_stats_max_missing_assets_subset_minimal:
+        description: "Max allowed missing assets in subset-minimal (non-negative integer, empty to inherit global)"
+        required: false
+        default: ""
       pack_stats_max_missing_book_module:
         description: "Max allowed missing book-module assets (non-negative integer)"
         required: false
@@ -69,6 +77,8 @@ jobs:
           EDITOR_PACK_STATS_SELECTED_BOOKS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_selected_books || 'totto-chan,wave' }}
           EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_require_valid_selection || 'true' }}
           EDITOR_PACK_STATS_MAX_MISSING_ASSETS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_assets || '1' }}
+          EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_assets_subset_balanced || '' }}
+          EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_assets_subset_minimal || '' }}
           EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_book_module || '0' }}
           EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_book_cover || '' }}
           EDITOR_PACK_STATS_MAX_MISSING_FILE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_file_ref || '' }}
@@ -102,6 +112,11 @@ jobs:
             .join(", ") || "(none)";
           const threshold = stats.missingAssetsThreshold || {};
           const thresholdText = threshold.enabled ? String(threshold.maxMissingAssets) : "disabled";
+          const thresholdByMode = stats.missingAssetsThresholdsByMode || {};
+          const thresholdBalanced = thresholdByMode["subset-balanced"] || {};
+          const thresholdMinimal = thresholdByMode["subset-minimal"] || {};
+          const thresholdBalancedText = thresholdBalanced.enabled ? String(thresholdBalanced.maxMissingAssets) : "disabled";
+          const thresholdMinimalText = thresholdMinimal.enabled ? String(thresholdMinimal.maxMissingAssets) : "disabled";
           const categoryThresholds = stats.missingAssetsCategoryThresholds || {};
           const categoryThresholdPreset = String(stats.missingAssetsCategoryThresholdPreset || "custom");
           const moduleThreshold = categoryThresholds["book-module"] || {};
@@ -126,6 +141,8 @@ jobs:
             `- mode: \`${selection.mode || "unknown"}\``,
             `- require valid selection: \`${String(stats.requireValidSelection ?? false)}\``,
             `- max missing-assets threshold: \`${thresholdText}\``,
+            `- max missing-assets subset-balanced: \`${thresholdBalancedText}\``,
+            `- max missing-assets subset-minimal: \`${thresholdMinimalText}\``,
             `- category threshold preset: \`${categoryThresholdPreset}\``,
             `- max book-module threshold: \`${moduleThresholdText}\``,
             `- max book-cover threshold: \`${coverThresholdText}\``,

@@ -150,6 +150,7 @@
 | 抽样格式校验检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"bad;id\" EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true node scripts/editor-regression.mjs` | 非法格式 ID 在严格模式下失败 | 已接入 | ✓ |
 | summary 告警检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 告警状态 | 已接入（warning/ok） | ✓ |
 | missing-assets 阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_ASSETS=0 ./scripts/editor-regression.sh` | 超阈值时回归失败 | 已接入 | ✓ |
+| 按模式阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL=0 ./scripts/editor-regression.sh` | subset-minimal 可独立阈值并触发失败 | 已接入 | ✓ |
 | summary 分类统计检查 | 审查 workflow summary 生成逻辑 | 输出 missing-assets 分类统计 | 已接入 | ✓ |
 | 分类阈值检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE=0 ./scripts/editor-regression.sh` | 模块缺失分类按阈值校验 | 已接入 | ✓ |
 | 分类阈值扩展检查 | `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER=1 EDITOR_PACK_STATS_MAX_MISSING_FILE_REF=1 ./scripts/editor-regression.sh` | 封面/文件引用分类支持独立阈值 | 已接入 | ✓ |
@@ -1360,6 +1361,39 @@
   - `progress.md` (updated)
 
 ### Phase 82: Sprint 4 checkpoint（category-threshold-preset 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`ae4ac7a`（category threshold presets）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 83: Sprint 4 missing-assets 按模式阈值
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加 `EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED` / `..._SUBSET_MINIMAL`
+  - 回归报告新增 `missingAssetsThresholdsByMode`
+  - workflow_dispatch 增加按模式阈值输入
+  - workflow summary 增加 balanced/minimal 阈值展示
+  - 本地验证 minimal 独立阈值失败路径与默认路径通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 84: Sprint 4 checkpoint（mode-threshold 增量）
 - **Status:** in_progress
 - Actions taken:
   - 已完成功能实现与回归验证
@@ -1382,8 +1416,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 82 |
-| Where am I going? | Phase 82 -> checkpoint commit -> push |
+| Where am I? | Phase 84 |
+| Where am I going? | Phase 84 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成分类阈值预设并等待增量 checkpoint |
+| What have I done? | 已完成按模式阈值并等待增量 checkpoint |

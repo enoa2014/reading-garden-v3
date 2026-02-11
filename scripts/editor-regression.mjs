@@ -94,6 +94,39 @@ function enforceCategoryMissingAssetsThreshold(category, missingAssetsCount, max
   }
 }
 
+function resolveMissingAssetsThresholdsByMode() {
+  const globalThreshold = parseMaxMissingAssetsThreshold(process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS);
+  const subsetBalanced = parseMaxMissingAssetsThreshold(
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED,
+    "EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED"
+  );
+  const subsetMinimal = parseMaxMissingAssetsThreshold(
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL,
+    "EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL"
+  );
+
+  const byMode = {
+    "subset-balanced": {
+      enabled: subsetBalanced != null || globalThreshold != null,
+      maxMissingAssets: subsetBalanced == null ? globalThreshold : subsetBalanced,
+      source: subsetBalanced != null ? "env" : (globalThreshold != null ? "global" : "disabled"),
+    },
+    "subset-minimal": {
+      enabled: subsetMinimal != null || globalThreshold != null,
+      maxMissingAssets: subsetMinimal == null ? globalThreshold : subsetMinimal,
+      source: subsetMinimal != null ? "env" : (globalThreshold != null ? "global" : "disabled"),
+    },
+  };
+
+  return {
+    global: {
+      enabled: globalThreshold != null,
+      maxMissingAssets: globalThreshold == null ? null : globalThreshold,
+    },
+    byMode,
+  };
+}
+
 function readCategoryMissingAssetsThresholdsFromEnv() {
   const preset = normalizeCategoryThresholdPreset(process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET);
   const presetValues = PACK_STATS_CATEGORY_THRESHOLD_PRESETS[preset] || {};
@@ -652,7 +685,7 @@ async function estimateSitePackStats() {
   }
 
   const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
-  const maxMissingAssets = parseMaxMissingAssetsThreshold(process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS);
+  const missingAssetsThresholdConfig = resolveMissingAssetsThresholdsByMode();
   const categoryThresholdConfig = readCategoryMissingAssetsThresholdsFromEnv();
   const categoryMissingAssetsThresholds = categoryThresholdConfig.thresholds;
   if (requireValidSelection && selectionMeta.invalidFormatBookIds.length) {
@@ -716,6 +749,10 @@ async function estimateSitePackStats() {
     missingAssetsByCategory: {},
     includeSubsetBooksJson: true,
   });
+  enforceMissingAssetsThreshold(
+    subsetBalancedStats.missingAssets,
+    missingAssetsThresholdConfig.byMode["subset-balanced"].maxMissingAssets
+  );
 
   const subsetMinimalFiles = await collectFilesFromRoots(SUBSET_CORE_ROOTS);
   for (const id of selectedBookIds) {
@@ -744,7 +781,10 @@ async function estimateSitePackStats() {
     missingAssetsByCategory,
     includeSubsetBooksJson: true,
   });
-  enforceMissingAssetsThreshold(subsetMinimalStats.missingAssets, maxMissingAssets);
+  enforceMissingAssetsThreshold(
+    subsetMinimalStats.missingAssets,
+    missingAssetsThresholdConfig.byMode["subset-minimal"].maxMissingAssets
+  );
   Object.entries(categoryMissingAssetsThresholds).forEach(([category, threshold]) => {
     const missingByCategory = Number(subsetMinimalStats.missingAssetsByCategory?.[category] || 0);
     enforceCategoryMissingAssetsThreshold(category, missingByCategory, threshold.maxMissingAssets);
@@ -754,10 +794,8 @@ async function estimateSitePackStats() {
     sampleSelectedBookIds: selectedBookIds,
     selection: selectionMeta,
     requireValidSelection,
-    missingAssetsThreshold: {
-      enabled: maxMissingAssets != null,
-      maxMissingAssets: maxMissingAssets == null ? null : maxMissingAssets,
-    },
+    missingAssetsThreshold: missingAssetsThresholdConfig.global,
+    missingAssetsThresholdsByMode: missingAssetsThresholdConfig.byMode,
     missingAssetsCategoryThresholds: categoryMissingAssetsThresholds,
     missingAssetsCategoryThresholdPreset: categoryThresholdConfig.preset,
     full: fullStats,
@@ -859,6 +897,49 @@ function testPackStatsThresholdConfig() {
   }
   assert(exceededFailed, "threshold guard should fail when missing assets exceed limit");
   enforceMissingAssetsThreshold(1, 1);
+}
+
+function testPackStatsThresholdByModeConfig() {
+  const backup = {
+    global: process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS,
+    balanced: process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED,
+    minimal: process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL,
+  };
+
+  try {
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS = "2";
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED = "";
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL = "0";
+    const config = resolveMissingAssetsThresholdsByMode();
+    assert(config.global.maxMissingAssets === 2, "global threshold should be parsed");
+    assert(config.byMode["subset-balanced"]?.maxMissingAssets === 2, "balanced should inherit global threshold");
+    assert(config.byMode["subset-minimal"]?.maxMissingAssets === 0, "minimal should override global threshold");
+
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED = "bad";
+    let invalidFailed = false;
+    try {
+      resolveMissingAssetsThresholdsByMode();
+    } catch (err) {
+      invalidFailed = String(err?.message || "").includes("EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED");
+    }
+    assert(invalidFailed, "mode threshold parser should report invalid env");
+  } finally {
+    if (typeof backup.global === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS;
+    } else {
+      process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS = backup.global;
+    }
+    if (typeof backup.balanced === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED;
+    } else {
+      process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_BALANCED = backup.balanced;
+    }
+    if (typeof backup.minimal === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL;
+    } else {
+      process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS_SUBSET_MINIMAL = backup.minimal;
+    }
+  }
 }
 
 function testPackStatsCategoryThresholdConfig() {
@@ -971,6 +1052,7 @@ async function runChecks() {
     { name: "pack-size-strict-selection", run: testPackStatsStrictSelection },
     { name: "pack-size-strict-format", run: testPackStatsStrictFormat },
     { name: "pack-size-threshold-config", run: testPackStatsThresholdConfig },
+    { name: "pack-size-threshold-by-mode-config", run: testPackStatsThresholdByModeConfig },
     { name: "pack-size-category-threshold-config", run: testPackStatsCategoryThresholdConfig },
     { name: "pack-size-stats", run: testPackSizeStats },
   ];
