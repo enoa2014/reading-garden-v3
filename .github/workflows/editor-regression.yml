@@ -5,6 +5,12 @@ on:
     branches:
       - master
     paths:
+      - "index.html"
+      - "book.html"
+      - "js/**"
+      - "css/**"
+      - "data/**"
+      - "package.json"
       - "reading-garden-editor/**"
       - "scripts/editor-regression.sh"
       - "scripts/editor-regression.mjs"
@@ -14,6 +20,12 @@ on:
       - ".github/workflows/editor-regression.yml"
   pull_request:
     paths:
+      - "index.html"
+      - "book.html"
+      - "js/**"
+      - "css/**"
+      - "data/**"
+      - "package.json"
       - "reading-garden-editor/**"
       - "scripts/editor-regression.sh"
       - "scripts/editor-regression.mjs"

@@ -72,7 +72,7 @@ function renderFurtherReading(items) {
           const year = escapeHtml(String(b?.year || ""));
           const desc = escapeHtml(String(b?.desc || ""));
           const link = String(b?.link || "").trim();
-          const safeLink = /^https?:\\/\\//.test(link) ? link : "";
+          const safeLink = /^https?:\/\//.test(link) ? link : "";
           return `
             <article class="rg-readingcard">
               <div class="rg-readingcard__top">
@@ -136,4 +136,3 @@ export default {
     `;
   },
 };
-

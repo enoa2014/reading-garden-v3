@@ -4,7 +4,7 @@
   "description": "Reading Garden - 离线优先的阅读花园可视化工具",
   "type": "module",
   "scripts": {
-    "build": "mkdir -p dist && cp -r *.html assets css data design-system docs js reading-garden-editor scripts dist/ 2>/dev/null || true",
+    "build": "rm -rf dist && mkdir -p dist && cp -r *.html assets css data design-system docs js reading-garden-editor scripts dist/",
     "start": "echo 'Use a static file server to run locally'",
     "test": "echo 'No tests configured'"
   },

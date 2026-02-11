@@ -829,7 +829,7 @@ function renderAnalysisPanel(state) {
         </label>
         <label class="checkbox-inline">
           <input name="confirmOverwriteAnalysis" type="checkbox" ${busy} />
-          我已确认 overwrite 会修改 `registry.json`
+          我已确认 overwrite 会修改 registry.json
         </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Analyze Text</button>
