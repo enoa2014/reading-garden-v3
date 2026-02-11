@@ -9,8 +9,12 @@ import {
 import { normalizePath, sanitizeBookId } from "./path-resolver.js";
 import { buildNewBookArtifacts } from "./book-template.js";
 import { renderDashboard } from "../ui/dashboard.js";
+import { ImportMergeService } from "../packaging/import-merge-service.js";
+import { BookPackService } from "../packaging/book-pack-service.js";
 
 const fs = createFileSystemAdapter();
+const mergeService = new ImportMergeService();
+const bookPackService = new BookPackService({ fs, mergeService });
 
 function qs(sel) {
   return document.querySelector(sel);
@@ -42,6 +46,8 @@ function render() {
   if (state.currentView === "dashboard") {
     renderDashboard(root, state, {
       onCreateBook: createBookFlow,
+      onExportPack: exportPackFlow,
+      onImportPack: importPackFlow,
     });
     return;
   }
@@ -173,7 +179,7 @@ async function refreshProjectData() {
 
 async function openProjectFlow() {
   setStatus("Opening project...");
-  setState({ busy: true, newBookFeedback: null });
+  setState({ busy: true, newBookFeedback: null, packFeedback: null });
 
   try {
     const handle = await fs.openProject();
@@ -273,7 +279,7 @@ async function createBookFlow(rawInput) {
     if (!existed) createdPaths.push({ path, recursive: false });
   };
 
-  setState({ busy: true, newBookFeedback: null });
+  setState({ busy: true, newBookFeedback: null, packFeedback: null });
   setStatus("Creating new book...");
 
   try {
@@ -338,6 +344,101 @@ async function createBookFlow(rawInput) {
       },
     });
     setStatus("Create failed");
+  }
+
+  setState({ busy: false });
+}
+
+async function exportPackFlow(bookId) {
+  if (!bookId) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: "请选择要导出的书籍。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, packFeedback: null });
+  setStatus("Exporting rgbook...");
+
+  try {
+    const state = getState();
+    const result = await bookPackService.exportBookPack({
+      bookId,
+      books: state.books,
+    });
+
+    setState({
+      packFeedback: {
+        type: "ok",
+        message: `导出成功：${result.filename}（data ${result.dataFiles}，assets ${result.assets}）`,
+      },
+    });
+    setStatus("rgbook exported");
+  } catch (err) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: `导出失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Export failed");
+  }
+
+  setState({ busy: false });
+}
+
+async function importPackFlow(file, strategy) {
+  if (!file) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: "请选择要导入的 rgbook 文件。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, packFeedback: null });
+  setStatus("Importing rgbook...");
+
+  try {
+    const state = getState();
+    const result = await bookPackService.importBookPack({
+      file,
+      existingBooks: state.books,
+      strategy,
+    });
+
+    await refreshProjectData();
+
+    if (result.skipped) {
+      setState({
+        packFeedback: {
+          type: "ok",
+          message: "导入已跳过（skip 策略）。",
+        },
+      });
+      setStatus("Import skipped");
+    } else {
+      setState({
+        packFeedback: {
+          type: "ok",
+          message: `导入成功：${result.targetBookId}（${result.strategy}）`,
+        },
+      });
+      setStatus("rgbook imported");
+    }
+  } catch (err) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: `导入失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Import failed");
   }
 
   setState({ busy: false });

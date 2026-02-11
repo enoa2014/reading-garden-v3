@@ -121,6 +121,26 @@
 | Sprint2 语法检查 | `node --check` on editor js files | 全部通过 | 通过 | ✓ |
 | 模板模块化检查 | `buildNewBookArtifacts` smoke test | 按选项输出模块与模板文件 | 通过 | ✓ |
 | 路径归一化检查 | `normalizePath` smoke test | 保留 `?v=` query | 通过 | ✓ |
+| Sprint3 语法检查 | `node --check`（排除 vendor） | 全部通过 | 通过 | ✓ |
+| 合并策略检查 | `ImportMergeService` smoke test | rename 生成新 id | 通过（`wave-imported-1`） | ✓ |
+
+### Phase 8: Sprint 3 rgbook 导入导出落地
+- **Status:** in_progress
+- Actions taken:
+  - 引入本地 `JSZip` vendor 文件
+  - 实现 `BookPackService` 的导出/导入/检查流程
+  - 实现 `ImportMergeService.applyMergePlan`
+  - 扩展 `FileSystemAdapter` 支持二进制读写（readBinary/writeBinary）
+  - 扩展 Dashboard 与 app：接入 rgbook 导出/导入交互
+- Files created/modified:
+  - `reading-garden-editor/editor/js/vendor/jszip.min.js` (created)
+  - `reading-garden-editor/editor/js/packaging/book-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/packaging/import-merge-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/filesystem.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/index.html` (updated)
+  - `reading-garden-editor/README.md` (updated)
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
@@ -130,8 +150,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 5 |
-| Where am I going? | Sprint 3 交换包落地 |
+| Where am I? | Phase 8 |
+| Where am I going? | Phase 8 -> checkpoint 提交 |
 | What's the goal? | 打通编辑器最小可运行闭环 |
-| What have I learned? | 新建书能力可先落地，交换包可先骨架化并逐轮填充 |
-| What have I done? | 已完成 Sprint2 扩展、自检与文档同步 |
+| What have I learned? | 可先以 rgbook 打通分享闭环，再推进 rgsite 发布闭环 |
+| What have I done? | 已把 rgbook 从骨架推进到可导入导出链路 |

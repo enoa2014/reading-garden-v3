@@ -14,6 +14,7 @@ const state = {
   currentView: "dashboard",
   busy: false,
   newBookFeedback: null,
+  packFeedback: null,
 };
 
 function emit(key) {

@@ -60,13 +60,23 @@
     - `editor/js/packaging/book-pack-service.js`
     - `editor/js/packaging/import-merge-service.js`
     - `editor/js/packaging/site-pack-service.js`
+- Sprint 3 已完成实现（当前）：
+  - 引入本地依赖：`editor/js/vendor/jszip.min.js`
+  - `BookPackService` 已支持：
+    - 导出 `*.rgbook.zip`（book.json / registry / data / assets / manifest）
+    - 导入 `*.rgbook.zip`（冲突策略：rename/overwrite/skip）
+    - 导入失败时基础回滚（新建路径逆序删除 + books 索引恢复尝试）
+  - `ImportMergeService` 已支持 `applyMergePlan`
+  - `FileSystemAdapter` 已支持二进制读写（用于资产打包导入）
+  - Dashboard 已接入 rgbook 导入导出入口
 
 ## Risks & Watchpoints
 - 浏览器不支持 File System Access API 时需要明确降级提示。
 - `books.json`/目录结构异常时要给出可理解错误，避免静默失败。
 - 状态管理若无订阅机制，后续 UI 扩展会快速失控。
 - 新建书回滚当前仅处理“本次新建路径”删除，尚未实现“基于备份自动恢复覆盖文件”流程。
-- 交换包服务目前是接口骨架，导入导出真实链路需在 Sprint 3 落地。
+- `rgbook` 导入当前未实现 checksum 校验与压缩包安全策略（路径穿越/大小限制）硬校验。
+- `rgsite` 导出仍是骨架，尚未进入真实打包流程。
 
 ## Sprint 3 预规划
 - 目标 1：将 `rgbook` 从骨架接口升级为可导出/可导入链路（先 JSON bundle，再接 ZIP）。

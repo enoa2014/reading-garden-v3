@@ -16,6 +16,11 @@
   - 新建书失败回滚（逆序删除本次创建路径）
   - `rgbook/rgsite` 交换包服务骨架接口（待下一轮填充实现）
 
+- Sprint 3 早期实现（进行中）：
+  - 已接入本地 `JSZip`（`editor/js/vendor/jszip.min.js`）
+  - 已支持 `rgbook` 导出（单书打包为 `*.rgbook.zip`）
+  - 已支持 `rgbook` 导入（`rename/overwrite/skip` 冲突策略）
+
 ## 运行方式
 
 1. 在项目根目录启动本地静态服务：

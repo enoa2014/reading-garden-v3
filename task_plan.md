@@ -1,50 +1,51 @@
-# Task Plan: Reading Garden Editor 开发实施（Sprint 2）
+# Task Plan: Reading Garden Editor 开发实施（Sprint 3）
 
 ## Goal
-在 Sprint 1 骨架基础上继续推进：实现“新建书向导 + 规则校验增强 + 交换包服务骨架”，并保持可回滚与可恢复开发流程。
+把 `rgbook` 从骨架升级为可用能力：支持单书导出/导入、冲突策略合并、基础回滚，并继续保持文档可恢复。
 
 ## Current Phase
-Phase 5
+Phase 4
 
 ## Phases
-### Phase 1: Sprint 2 目标收敛
-- [x] 明确本轮核心目标（建书、校验、交换包骨架）
-- [x] 对齐离线优先与回滚策略要求
+### Phase 1: Sprint 3 设计落地准备
+- [x] 选择本地打包方案（JSZip 本地 vendor）
+- [x] 明确导入冲突策略（rename/overwrite/skip）
 - **Status:** complete
 
-### Phase 2: 核心能力扩展
-- [x] 新增 `book-template.js` 生成最小书籍模板
-- [x] 扩展 `filesystem.js`（`exists`/`deletePath`）
-- [x] 扩展 `validator.js`（新建书输入校验）
+### Phase 2: 打包服务实现
+- [x] 实现 `BookPackService.exportBookPack`
+- [x] 实现 `BookPackService.inspectBookPack`
+- [x] 实现 `BookPackService.importBookPack`
+- [x] 扩展 `FileSystemAdapter` 二进制读写能力
 - **Status:** complete
 
-### Phase 3: 主流程增强
-- [x] 扩展 `app.js`：新建书流程、健康检查、回滚清理
-- [x] 扩展 `dashboard.js`：新建书表单、反馈信息、健康面板
-- [x] 扩展样式：表单与状态反馈样式
+### Phase 3: UI 流程接入
+- [x] Dashboard 增加 rgbook 导出表单
+- [x] Dashboard 增加 rgbook 导入表单 + 冲突策略
+- [x] `app.js` 接入导出/导入处理流程
 - **Status:** complete
 
-### Phase 4: 交换包骨架落地与验证
-- [x] 新增 `packaging/book-pack-service.js` 骨架
-- [x] 新增 `packaging/import-merge-service.js` 骨架
-- [x] 新增 `packaging/site-pack-service.js` 骨架
-- [x] 通过语法检查
-- [x] 更新运行文档与开发日志
-- [x] checkpoint 提交与推送
-- **Status:** complete
-
-### Phase 5: 下一轮规划
-- [x] 规划 Sprint 3（交换包真实导入导出 + 新建书向导增强）
+### Phase 4: 校验与文档同步
+- [x] JS 语法检查（编辑器代码）
+- [x] 模块级 smoke test（merge/path）
+- [ ] 同步 `findings.md` / `progress.md` 记录
+- [ ] checkpoint 提交与推送
 - **Status:** in_progress
 
+### Phase 5: 下一迭代规划
+- [ ] 规划 `rgsite` 真正导出链路
+- [ ] 规划 rgbook 校验增强（checksum、恶意包检测）
+- [ ] 规划自动化回归测试
+- **Status:** pending
+
 ## Key Questions
-1. 新建书流程是否已具备“失败自动回滚”最低保障？
-2. 交换包骨架接口是否足够支持下一轮直接填充实现？
-3. 文档是否能保证断电后继续开发无需口头补充？
+1. 当前 `rgbook` 导入回滚策略是否覆盖主要失败路径？
+2. 下一步应先做 `rgsite` 还是先补 `rgbook` 安全校验？
+3. 是否需要把导入过程可视化为步骤日志面板？
 
 ## Decisions Made
 | Decision | Rationale |
 |----------|-----------|
-| Sprint 2 先做最小可用建书而不等待完整交换包实现 | 先提高内容生产效率，保持迭代速度 |
-| 新建书失败采用“已创建路径逆序删除”回滚 | 避免产生半成品目录污染 |
-| 交换包先落接口骨架（manifest/merge plan） | 为 Sprint 3 减少设计反复 |
+| 引入本地 `JSZip` vendor 文件 | 保持离线可用，避免运行时 CDN 依赖 |
+| 先实现 rgbook，再推进 rgsite | 优先满足“教师互相分享书籍”场景 |
+| 导入冲突默认推荐 `rename` | 最大限度降低覆盖风险 |

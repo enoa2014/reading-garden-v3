@@ -209,7 +209,8 @@ body {
 }
 
 .form-grid input,
-.form-grid textarea {
+.form-grid textarea,
+.form-grid select {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 8px 10px;
@@ -218,7 +219,8 @@ body {
 }
 
 .form-grid input:focus,
-.form-grid textarea:focus {
+.form-grid textarea:focus,
+.form-grid select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(47, 111, 89, 0.12);

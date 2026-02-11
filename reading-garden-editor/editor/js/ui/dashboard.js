@@ -154,6 +154,52 @@ function renderNewBookPanel(state) {
   `;
 }
 
+function renderPackPanel(state) {
+  if (!state.structure?.ok) return "";
+  const busy = state.busy ? "disabled" : "";
+  const options = state.books
+    .map((book) => `<option value="${book.id}">${book.title} (${book.id})</option>`)
+    .join("");
+
+  const feedback = state.packFeedback
+    ? `<p class="${state.packFeedback.type === "error" ? "error-text" : "ok-text"}">${state.packFeedback.message}</p>`
+    : "";
+
+  return `
+    <section class="panel">
+      <h3>Book Pack Exchange (rgbook)</h3>
+      <p class="muted">导出单书为 <code>.rgbook.zip</code>，或从压缩包导入并合并到书架。</p>
+      <form id="exportPackForm" class="form-grid">
+        <label class="full">
+          选择要导出的书籍
+          <select name="bookId" ${busy}>${options}</select>
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-primary" type="submit" ${busy}>Export rgbook</button>
+        </div>
+      </form>
+      <form id="importPackForm" class="form-grid">
+        <label class="full">
+          选择要导入的文件
+          <input name="packFile" type="file" accept=".zip,.rgbook.zip" ${busy} />
+        </label>
+        <label>
+          冲突策略
+          <select name="mergeStrategy" ${busy}>
+            <option value="rename">rename (recommended)</option>
+            <option value="overwrite">overwrite</option>
+            <option value="skip">skip</option>
+          </select>
+        </label>
+        <div class="actions-row">
+          <button class="btn btn-primary" type="submit" ${busy}>Import rgbook</button>
+        </div>
+      </form>
+      ${feedback}
+    </section>
+  `;
+}
+
 function renderErrorsPanel(state) {
   if (!state.errors?.length) return "";
   return `
@@ -169,6 +215,7 @@ export function renderDashboard(root, state, handlers = {}) {
   root.innerHTML = `
     ${renderStructurePanel(state)}
     ${renderNewBookPanel(state)}
+    ${renderPackPanel(state)}
     ${renderBookHealthPanel(state)}
     ${renderErrorsPanel(state)}
     ${renderBooksPanel(state)}
@@ -201,6 +248,30 @@ export function renderDashboard(root, state, handlers = {}) {
         includeCharacters: fd.get("includeCharacters") === "on",
         includeThemes: fd.get("includeThemes") === "on",
       });
+    });
+  }
+
+  const exportForm = root.querySelector("#exportPackForm");
+  if (exportForm && handlers.onExportPack) {
+    exportForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const fd = new FormData(exportForm);
+      handlers.onExportPack(String(fd.get("bookId") || ""));
+    });
+  }
+
+  const importForm = root.querySelector("#importPackForm");
+  if (importForm && handlers.onImportPack) {
+    importForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const fileInput = importForm.querySelector('input[name="packFile"]');
+      const strategy = importForm.querySelector('select[name="mergeStrategy"]')?.value || "rename";
+      const file = fileInput?.files?.[0];
+      if (!file) {
+        handlers.onImportPack(null, strategy);
+        return;
+      }
+      handlers.onImportPack(file, strategy);
     });
   }
 }

@@ -27,11 +27,6 @@ async function getParentDirAndName(rootHandle, fullPath, options = {}) {
   return { dir, fileName };
 }
 
-async function readFileText(fileHandle) {
-  const file = await fileHandle.getFile();
-  return file.text();
-}
-
 async function pathExists(rootHandle, path) {
   const parts = splitPath(path);
   if (!parts.length) return true;
@@ -58,6 +53,12 @@ async function pathExists(rootHandle, path) {
   }
 
   return false;
+}
+
+async function writeWithHandle(fileHandle, content) {
+  const writable = await fileHandle.createWritable();
+  await writable.write(content);
+  await writable.close();
 }
 
 export class FileSystemAdapter {
@@ -109,7 +110,17 @@ export class FileSystemAdapter {
     const normalized = stripQuery(path);
     const { dir, fileName } = await getParentDirAndName(this.projectHandle, normalized);
     const fileHandle = await dir.getFileHandle(fileName);
-    return readFileText(fileHandle);
+    const file = await fileHandle.getFile();
+    return file.text();
+  }
+
+  async readBinary(path) {
+    if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
+    const normalized = stripQuery(path);
+    const { dir, fileName } = await getParentDirAndName(this.projectHandle, normalized);
+    const fileHandle = await dir.getFileHandle(fileName);
+    const file = await fileHandle.getFile();
+    return file.arrayBuffer();
   }
 
   async readJson(path) {
@@ -153,7 +164,7 @@ export class FileSystemAdapter {
     await dir.removeEntry(name, { recursive: Boolean(options.recursive) });
   }
 
-  async backupFileIfExists(path) {
+  async backupFileIfExistsText(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
     const normalized = stripQuery(path);
     const exists = await pathExists(this.projectHandle, normalized);
@@ -167,13 +178,27 @@ export class FileSystemAdapter {
     return backupPath;
   }
 
+  async backupFileIfExistsBinary(path) {
+    if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
+    const normalized = stripQuery(path);
+    const exists = await pathExists(this.projectHandle, normalized);
+    if (!exists) return null;
+
+    const bytes = await this.readBinary(normalized);
+    const stamp = nowStamp();
+    const backupPath = joinPath(BACKUP_DIR, stamp, normalized);
+    await this.writeBinary(backupPath, bytes, { skipBackup: true });
+
+    return backupPath;
+  }
+
   async writeText(path, content, options = {}) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
     const normalized = stripQuery(path);
 
     let backupPath = null;
     if (!options.skipBackup) {
-      backupPath = await this.backupFileIfExists(normalized);
+      backupPath = await this.backupFileIfExistsText(normalized);
     }
 
     const { dir, fileName } = await getParentDirAndName(
@@ -182,9 +207,31 @@ export class FileSystemAdapter {
       { create: true }
     );
     const fileHandle = await dir.getFileHandle(fileName, { create: true });
-    const writable = await fileHandle.createWritable();
-    await writable.write(String(content));
-    await writable.close();
+    await writeWithHandle(fileHandle, String(content));
+
+    return {
+      path: normalized,
+      backupPath,
+    };
+  }
+
+  async writeBinary(path, data, options = {}) {
+    if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
+    const normalized = stripQuery(path);
+
+    let backupPath = null;
+    if (!options.skipBackup) {
+      backupPath = await this.backupFileIfExistsBinary(normalized);
+    }
+
+    const { dir, fileName } = await getParentDirAndName(
+      this.projectHandle,
+      normalized,
+      { create: true }
+    );
+    const fileHandle = await dir.getFileHandle(fileName, { create: true });
+    const chunk = data instanceof Uint8Array ? data : new Uint8Array(data);
+    await writeWithHandle(fileHandle, chunk);
 
     return {
       path: normalized,
