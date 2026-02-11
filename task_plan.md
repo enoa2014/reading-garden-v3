@@ -68,10 +68,11 @@ Phase 9
 - [x] `packStats` 支持通过环境变量指定 subset 样本书籍
 - [x] CI 固定 `packStats` 样本（`totto-chan,wave`）
 - [x] `workflow_dispatch` 支持输入覆盖 `packStats` 抽样
+- [x] CI Job Summary 输出 `packStats` 摘要
 - **Status:** in_progress
 
 ## Key Questions
-1. `workflow_dispatch` 输入是否需要增加“书籍 ID 校验提示”？
+1. 当 `workflow_dispatch` 输入无效书籍 ID 时，是否应让 CI 直接失败？
 2. 缺失资源分组标签是否需要进一步收敛为“模块级固定枚举”？
 3. 最近模板是否需要“导入/导出模板配置”能力？
 
@@ -88,3 +89,4 @@ Phase 9
 | `packStats` 抽样支持环境变量覆盖 | 兼容不同书籍组合的针对性回归分析 |
 | CI 默认固定 `packStats` 抽样为 `totto-chan,wave` | 提升跨分支、跨时间段报告对比稳定性 |
 | 手动触发回归支持输入覆盖抽样书籍 | 方便在不改代码情况下做针对性对比分析 |
+| CI summary 固定输出 packStats 关键指标与 missing IDs | 降低排查成本，提升输入错误可见性 |

@@ -142,6 +142,7 @@
 | 回归样本配置检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"wave,totto-chan\" ./scripts/editor-regression.sh` | packStats 按指定书籍抽样 | 通过（mode=env） | ✓ |
 | CI 固定抽样检查 | 审查 workflow 回归步骤 env | PR/Push 采用固定 packStats 抽样 | 已接入（totto-chan,wave） | ✓ |
 | workflow_dispatch 抽样覆盖检查 | 审查 workflow_dispatch inputs 与 env 表达式 | 手动触发可覆盖 packStats 抽样书籍 | 已接入 | ✓ |
+| CI 摘要输出检查 | `GITHUB_STEP_SUMMARY=/tmp/pack-summary.md node ...` | 输出 packStats 关键指标与 missing IDs | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -786,6 +787,35 @@
   - `progress.md` (updated)
 
 ### Phase 48: Sprint 4 checkpoint（dispatch-pack-sample 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`6bf053d`（workflow_dispatch override for packStats）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 49: Sprint 4 CI packStats 摘要
+- **Status:** complete
+- Actions taken:
+  - workflow 增加 `Summarize packStats` 步骤
+  - Job Summary 输出抽样模式、书籍、missing IDs 与体积关键指标
+  - 本地模拟 `GITHUB_STEP_SUMMARY` 生成并校验摘要内容
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 50: Sprint 4 checkpoint（ci-pack-summary 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -803,8 +833,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 48 |
-| Where am I going? | Phase 48 -> checkpoint commit -> push |
+| Where am I? | Phase 50 |
+| Where am I going? | Phase 50 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 workflow_dispatch 抽样覆盖并等待增量 checkpoint |
+| What have I done? | 已完成 CI packStats 摘要并等待增量 checkpoint |

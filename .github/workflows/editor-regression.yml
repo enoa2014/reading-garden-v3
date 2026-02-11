@@ -41,6 +41,42 @@ jobs:
           EDITOR_PACK_STATS_SELECTED_BOOKS: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_selected_books || 'totto-chan,wave' }}
         run: ./scripts/editor-regression.sh
 
+      - name: Summarize packStats
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const reportPath = "tmp/editor-regression-report.json";
+          if (!fs.existsSync(reportPath)) process.exit(0);
+
+          const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+          const stats = report.packStats
+            || report.checks?.find((item) => item?.name === "pack-size-stats")?.details;
+          if (!stats) process.exit(0);
+
+          const selection = stats.selection || {};
+          const selected = Array.isArray(stats.sampleSelectedBookIds) ? stats.sampleSelectedBookIds : [];
+          const missing = Array.isArray(selection.missingBookIds) ? selection.missingBookIds : [];
+          const ratio = stats.comparePercent || {};
+          const lines = [
+            "### packStats Summary",
+            "",
+            `- mode: \`${selection.mode || "unknown"}\``,
+            `- selected: \`${selected.join(", ") || "(none)"}\``,
+            `- missing requested: \`${missing.join(", ") || "(none)"}\``,
+            `- full bytes: ${stats.full?.totalBytes ?? 0}`,
+            `- subset-balanced bytes: ${stats.subsetBalanced?.totalBytes ?? 0}`,
+            `- subset-minimal bytes: ${stats.subsetMinimal?.totalBytes ?? 0}`,
+            `- subset-balanced/full: ${ratio.subsetBalancedVsFull ?? 0}%`,
+            `- subset-minimal/full: ${ratio.subsetMinimalVsFull ?? 0}%`,
+          ];
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          if (summaryPath) {
+            fs.appendFileSync(summaryPath, `${lines.join("\n")}\n`, "utf8");
+          }
+          NODE
+
       - name: Upload Regression Report
         if: always()
         uses: actions/upload-artifact@v4
