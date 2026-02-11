@@ -38,6 +38,8 @@ python3 -m http.server 8080
 
 ```bash
 ./scripts/editor-regression.sh
+# 可选：指定 packStats 的 subset 样本书籍
+EDITOR_PACK_STATS_SELECTED_BOOKS="totto-chan,wave" ./scripts/editor-regression.sh
 ```
 
 CI 门禁：

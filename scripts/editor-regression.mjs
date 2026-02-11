@@ -428,11 +428,51 @@ async function estimateSitePackStats() {
   const allBooks = Array.isArray(booksData?.books) ? booksData.books : [];
   assert(allBooks.length > 0, "books.json should contain books for pack stats");
 
-  const selectedBooks = allBooks.slice(0, Math.min(2, allBooks.length));
+  const dedupRequested = [];
+  const seenRequested = new Set();
+  String(process.env.EDITOR_PACK_STATS_SELECTED_BOOKS || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .forEach((id) => {
+      if (seenRequested.has(id)) return;
+      seenRequested.add(id);
+      dedupRequested.push(id);
+    });
+
+  const bookMap = new Map(
+    allBooks
+      .map((book) => [String(book?.id || "").trim(), book])
+      .filter(([id]) => Boolean(id))
+  );
+  let selectedBooks = allBooks.slice(0, Math.min(2, allBooks.length));
+  const selectionMeta = {
+    mode: "auto",
+    requestedBookIds: dedupRequested,
+    missingBookIds: [],
+  };
+
+  if (dedupRequested.length) {
+    selectionMeta.mode = "env";
+    const selectedFromEnv = [];
+    dedupRequested.forEach((id) => {
+      const book = bookMap.get(id);
+      if (book) {
+        selectedFromEnv.push(book);
+      } else {
+        selectionMeta.missingBookIds.push(id);
+      }
+    });
+    selectedBooks = selectedFromEnv;
+  }
+
   const selectedBookIds = selectedBooks
     .map((item) => String(item?.id || "").trim())
     .filter(Boolean);
-  assert(selectedBookIds.length > 0, "pack stats needs at least one selected book");
+  assert(
+    selectedBookIds.length > 0,
+    "pack stats needs at least one selected book (check EDITOR_PACK_STATS_SELECTED_BOOKS)"
+  );
 
   const allBookIdsSet = new Set(
     allBooks
@@ -501,6 +541,7 @@ async function estimateSitePackStats() {
 
   return {
     sampleSelectedBookIds: selectedBookIds,
+    selection: selectionMeta,
     full: fullStats,
     subsetBalanced: subsetBalancedStats,
     subsetMinimal: subsetMinimalStats,

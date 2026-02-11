@@ -139,6 +139,7 @@
 | 最近模板复用检查 | 审查 `dashboard(localStorage) -> custom report` | 自定义脱敏字段可复用最近模板 | 已接入（最多 5 条） | ✓ |
 | 最近模板清空检查 | 审查 `dashboard clear action -> app feedback` | 可一键清空历史模板并提示结果 | 已接入 | ✓ |
 | 回归包体统计检查 | `tmp/editor-regression-report.json` | 产出 full/subset/minimal 体积对比 | 已接入 `packStats` | ✓ |
+| 回归样本配置检查 | `EDITOR_PACK_STATS_SELECTED_BOOKS=\"wave,totto-chan\" ./scripts/editor-regression.sh` | packStats 按指定书籍抽样 | 通过（mode=env） | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -694,6 +695,38 @@
   - `progress.md` (updated)
 
 ### Phase 42: Sprint 4 checkpoint（missing-group 增量）
+- **Status:** complete
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`f451398`（missing assets grouped by source）
+  - 推送到远端 `origin/master`
+- Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 43: Sprint 4 packStats 样本可配置
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 支持 `EDITOR_PACK_STATS_SELECTED_BOOKS` 覆盖 subset 抽样
+  - 回归报告新增 `selection` 元数据（mode/requested/missing）
+  - 保持默认“前 2 本书”自动抽样策略
+  - 本地执行默认模式与 env 模式回归均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 44: Sprint 4 checkpoint（pack-sample-config 增量）
 - **Status:** in_progress
 - Actions taken:
   - 完成功能、回归与文档同步
@@ -711,8 +744,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 42 |
-| Where am I going? | Phase 42 -> checkpoint commit -> push |
+| Where am I? | Phase 44 |
+| Where am I going? | Phase 44 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成缺失资源分组并等待增量 checkpoint |
+| What have I done? | 已完成 packStats 样本可配置并等待增量 checkpoint |
