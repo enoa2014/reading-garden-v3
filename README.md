@@ -23,6 +23,7 @@ python3 -m http.server 8080
 - 已实现：本地 AI 配置面板（LLM 与图片接口参数）与配置文件落盘（`reading-garden-editor/config/ai-settings.json`）
 - 已实现：AI 配置导入/导出（JSON）以便跨设备迁移
 - 已实现：原文文本分析助手（LLM 可选 + 本地启发式回退）与模块建议 JSON 导出
+- 已实现：分析建议安全落盘（`registry.suggested.json`，不覆盖现有 `registry.json`）
 - 当前目标：导出可上传腾讯云 EdgeOne 的稳定发布包链路
 
 配套文档：

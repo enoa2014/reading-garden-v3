@@ -160,6 +160,7 @@
 | AI 配置链路检查 | 审查 `dashboard(ai form) -> app(save/load) -> filesystem` | 支持本地保存/加载 LLM 与图片接口配置 | 已接入 | ✓ |
 | AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
+| 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |

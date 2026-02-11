@@ -19,6 +19,44 @@ const mergeService = new ImportMergeService();
 const bookPackService = new BookPackService({ fs, mergeService });
 const sitePackService = new SitePackService({ fs });
 const AI_SETTINGS_PATH = "reading-garden-editor/config/ai-settings.json";
+const MODULE_TEMPLATE_MAP = {
+  reading: {
+    id: "reading",
+    title: "阅读",
+    icon: "📖",
+    entry: "../../js/modules/reading-module.js",
+    data: "chapters.json",
+    active: true,
+  },
+  characters: {
+    id: "characters",
+    title: "人物",
+    icon: "👥",
+    entry: "../../js/modules/characters-module.js",
+    data: "characters.json",
+  },
+  themes: {
+    id: "themes",
+    title: "主题",
+    icon: "💭",
+    entry: "../../js/modules/themes-module.js",
+    data: "themes.json",
+  },
+  timeline: {
+    id: "timeline",
+    title: "时间线",
+    icon: "📅",
+    entry: "../../js/modules/timeline-module.js",
+    data: "timeline.json",
+  },
+  interactive: {
+    id: "interactive",
+    title: "情境",
+    icon: "🎯",
+    entry: "../../js/modules/interactive-module.js",
+    data: "scenarios.json",
+  },
+};
 
 function buildDefaultAiSettings() {
   return {
@@ -120,6 +158,7 @@ function render() {
       onImportAiSettings: importAiSettingsFlow,
       onAnalyzeBookText: analyzeBookTextFlow,
       onDownloadAnalysisSuggestion: downloadAnalysisSuggestionFlow,
+      onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -470,6 +509,121 @@ function downloadAnalysisSuggestionFlow() {
       message: `分析建议已下载：${filename}`,
     },
   });
+}
+
+function resolveTargetBookForSuggestion(inputBookId = "") {
+  const state = getState();
+  const explicit = String(inputBookId || "").trim();
+  if (explicit) return explicit;
+  return String(state.analysisSuggestion?.bookIdSuggestion || "").trim();
+}
+
+function buildSuggestedRegistry(registry, suggestion) {
+  const safeRegistry = registry && typeof registry === "object" ? registry : {};
+  const currentModules = Array.isArray(safeRegistry.modules) ? safeRegistry.modules : [];
+  const currentMap = new Map(
+    currentModules
+      .map((item) => [String(item?.id || "").trim(), item])
+      .filter(([id]) => Boolean(id))
+  );
+
+  const outModules = currentModules.map((item) => ({ ...item }));
+  let added = 0;
+  const skippedUnknown = [];
+  const considered = Array.isArray(suggestion?.moduleSuggestions) ? suggestion.moduleSuggestions : [];
+  considered.forEach((item) => {
+    const id = String(item?.id || "").trim();
+    if (!id || !item?.include || currentMap.has(id)) return;
+    const template = MODULE_TEMPLATE_MAP[id];
+    if (!template) {
+      skippedUnknown.push(id);
+      return;
+    }
+    outModules.push({ ...template });
+    currentMap.set(id, template);
+    added += 1;
+  });
+
+  return {
+    registry: {
+      ...safeRegistry,
+      modules: outModules,
+      suggestionMeta: {
+        generatedAt: new Date().toISOString(),
+        mode: String(suggestion?.mode || "heuristic"),
+        addedModules: added,
+      },
+    },
+    added,
+    skippedUnknown,
+  };
+}
+
+async function applyAnalysisSuggestionFlow({ bookId = "" } = {}) {
+  const state = getState();
+  const suggestion = state.analysisSuggestion;
+  if (!suggestion) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "当前没有可应用的分析结果，请先执行 Analyze Text。",
+      },
+    });
+    return;
+  }
+
+  const targetBookId = resolveTargetBookForSuggestion(bookId);
+  if (!targetBookId) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "请选择目标书籍后再应用建议。",
+      },
+    });
+    return;
+  }
+
+  const bookExists = state.books.some((book) => String(book?.id || "").trim() === targetBookId);
+  if (!bookExists) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: `未找到目标书籍：${targetBookId}`,
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, analysisFeedback: null });
+  setStatus("Applying analysis suggestion...");
+
+  try {
+    const registryPath = `data/${targetBookId}/registry.json`;
+    const suggestedPath = `data/${targetBookId}/registry.suggested.json`;
+    const registry = await fs.readJson(registryPath);
+    const next = buildSuggestedRegistry(registry, suggestion);
+    await fs.writeJson(suggestedPath, next.registry);
+    const skippedText = next.skippedUnknown.length
+      ? `，未识别模块 ${next.skippedUnknown.join(", ")}`
+      : "";
+    setState({
+      analysisFeedback: {
+        type: "ok",
+        message: `建议已安全写入：${suggestedPath}（新增 ${next.added}）${skippedText}`,
+      },
+    });
+    setStatus("Suggestion applied");
+  } catch (err) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: `应用建议失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Apply suggestion failed");
+  }
+
+  setState({ busy: false });
 }
 
 async function saveAiSettingsFlow(rawSettings) {

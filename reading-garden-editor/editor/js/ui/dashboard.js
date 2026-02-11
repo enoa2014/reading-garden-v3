@@ -417,6 +417,7 @@ function renderAnalysisPanel(state) {
     <section class="panel">
       <h3>Text Analysis Assistant</h3>
       <p class="muted">导入书本原文（txt/md）后生成模块建议，支持 LLM（可选）与本地回退。</p>
+      <p class="muted">可将建议安全落盘为 <code>registry.suggested.json</code>，不会覆盖现有配置。</p>
       <form id="analysisForm" class="form-grid">
         <label class="full">
           原文文件
@@ -436,6 +437,7 @@ function renderAnalysisPanel(state) {
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Analyze Text</button>
           <button class="btn btn-secondary download-analysis-btn" type="button" ${busy}>Download Suggestion</button>
+          <button class="btn btn-secondary apply-analysis-btn" type="button" ${busy}>Apply Suggestion (Safe)</button>
         </div>
       </form>
       ${feedback}
@@ -738,9 +740,18 @@ export function renderDashboard(root, state, handlers = {}) {
   }
   if (analysisForm) {
     const downloadAnalysisBtn = analysisForm.querySelector(".download-analysis-btn");
+    const applyAnalysisBtn = analysisForm.querySelector(".apply-analysis-btn");
     downloadAnalysisBtn?.addEventListener("click", () => {
       if (handlers.onDownloadAnalysisSuggestion) {
         handlers.onDownloadAnalysisSuggestion();
+      }
+    });
+    applyAnalysisBtn?.addEventListener("click", () => {
+      const fd = new FormData(analysisForm);
+      if (handlers.onApplyAnalysisSuggestion) {
+        handlers.onApplyAnalysisSuggestion({
+          bookId: String(fd.get("targetBookId") || ""),
+        });
       }
     });
   }

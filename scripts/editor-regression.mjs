@@ -495,6 +495,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("importAiSettingsFlow"), "app should support importing ai settings");
   assert(appSource.includes("analyzeBookTextFlow"), "app should support text analysis flow");
   assert(appSource.includes("downloadAnalysisSuggestionFlow"), "app should support analysis suggestion download");
+  assert(appSource.includes("applyAnalysisSuggestionFlow"), "app should support applying analysis suggestion");
+  assert(appSource.includes("registry.suggested.json"), "app should write safe suggested registry file");
   assert(appSource.includes("AI_SETTINGS_PATH"), "app should define ai settings path");
   assert(appSource.includes("clearRedactionTemplatesFlow"), "app should support clearing redaction templates");
   assert(appSource.includes("previewRedactionTemplatesFlow"), "app should support previewing redaction templates");
@@ -510,6 +512,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("analysisForm"), "dashboard should expose text analysis form");
   assert(dashboardSource.includes("Analyze Text"), "dashboard should expose text analysis action");
   assert(dashboardSource.includes("download-analysis-btn"), "dashboard should expose analysis download action");
+  assert(dashboardSource.includes("apply-analysis-btn"), "dashboard should expose analysis apply action");
   assert(dashboardSource.includes("AI Settings (Local)"), "dashboard should render ai settings panel");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");
   assert(dashboardSource.includes("clear-redaction-templates-btn"), "dashboard should expose clear-template action");
