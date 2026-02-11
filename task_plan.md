@@ -4,7 +4,7 @@
 补齐 `rgbook` 安全校验与 `rgsite` 发布包导出能力，形成可直接上传腾讯云 EdgeOne 的稳定打包链路，并保持断点恢复文档持续同步。
 
 ## Current Phase
-Phase 5
+Phase 6
 
 ## Phases
 ### Phase 1: Sprint 3 收尾同步
@@ -35,8 +35,14 @@ Phase 5
 
 ### Phase 5: 文档同步与 checkpoint
 - [x] 同步 `findings.md` / `progress.md` / `reading-garden-editor/README.md`
-- [ ] 提交 checkpoint commit（含回滚点）
-- [ ] 推送 `origin/master`
+- [x] 提交 checkpoint commit（含回滚点）
+- [x] 推送 `origin/master`
+- **Status:** complete
+
+### Phase 6: 下一迭代规划
+- [ ] 增加 `rgbook` 导入失败诊断报告导出
+- [ ] 增加 `rgsite` 子集导出（按书籍筛选）
+- [ ] 增加导入导出自动化回归脚本
 - **Status:** in_progress
 
 ## Key Questions

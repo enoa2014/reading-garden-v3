@@ -181,13 +181,31 @@
   - `progress.md` (updated)
 
 ### Phase 10: Sprint 4 checkpoint 提交与推送
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 同步 `task_plan.md`/`findings.md`/`progress.md` 阶段状态
-  - 准备执行提交与推送
+  - 创建 checkpoint commit：`cfa3ac4`（rgbook 安全校验 + rgsite 导出链路）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/packaging/pack-utils.js` (created)
+  - `reading-garden-editor/editor/js/packaging/book-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 11: Sprint 4 文档收口（post-push）
+- **Status:** in_progress
+- Actions taken:
+  - 将计划状态切换到“checkpoint 已完成”
+  - 准备提交 docs-only 同步记录，确保断电恢复时状态一致
+- Files created/modified:
+  - `task_plan.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -198,8 +216,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 10 |
-| Where am I going? | Phase 10 -> checkpoint commit -> push |
+| Where am I? | Phase 11 |
+| Where am I going? | Phase 11 -> 下一迭代开发 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 Sprint 4 核心实现，正在做 checkpoint 收口 |
+| What have I done? | 已完成 Sprint 4 核心实现并完成 checkpoint 推送 |
