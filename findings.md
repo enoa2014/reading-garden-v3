@@ -5,7 +5,7 @@
 - `docs/reading-garden-editor-详细设计文档.md`（v1.1）
 
 ## 当前任务目标
-- 启动 Sprint 1 开发，先实现离线手工模式下的最小可运行编辑器骨架。
+- 在 Sprint 1 基础上推进 Sprint 2：新建书向导 + 校验增强 + 交换包骨架。
 - 强制执行“关键节点写盘”策略：`task_plan.md`、`findings.md`、`progress.md` 同步更新。
 - 用户已批准对 `reading-garden-v3` 本体进行改造，但要求必须具备清晰回滚策略。
 
@@ -47,11 +47,23 @@
 - 站点入口已同步：
   - `index.html` 导航新增 `Editor` 链接，指向 `reading-garden-editor/index.html`
   - `reading-garden-editor/README.md` 新增独立运行与回滚说明
+- Sprint 2 已完成实现：
+  - 新增 `editor/js/core/book-template.js`（最小书籍模板生成）
+  - 扩展 `editor/js/core/filesystem.js`：新增 `exists` 与 `deletePath`
+  - 扩展 `editor/js/core/validator.js`：新增新建书输入校验
+  - 扩展 `editor/js/core/app.js`：新建书流程、书架健康检查、失败回滚
+  - 扩展 `editor/js/ui/dashboard.js`：新建书表单、创建反馈、健康面板
+  - 新增交换包骨架模块：
+    - `editor/js/packaging/book-pack-service.js`
+    - `editor/js/packaging/import-merge-service.js`
+    - `editor/js/packaging/site-pack-service.js`
 
 ## Risks & Watchpoints
 - 浏览器不支持 File System Access API 时需要明确降级提示。
 - `books.json`/目录结构异常时要给出可理解错误，避免静默失败。
 - 状态管理若无订阅机制，后续 UI 扩展会快速失控。
+- 新建书回滚当前仅处理“本次新建路径”删除，尚未实现“基于备份自动恢复覆盖文件”流程。
+- 交换包服务目前是接口骨架，导入导出真实链路需在 Sprint 3 落地。
 
 ## Resources
 - `reading-garden-v3/`

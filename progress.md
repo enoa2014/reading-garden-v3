@@ -67,6 +67,39 @@
 - Files created/modified:
   - Git commits and remote sync
 
+### Phase 6: Sprint 2 核心功能扩展
+- **Status:** complete
+- Actions taken:
+  - 新增 `book-template.js`，用于生成最小可运行新书模板
+  - 扩展 `filesystem.js`，增加 `exists` 和 `deletePath`，支持回滚清理
+  - 扩展 `validator.js`，增加新建书输入校验
+  - 扩展 `app.js`，实现：
+    - 书架健康检查（每本书 `registry.json` 存在性）
+    - 新建书主流程（创建目录/数据/封面并写入 `books.json`）
+    - 失败时逆序删除本次创建路径（事务式回滚第一版）
+  - 扩展 `dashboard.js`，新增新建书表单与反馈提示
+  - 新增交换包骨架模块（book/site/import-merge）
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/book-template.js` (created)
+  - `reading-garden-editor/editor/js/core/filesystem.js` (updated)
+  - `reading-garden-editor/editor/js/core/validator.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `reading-garden-editor/editor/js/packaging/book-pack-service.js` (created)
+  - `reading-garden-editor/editor/js/packaging/import-merge-service.js` (created)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (created)
+
+### Phase 7: Sprint 2 自检与文档同步
+- **Status:** in_progress
+- Actions taken:
+  - 对编辑器全部 JS 文件执行 `node --check` 语法检查并通过
+  - 将计划文档切换到 Sprint 2
+- Files created/modified:
+  - `task_plan.md` (rewritten)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Test Results
 | Test | Input | Expected | Actual | Status |
 |------|-------|----------|--------|--------|
@@ -75,6 +108,7 @@
 | 回滚机制检查 | `filesystem.js` 写流程审查 | 写前备份可用 | 已实现 `backupFileIfExists` | ✓ |
 | 文档入口检查 | README 编辑器章节 | 可定位入口、文档、回滚策略 | 已补充 | ✓ |
 | 远端备份检查 | `git push origin master` | checkpoint 可远端恢复 | 已推送 | ✓ |
+| Sprint2 语法检查 | `node --check` on editor js files | 全部通过 | 通过 | ✓ |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
@@ -85,7 +119,7 @@
 | Question | Answer |
 |----------|--------|
 | Where am I? | Phase 4 |
-| Where am I going? | 下一轮 Sprint 开发 |
+| Where am I going? | Phase 7 -> checkpoint 提交 |
 | What's the goal? | 打通编辑器最小可运行闭环 |
-| What have I learned? | 回滚策略需要内置在写路径中，而非只依赖 git |
-| What have I done? | 已完成骨架开发、文档同步、checkpoint 提交与远端备份 |
+| What have I learned? | 新建书能力可先落地，交换包可先骨架化并逐轮填充 |
+| What have I done? | 已完成 Sprint2 功能扩展并完成语法自检 |

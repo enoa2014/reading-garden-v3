@@ -9,8 +9,11 @@ const state = {
     missing: [],
   },
   books: [],
+  bookHealth: [],
   errors: [],
   currentView: "dashboard",
+  busy: false,
+  newBookFeedback: null,
 };
 
 function emit(key) {

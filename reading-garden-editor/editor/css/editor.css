@@ -180,12 +180,71 @@ body {
   font-size: 0.86rem;
 }
 
+.muted {
+  color: var(--muted);
+}
+
 .empty {
   color: var(--muted);
   padding: 12px;
   border: 1px dashed var(--line);
   border-radius: 8px;
   background: #fff;
+}
+
+.form-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.form-grid label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.form-grid input,
+.form-grid textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font: inherit;
+  background: #fff;
+}
+
+.form-grid input:focus,
+.form-grid textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(47, 111, 89, 0.12);
+}
+
+.actions-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ok-text {
+  color: #1f6a3a;
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+}
+
+.error-text {
+  color: var(--danger);
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+}
+
+code {
+  background: #f2ede4;
+  border-radius: 4px;
+  padding: 0 4px;
 }
 
 @media (max-width: 900px) {

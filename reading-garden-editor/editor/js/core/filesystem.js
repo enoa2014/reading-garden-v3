@@ -99,6 +99,11 @@ export class FileSystemAdapter {
     };
   }
 
+  async exists(path) {
+    if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
+    return pathExists(this.projectHandle, stripQuery(path));
+  }
+
   async readText(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
     const normalized = stripQuery(path);
@@ -132,6 +137,20 @@ export class FileSystemAdapter {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
     const parts = splitPath(path);
     return getDirectoryHandle(this.projectHandle, parts, { create: true });
+  }
+
+  async deletePath(path, options = {}) {
+    if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
+    const normalized = stripQuery(path);
+    const parts = splitPath(normalized);
+    const name = parts.pop();
+    if (!name) throw new Error(`Invalid delete path: ${path}`);
+
+    const dir = parts.length
+      ? await getDirectoryHandle(this.projectHandle, parts)
+      : this.projectHandle;
+
+    await dir.removeEntry(name, { recursive: Boolean(options.recursive) });
   }
 
   async backupFileIfExists(path) {

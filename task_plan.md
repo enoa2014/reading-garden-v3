@@ -1,57 +1,50 @@
-# Task Plan: Reading Garden Editor 开发实施（Sprint 1）
+# Task Plan: Reading Garden Editor 开发实施（Sprint 2）
 
 ## Goal
-按 `docs/reading-garden-editor-需求文档.md` 与 `docs/reading-garden-editor-详细设计文档.md` 启动开发，先落地离线可运行的编辑器基础骨架（项目接入、结构校验、状态管理、路径处理、基础仪表盘）。
+在 Sprint 1 骨架基础上继续推进：实现“新建书向导 + 规则校验增强 + 交换包服务骨架”，并保持可回滚与可恢复开发流程。
 
 ## Current Phase
-Phase 5
+Phase 4
 
 ## Phases
-### Phase 1: 开发基线与结构初始化
-- [x] 确认开发目标与优先级（Sprint 1）
-- [x] 读取需求/设计文档中的 Sprint 1 范围
-- [x] 建立 `reading-garden-editor/` 目录骨架
+### Phase 1: Sprint 2 目标收敛
+- [x] 明确本轮核心目标（建书、校验、交换包骨架）
+- [x] 对齐离线优先与回滚策略要求
 - **Status:** complete
 
-### Phase 2: 核心基础模块实现
-- [x] `filesystem.js`：目录接入 + 结构校验 + 基础读写
-- [x] `state.js`：可订阅状态容器
-- [x] `path-resolver.js`：路径归一化与重写基础能力
-- [x] `validator.js`：基础 schema/规则校验入口
+### Phase 2: 核心能力扩展
+- [x] 新增 `book-template.js` 生成最小书籍模板
+- [x] 扩展 `filesystem.js`（`exists`/`deletePath`）
+- [x] 扩展 `validator.js`（新建书输入校验）
 - **Status:** complete
 
-### Phase 3: 最小 UI 与主流程打通
-- [x] `index.html` + 基础样式 + 应用入口
-- [x] `app.js`：模式检测、打开项目、载入书架
-- [x] `dashboard.js`：展示书籍列表与健康状态
+### Phase 3: 主流程增强
+- [x] 扩展 `app.js`：新建书流程、健康检查、回滚清理
+- [x] 扩展 `dashboard.js`：新建书表单、反馈信息、健康面板
+- [x] 扩展样式：表单与状态反馈样式
 - **Status:** complete
 
-### Phase 4: 自检与文档同步
-- [x] 核心流程自测（打开目录、读取 `books.json`、显示结果）
-- [x] 同步 `findings.md` 关键发现
-- [x] 同步 `progress.md` 执行日志
-- **Status:** complete
+### Phase 4: 交换包骨架落地与验证
+- [x] 新增 `packaging/book-pack-service.js` 骨架
+- [x] 新增 `packaging/import-merge-service.js` 骨架
+- [x] 新增 `packaging/site-pack-service.js` 骨架
+- [x] 通过语法检查
+- [x] 更新运行文档与开发日志
+- [ ] checkpoint 提交与推送
+- **Status:** in_progress
 
-### Phase 5: 交付与提交
-- [x] 输出改动摘要与下一步计划
-- [x] checkpoint 提交（用于回滚）
-- **Status:** complete
+### Phase 5: 下一轮规划
+- [ ] 规划 Sprint 3（交换包真实导入导出 + 新建书向导增强）
+- **Status:** pending
 
 ## Key Questions
-1. 在不引入构建链的前提下，如何保证模块化代码可持续扩展？
-2. Sprint 1 最小可运行闭环是否完整覆盖“离线手工模式”的入口？
-3. 如何让 `task_plan.md`/`findings.md`/`progress.md` 成为断电恢复后的唯一事实来源？
+1. 新建书流程是否已具备“失败自动回滚”最低保障？
+2. 交换包骨架接口是否足够支持下一轮直接填充实现？
+3. 文档是否能保证断电后继续开发无需口头补充？
 
 ## Decisions Made
 | Decision | Rationale |
 |----------|-----------|
-| 先实现“最小可运行骨架”，再迭代 AI/交换包能力 | 控制范围，尽快形成可验证基础闭环 |
-| 保持纯静态 ES Modules，无构建步骤 | 对齐项目技术约束与用户使用方式 |
-| 每完成一个关键节点立即更新三份文档 | 满足断电恢复后可无缝接续开发的要求 |
-| 允许改造 `reading-garden-v3` 本体并同步做回滚策略 | 已获用户批准，需在演进速度与安全性间平衡 |
-| 文件写入默认支持“写前备份”机制 | 确保误操作时可快速恢复 |
-
-## Errors Encountered
-| Error | Attempt | Resolution |
-|-------|---------|------------|
-|       | 1       |            |
+| Sprint 2 先做最小可用建书而不等待完整交换包实现 | 先提高内容生产效率，保持迭代速度 |
+| 新建书失败采用“已创建路径逆序删除”回滚 | 避免产生半成品目录污染 |
+| 交换包先落接口骨架（manifest/merge plan） | 为 Sprint 3 减少设计反复 |

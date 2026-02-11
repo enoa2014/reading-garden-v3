@@ -48,6 +48,26 @@ export function validateBooksData(data) {
   };
 }
 
+export function validateNewBookInput(input, existingBooks = []) {
+  const errors = [];
+  const id = String(input?.id || "").trim();
+  const title = String(input?.title || "").trim();
+
+  if (!title) errors.push("书名不能为空");
+  if (!id) errors.push("书籍 ID 不能为空");
+  if (id && !/^[a-z0-9-]+$/.test(id)) {
+    errors.push("书籍 ID 仅允许小写字母、数字和连字符");
+  }
+
+  const exists = existingBooks.some((book) => String(book?.id || "") === id);
+  if (exists) errors.push(`书籍 ID 已存在：${id}`);
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
 export function validateErrorList(errors) {
   if (!Array.isArray(errors)) return [];
   return errors.map((item) => String(item)).filter(Boolean);
