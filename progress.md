@@ -2056,6 +2056,28 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 118: Sprint 4 Live Preview 自动刷新偏好按项目独立配置
+- **Status:** complete
+- Actions taken:
+  - `app.js` 将预览自动刷新偏好升级为 `defaultEnabled + projects` 存储结构，并兼容旧版 `1/0` 值
+  - 新增项目级解析流程：项目打开时应用 `applyPreviewAutoRefreshPreferenceForProject(projectName)`
+  - 自动刷新开关变更、会话快照恢复、历史快照恢复均改为写入当前项目策略（非全局覆盖）
+  - `state.js` 新增 `previewAutoRefreshPolicyScope`，统一表达偏好来源（`project/global`）
+  - `dashboard.js` 在自动刷新开关下显示来源标签（自动刷新来源：项目覆盖/全局默认）
+  - 回归脚本补充项目级自动刷新策略关键标记断言
+  - 运行 `node --check`（`app.js/state.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2065,8 +2087,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 117 |
-| Where am I going? | Phase 117 -> checkpoint commit -> push |
+| Where am I? | Phase 118 |
+| Where am I going? | Phase 118 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 会话策略迁移需要显式导入模式，才能兼顾“全量替换”和“增量合并”两类场景 |
-| What have I done? | 已完成会话快照策略 `replace/merge` 导入模式闭环，并接入 UI、回归与文档同步 |
+| What have I learned? | 预览偏好在多项目场景下需要“全局默认 + 项目覆盖”模型，才能避免项目间相互污染 |
+| What have I done? | 已完成 Live Preview 自动刷新偏好项目级隔离，并接入 UI 来源标识、回归与文档同步 |

@@ -290,25 +290,127 @@ function writeRecoveryHistoryPolicyPayloadToStorage(payload) {
   }
 }
 
-function readPreviewAutoRefreshPreference() {
+function normalizePreviewAutoRefreshEnabled(rawValue, fallback = true) {
+  if (typeof rawValue === "boolean") return rawValue;
+  if (rawValue == null) return fallback;
+  const value = String(rawValue || "").trim().toLowerCase();
+  if (!value) return fallback;
+  if (["0", "false", "off", "no"].includes(value)) return false;
+  if (["1", "true", "on", "yes"].includes(value)) return true;
+  return fallback;
+}
+
+function buildDefaultPreviewAutoRefreshPolicyPayload() {
+  return {
+    defaultEnabled: true,
+    projects: {},
+  };
+}
+
+function normalizePreviewAutoRefreshPolicyPayload(rawPayload) {
+  if (!rawPayload || typeof rawPayload !== "object") {
+    return {
+      defaultEnabled: normalizePreviewAutoRefreshEnabled(rawPayload, true),
+      projects: {},
+    };
+  }
+  const safe = rawPayload;
+  const projectsRaw = safe.projects && typeof safe.projects === "object" ? safe.projects : {};
+  const projects = {};
+  Object.entries(projectsRaw).forEach(([key, value]) => {
+    const projectName = String(key || "").trim();
+    if (!projectName) return;
+    projects[projectName] = normalizePreviewAutoRefreshEnabled(value, true);
+  });
+  return {
+    defaultEnabled: normalizePreviewAutoRefreshEnabled(
+      Object.prototype.hasOwnProperty.call(safe, "defaultEnabled")
+        ? safe.defaultEnabled
+        : safe.enabled,
+      true
+    ),
+    projects,
+  };
+}
+
+function readPreviewAutoRefreshPolicyPayloadFromStorage() {
   try {
     const raw = window.localStorage.getItem(PREVIEW_AUTO_REFRESH_STORAGE_KEY);
-    if (raw == null) return true;
-    const value = String(raw || "").trim().toLowerCase();
-    return !["0", "false", "off", "no"].includes(value);
+    if (raw == null) return buildDefaultPreviewAutoRefreshPolicyPayload();
+    const parsed = JSON.parse(raw);
+    return normalizePreviewAutoRefreshPolicyPayload(parsed);
   } catch {
-    return true;
+    try {
+      const raw = window.localStorage.getItem(PREVIEW_AUTO_REFRESH_STORAGE_KEY);
+      return normalizePreviewAutoRefreshPolicyPayload(raw);
+    } catch {
+      return buildDefaultPreviewAutoRefreshPolicyPayload();
+    }
   }
 }
 
-function writePreviewAutoRefreshPreference(nextValue) {
-  const normalized = nextValue !== false;
+function writePreviewAutoRefreshPolicyPayloadToStorage(payload) {
   try {
-    window.localStorage.setItem(PREVIEW_AUTO_REFRESH_STORAGE_KEY, normalized ? "1" : "0");
+    window.localStorage.setItem(
+      PREVIEW_AUTO_REFRESH_STORAGE_KEY,
+      JSON.stringify(normalizePreviewAutoRefreshPolicyPayload(payload))
+    );
   } catch {
     // ignore storage errors in private mode or blocked storage contexts
   }
-  return normalized;
+}
+
+function resolvePreviewAutoRefreshEnabledForProject(projectName = "", payload = null) {
+  const safeProjectName = String(projectName || "").trim();
+  const policyPayload = payload
+    ? normalizePreviewAutoRefreshPolicyPayload(payload)
+    : readPreviewAutoRefreshPolicyPayloadFromStorage();
+  if (
+    safeProjectName
+    && Object.prototype.hasOwnProperty.call(policyPayload.projects, safeProjectName)
+  ) {
+    return normalizePreviewAutoRefreshEnabled(policyPayload.projects[safeProjectName], true);
+  }
+  return normalizePreviewAutoRefreshEnabled(policyPayload.defaultEnabled, true);
+}
+
+function resolvePreviewAutoRefreshPolicyScopeForProject(projectName = "", payload = null) {
+  const safeProjectName = String(projectName || "").trim();
+  if (!safeProjectName) return "global";
+  const policyPayload = payload
+    ? normalizePreviewAutoRefreshPolicyPayload(payload)
+    : readPreviewAutoRefreshPolicyPayloadFromStorage();
+  return Object.prototype.hasOwnProperty.call(policyPayload.projects, safeProjectName)
+    ? "project"
+    : "global";
+}
+
+function applyPreviewAutoRefreshPreferenceForProject(projectName = "", payload = null) {
+  const policyPayload = payload
+    ? normalizePreviewAutoRefreshPolicyPayload(payload)
+    : readPreviewAutoRefreshPolicyPayloadFromStorage();
+  return {
+    enabled: resolvePreviewAutoRefreshEnabledForProject(projectName, policyPayload),
+    scope: resolvePreviewAutoRefreshPolicyScopeForProject(projectName, policyPayload),
+    policyPayload,
+  };
+}
+
+function writePreviewAutoRefreshPreference(nextValue, projectName = "") {
+  const normalized = normalizePreviewAutoRefreshEnabled(nextValue, true);
+  const safeProjectName = String(projectName || "").trim();
+  const payload = readPreviewAutoRefreshPolicyPayloadFromStorage();
+  if (safeProjectName) {
+    payload.projects[safeProjectName] = normalized;
+  } else {
+    payload.defaultEnabled = normalized;
+  }
+  writePreviewAutoRefreshPolicyPayloadToStorage(payload);
+  return {
+    enabled: normalized,
+    scope: safeProjectName ? "project" : "global",
+    policyPayload: payload,
+  };
 }
 
 function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = null) {
@@ -545,8 +647,13 @@ async function restoreRecoverySnapshotForProject(books = []) {
     if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
       patch.analysisSuggestion = snapshot.analysisSuggestion;
     }
+    const previewAutoRefreshPolicy = writePreviewAutoRefreshPreference(
+      patch.previewAutoRefresh,
+      state.projectName
+    );
+    patch.previewAutoRefresh = previewAutoRefreshPolicy.enabled;
+    patch.previewAutoRefreshPolicyScope = previewAutoRefreshPolicy.scope;
     setState(patch);
-    writePreviewAutoRefreshPreference(patch.previewAutoRefresh);
   } catch {
     // recovery storage is best-effort only
   }
@@ -592,8 +699,13 @@ function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
   if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
     patch.analysisSuggestion = snapshot.analysisSuggestion;
   }
+  const previewAutoRefreshPolicy = writePreviewAutoRefreshPreference(
+    patch.previewAutoRefresh,
+    state.projectName
+  );
+  patch.previewAutoRefresh = previewAutoRefreshPolicy.enabled;
+  patch.previewAutoRefreshPolicyScope = previewAutoRefreshPolicy.scope;
   setState(patch);
-  writePreviewAutoRefreshPreference(patch.previewAutoRefresh);
   setStatus("Recovery snapshot restored");
 }
 
@@ -1026,7 +1138,12 @@ function updatePreviewStateFlow({ bookId = "", device = "", autoRefresh } = {}) 
     previewDevice: String(device || state.previewDevice || "desktop"),
   });
   if (typeof autoRefresh === "boolean") {
-    patch.previewAutoRefresh = writePreviewAutoRefreshPreference(autoRefresh);
+    const previewAutoRefreshPolicy = writePreviewAutoRefreshPreference(
+      autoRefresh,
+      String(state.projectName || "").trim()
+    );
+    patch.previewAutoRefresh = previewAutoRefreshPolicy.enabled;
+    patch.previewAutoRefreshPolicyScope = previewAutoRefreshPolicy.scope;
   }
   setState(patch);
 }
@@ -1204,11 +1321,14 @@ async function openProjectFlow() {
     const handle = await fs.openProject();
     const projectName = String(handle?.name || "").trim();
     const recoveryPolicy = applyRecoveryHistoryPolicyForProject(projectName);
+    const previewAutoRefreshPolicy = applyPreviewAutoRefreshPreferenceForProject(projectName);
     setState({
       projectHandle: handle,
       projectName: handle?.name || "",
       recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
       recoveryHistoryPolicyScope: recoveryPolicy.scope,
+      previewAutoRefresh: previewAutoRefreshPolicy.enabled,
+      previewAutoRefreshPolicyScope: previewAutoRefreshPolicy.scope,
     });
 
     setStatus("Verifying project structure...");
@@ -1253,6 +1373,7 @@ async function openProjectFlow() {
     setStatus(structureCheck.valid ? "Project loaded" : "Project loaded with issues");
   } catch (err) {
     const recoveryPolicy = applyRecoveryHistoryPolicyForProject("");
+    const previewAutoRefreshPolicy = applyPreviewAutoRefreshPreferenceForProject("");
     const msg = err?.message === "BROWSER_UNSUPPORTED"
       ? "当前浏览器不支持 File System Access API"
       : `打开项目失败：${err?.message || String(err)}`;
@@ -1271,6 +1392,8 @@ async function openProjectFlow() {
       recoveryHistory: [],
       recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
       recoveryHistoryPolicyScope: recoveryPolicy.scope,
+      previewAutoRefresh: previewAutoRefreshPolicy.enabled,
+      previewAutoRefreshPolicyScope: previewAutoRefreshPolicy.scope,
       analysisFeedback: null,
       analysisSuggestion: null,
       packManualPlan: null,
@@ -2396,11 +2519,12 @@ function detectMode() {
 
 function boot() {
   const historyPolicy = applyRecoveryHistoryPolicyForProject("");
-  const previewAutoRefresh = readPreviewAutoRefreshPreference();
+  const previewAutoRefreshPolicy = applyPreviewAutoRefreshPreferenceForProject("");
   setState({
     recoveryHistoryMaxAgeDays: historyPolicy.maxAgeDays,
     recoveryHistoryPolicyScope: historyPolicy.scope,
-    previewAutoRefresh,
+    previewAutoRefresh: previewAutoRefreshPolicy.enabled,
+    previewAutoRefreshPolicyScope: previewAutoRefreshPolicy.scope,
   });
   bindNav();
   detectMode();

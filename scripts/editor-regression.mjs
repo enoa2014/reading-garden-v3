@@ -547,8 +547,10 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
   assert(appSource.includes("PREVIEW_AUTO_REFRESH_STORAGE_KEY"), "app should persist preview auto-refresh preference key");
   assert(appSource.includes("applyRecoveryHistoryPolicy"), "app should apply recovery history policy");
-  assert(appSource.includes("readPreviewAutoRefreshPreference"), "app should read preview auto-refresh preference");
+  assert(appSource.includes("readPreviewAutoRefreshPolicyPayloadFromStorage"), "app should read preview auto-refresh policy payload");
   assert(appSource.includes("writePreviewAutoRefreshPreference"), "app should write preview auto-refresh preference");
+  assert(appSource.includes("applyPreviewAutoRefreshPreferenceForProject"), "app should support project-scoped preview auto-refresh preference");
+  assert(appSource.includes("previewAutoRefreshPolicyScope"), "app should track preview auto-refresh policy scope");
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
   assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");
@@ -593,6 +595,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("previewForm"), "dashboard should expose preview form");
   assert(dashboardSource.includes("preview-refresh-btn"), "dashboard should expose preview refresh action");
   assert(dashboardSource.includes("previewAutoRefresh"), "dashboard should expose preview auto refresh toggle");
+  assert(dashboardSource.includes("自动刷新来源："), "dashboard should show preview auto-refresh policy source");
   assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
   assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
   assert(dashboardSource.includes("preview-remove-recovery-btn"), "dashboard should expose recovery remove action");
@@ -652,6 +655,7 @@ async function testDiagnosticSourceMarkers() {
   assert(stateSource.includes("previewBookId"), "state should track preview book");
   assert(stateSource.includes("previewDevice"), "state should track preview device");
   assert(stateSource.includes("previewAutoRefresh"), "state should track preview auto refresh setting");
+  assert(stateSource.includes("previewAutoRefreshPolicyScope"), "state should track preview auto-refresh policy scope");
   assert(stateSource.includes("packManualPlan"), "state should track manual merge plan");
   assert(stateSource.includes("validationFeedback"), "state should track validation feedback");
   assert(stateSource.includes("recoveryFeedback"), "state should track recovery feedback");

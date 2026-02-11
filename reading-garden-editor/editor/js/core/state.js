@@ -29,6 +29,7 @@ const state = {
   previewBookId: "",
   previewDevice: "desktop",
   previewAutoRefresh: true,
+  previewAutoRefreshPolicyScope: "global",
   previewRefreshToken: 0,
   previewUrl: "",
 };

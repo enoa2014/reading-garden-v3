@@ -42,7 +42,7 @@
   - 覆盖应用需显式确认，防止误操作覆盖 `registry.json`
   - 支持 Live Preview：书籍实时预览 + desktop/tablet/mobile 设备切换 + 手动刷新
   - 支持 Live Preview 自动刷新开关：在导入/新建/覆盖写入后按设置自动刷新
-  - 支持 Live Preview 自动刷新偏好持久化（localStorage）
+  - 支持 Live Preview 自动刷新偏好“全局默认 + 项目覆盖”持久化（兼容旧版 localStorage）
   - 数据校验增强：`books.json` 与 `registry.json` 输出路径级错误与修复建议
   - `rgbook` 导入支持 `manual` 预检查：先输出冲突与推荐策略，不直接导入
   - IndexedDB 会话快照：500ms 防抖 + 30s 周期写入，重开项目自动恢复最近建议与预览偏好

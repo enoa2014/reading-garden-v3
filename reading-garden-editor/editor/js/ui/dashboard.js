@@ -648,6 +648,9 @@ function renderPreviewPanel(state) {
     ? String(state.previewDevice || "desktop")
     : "desktop";
   const previewAutoRefresh = state.previewAutoRefresh !== false;
+  const previewAutoRefreshPolicyScope = String(state.previewAutoRefreshPolicyScope || "global") === "project"
+    ? "项目覆盖"
+    : "全局默认";
   const recoveryHistoryMaxAgeDays = String(state.recoveryHistoryMaxAgeDays ?? 30);
   const recoveryPolicyImportMode = String(state.recoveryPolicyImportMode || "replace") === "merge"
     ? "merge"
@@ -712,6 +715,7 @@ function renderPreviewPanel(state) {
         <label class="checkbox-inline">
           <input name="previewAutoRefresh" type="checkbox" ${previewAutoRefresh ? "checked" : ""} ${busy} />
           写入后自动刷新预览
+          <small class="muted">自动刷新来源：${previewAutoRefreshPolicyScope}</small>
         </label>
         <label>
           快照自动清理
