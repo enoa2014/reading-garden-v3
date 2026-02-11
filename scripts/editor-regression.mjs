@@ -477,12 +477,35 @@ async function testSitePackSourceMarkers() {
 }
 
 async function testDiagnosticSourceMarkers() {
-  const appSource = await readFile(
+  const appSourceMain = await readFile(
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/app.js"),
     "utf8"
   );
+  const managerSources = await Promise.all([
+    "preview-manager.js",
+    "project-manager.js",
+    "book-manager.js",
+    "ai-manager.js",
+    "import-export-manager.js",
+  ].map((fileName) => readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/managers", fileName),
+    "utf8"
+  )));
+  const appSource = [appSourceMain, ...managerSources].join("\n");
   const dashboardSource = await readFile(
     path.resolve(ROOT, "reading-garden-editor/editor/js/ui/dashboard.js"),
+    "utf8"
+  );
+  const fileSystemSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/filesystem.js"),
+    "utf8"
+  );
+  const pathResolverSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/path-resolver.js"),
+    "utf8"
+  );
+  const editorIndexSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/index.html"),
     "utf8"
   );
   const stateSource = await readFile(
@@ -696,6 +719,11 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
+  assert(fileSystemSource.includes("assertSafePathInput"), "filesystem should validate unsafe path segments");
+  assert(fileSystemSource.includes("normalizeUserPath"), "filesystem should normalize and validate incoming paths");
+  assert(pathResolverSource.includes("Invalid path: contains .. or ."), "path resolver should reject dot traversal segments");
+  assert(pathResolverSource.includes("replaceAll(\"\\\\\", \"/\")"), "path resolver should normalize backslash separators");
+  assert(editorIndexSource.includes("Content-Security-Policy"), "editor entry should define CSP meta");
   assert(stateSource.includes("previewBookId"), "state should track preview book");
   assert(stateSource.includes("previewDevice"), "state should track preview device");
   assert(stateSource.includes("previewAutoRefresh"), "state should track preview auto refresh setting");

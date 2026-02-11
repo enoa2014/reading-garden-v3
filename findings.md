@@ -170,6 +170,21 @@
   - 文档同步：
     - `README.md` 与 `reading-garden-editor/README.md` 已更新到 Sprint 4 状态
 
+## 2026-02-12 Review 修复（架构 + 安全）
+- `app.js` 从 2800+ 行拆分为 manager 架构，新增：
+  - `editor/js/core/managers/project-manager.js`
+  - `editor/js/core/managers/book-manager.js`
+  - `editor/js/core/managers/import-export-manager.js`
+  - `editor/js/core/managers/ai-manager.js`
+  - `editor/js/core/managers/preview-manager.js`
+- `path-resolver.js` 新增并启用 `assertSafePathInput`，阻断 `.`/`..` 段与反斜杠路径分隔绕过。
+- `filesystem.js` 全入口接入路径校验（`normalizeUserPath`），统一防御 traversal 输入。
+- `reading-garden-editor/index.html` 新增 CSP meta：`default-src 'self'; script-src 'self';`
+- `scripts/editor-regression.mjs` 适配 manager 拆分（聚合 `app.js + managers` 检查），并新增路径安全/CSP 回归断言。
+- 本地验证：
+  - `node --check`（app/core/managers/security/regression files）通过
+  - `./scripts/editor-regression.sh` 通过（`editor-regression: ok`）
+
 ## Risks & Watchpoints
 - 浏览器不支持 File System Access API 时需要明确降级提示。
 - `books.json`/目录结构异常时要给出可理解错误，避免静默失败。

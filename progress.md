@@ -2356,6 +2356,32 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 133: Sprint 4 Review 修复收尾（app 拆分 + 安全加固）
+- **Status:** complete
+- Actions taken:
+  - 按 review 要求完成 `app.js` 职责拆分，新增 manager 目录并将 project/book/import-export/ai/preview 逻辑解耦
+  - `path-resolver.js` 强化路径安全：新增并启用 `assertSafePathInput`，阻断 `.`/`..` 与反斜杠分隔绕过
+  - `filesystem.js` 新增 `normalizeUserPath`，在 `exists/read/write/list/delete/ensureDirectory` 等入口统一做路径校验
+  - `reading-garden-editor/index.html` 增加 CSP meta（`default-src 'self'; script-src 'self';`）
+  - `scripts/editor-regression.mjs` 适配 manager 拆分并新增安全断言（路径校验/CSP）
+  - 运行 `node --check`（core/managers/path/filesystem/regression）通过
+  - 运行 `./scripts/editor-regression.sh` 通过（`editor-regression: ok`）
+  - 同步 `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/managers/preview-manager.js` (created)
+  - `reading-garden-editor/editor/js/core/managers/project-manager.js` (created)
+  - `reading-garden-editor/editor/js/core/managers/book-manager.js` (created)
+  - `reading-garden-editor/editor/js/core/managers/ai-manager.js` (created)
+  - `reading-garden-editor/editor/js/core/managers/import-export-manager.js` (created)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/core/path-resolver.js` (updated)
+  - `reading-garden-editor/editor/js/core/filesystem.js` (updated)
+  - `reading-garden-editor/index.html` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2367,8 +2393,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 132 |
-| Where am I going? | Phase 132 -> checkpoint commit -> push -> 下一轮导出链路可观测性增强 |
+| Where am I? | Phase 133 |
+| Where am I going? | Phase 133 -> checkpoint commit -> push -> 继续 Sprint 4 增量功能开发 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 自测结果若不落盘，CI 历史难以审计；artifact 化能显著提升排障与回归追踪效率 |
-| What have I done? | 已完成自测报告输出、CI 注入与 artifact 上传，并通过本地验证 |
+| What have I learned? | `app.js` 拆分后回归脚本应聚合多文件检查，避免 marker 仅绑定单文件导致误报 |
+| What have I done? | 已完成 manager 化拆分、安全修复（路径校验 + CSP）与回归脚本适配，并通过本地验证 |

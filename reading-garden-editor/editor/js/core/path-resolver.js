@@ -1,10 +1,35 @@
 function splitQuery(path) {
-  const idx = String(path).indexOf("?");
-  if (idx < 0) return { path: String(path), query: "" };
+  const normalizedPath = String(path || "").replaceAll("\\", "/");
+  const idx = normalizedPath.indexOf("?");
+  if (idx < 0) return { path: normalizedPath, query: "" };
   return {
-    path: String(path).slice(0, idx),
-    query: String(path).slice(idx),
+    path: normalizedPath.slice(0, idx),
+    query: normalizedPath.slice(idx),
   };
+}
+
+function decodeSegmentSafe(segment) {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+function hasTraversalSegment(inputPath) {
+  const rawPath = splitQuery(inputPath || "").path;
+  const parts = rawPath.split("/");
+  return parts.some((part) => {
+    if (!part) return false;
+    const decoded = decodeSegmentSafe(String(part).trim());
+    return decoded === "." || decoded === ".." || decoded.includes("/") || decoded.includes("\\");
+  });
+}
+
+export function assertSafePathInput(inputPath) {
+  if (hasTraversalSegment(inputPath)) {
+    throw new Error("Invalid path: contains .. or .");
+  }
 }
 
 export function normalizePath(inputPath) {
@@ -36,6 +61,7 @@ export function stripQuery(path) {
 }
 
 export function splitPath(path) {
+  assertSafePathInput(path);
   const normalized = normalizePath(path);
   return stripQuery(normalized).split("/").filter(Boolean);
 }

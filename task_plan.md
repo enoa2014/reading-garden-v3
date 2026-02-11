@@ -129,6 +129,10 @@ Phase 9
 - [x] 新建书模板支持可选 timeline/interactive 模块
 - [x] manual 导入预检查支持一键应用推荐策略
 - [x] 支持下载结构化校验报告（Validation Report）
+- [x] `app.js` 按职责拆分为 manager 模块（project/book/import-export/ai/preview）
+- [x] 路径安全加固：`path-resolver` + `filesystem` 统一阻断 `.`/`..`/反斜杠绕过
+- [x] 编辑器入口增加 CSP（`default-src 'self'; script-src 'self'`）
+- [x] 回归脚本适配 manager 拆分并新增安全断言（路径校验/CSP）
 - **Status:** in_progress
 
 ## Key Questions
@@ -213,3 +217,6 @@ Phase 9
 | 新建书模板扩展到 timeline/interactive 可选项 | 缩短常见教学模块的初始化步骤，减少手工补配置成本 |
 | manual 预检查增加“一键应用推荐策略” | 保留人工确认同时减少重复操作，提升导入效率 |
 | Validation Issues 增加报告下载能力 | 支持排障留档、跨角色协作与离线问题复现 |
+| `app.js` 按职责拆分为 5 个 manager 模块 | 降低单文件复杂度，提升可维护性与后续测试可扩展性 |
+| 路径校验统一前置到 `filesystem` 入口，并在 resolver 层阻断 traversal | 降低 ZIP/手工路径输入导致的越界读写风险 |
+| 编辑器入口启用 CSP | 在导入外部包场景下收敛 XSS 注入面 |

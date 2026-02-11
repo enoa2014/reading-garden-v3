@@ -1,4 +1,4 @@
-import { joinPath, splitPath, stripQuery } from "./path-resolver.js";
+import { assertSafePathInput, joinPath, splitPath, stripQuery } from "./path-resolver.js";
 
 const REQUIRED_PATHS = ["index.html", "data", "js", "css"];
 const BACKUP_DIR = ".rg-editor-backups";
@@ -55,6 +55,16 @@ async function pathExists(rootHandle, path) {
   return false;
 }
 
+function normalizeUserPath(path, options = {}) {
+  const { allowEmpty = false } = options;
+  const raw = String(path ?? "");
+  if (!allowEmpty && !raw.trim()) {
+    throw new Error("Invalid path: empty");
+  }
+  assertSafePathInput(raw);
+  return stripQuery(raw);
+}
+
 async function writeWithHandle(fileHandle, content) {
   const writable = await fileHandle.createWritable();
   await writable.write(content);
@@ -102,12 +112,13 @@ export class FileSystemAdapter {
 
   async exists(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    return pathExists(this.projectHandle, stripQuery(path));
+    const normalized = normalizeUserPath(path, { allowEmpty: true });
+    return pathExists(this.projectHandle, normalized);
   }
 
   async readText(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
     const { dir, fileName } = await getParentDirAndName(this.projectHandle, normalized);
     const fileHandle = await dir.getFileHandle(fileName);
     const file = await fileHandle.getFile();
@@ -116,7 +127,7 @@ export class FileSystemAdapter {
 
   async readBinary(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
     const { dir, fileName } = await getParentDirAndName(this.projectHandle, normalized);
     const fileHandle = await dir.getFileHandle(fileName);
     const file = await fileHandle.getFile();
@@ -128,9 +139,10 @@ export class FileSystemAdapter {
     return JSON.parse(text);
   }
 
-  async list(path = ".") {
+  async list(path = "") {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const parts = splitPath(path);
+    const normalized = normalizeUserPath(path, { allowEmpty: true });
+    const parts = splitPath(normalized);
     const dir = parts.length
       ? await getDirectoryHandle(this.projectHandle, parts)
       : this.projectHandle;
@@ -146,13 +158,14 @@ export class FileSystemAdapter {
 
   async ensureDirectory(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const parts = splitPath(path);
+    const normalized = normalizeUserPath(path);
+    const parts = splitPath(normalized);
     return getDirectoryHandle(this.projectHandle, parts, { create: true });
   }
 
   async deletePath(path, options = {}) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
     const parts = splitPath(normalized);
     const name = parts.pop();
     if (!name) throw new Error(`Invalid delete path: ${path}`);
@@ -166,7 +179,7 @@ export class FileSystemAdapter {
 
   async backupFileIfExistsText(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
     const exists = await pathExists(this.projectHandle, normalized);
     if (!exists) return null;
 
@@ -180,7 +193,7 @@ export class FileSystemAdapter {
 
   async backupFileIfExistsBinary(path) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
     const exists = await pathExists(this.projectHandle, normalized);
     if (!exists) return null;
 
@@ -194,7 +207,7 @@ export class FileSystemAdapter {
 
   async writeText(path, content, options = {}) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
 
     let backupPath = null;
     if (!options.skipBackup) {
@@ -217,7 +230,7 @@ export class FileSystemAdapter {
 
   async writeBinary(path, data, options = {}) {
     if (!this.projectHandle) throw new Error("PROJECT_NOT_OPENED");
-    const normalized = stripQuery(path);
+    const normalized = normalizeUserPath(path);
 
     let backupPath = null;
     if (!options.skipBackup) {
