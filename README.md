@@ -43,6 +43,7 @@ python3 -m http.server 8080
 CI 门禁：
 
 - `.github/workflows/editor-regression.yml` 已接入回归检查（push/PR 自动执行）
+- CI 会上传 `editor-regression-report` artifact（报告文件：`tmp/editor-regression-report.json`）
 
 ## 项目概览
 

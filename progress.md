@@ -131,6 +131,8 @@
 | CI 工作流配置检查 | 审查 `.github/workflows/editor-regression.yml` | push/PR 可自动执行回归脚本 | 已接入 | ✓ |
 | 诊断脱敏导出链路 | 审查 `dashboard -> app(redacted) -> download` | 可导出隐藏项目名和文件名的报告 | 已接入 | ✓ |
 | rgsite minimal 参数链路 | 审查 `dashboard -> app -> sitePackService` | subset 可选择 balanced/minimal | 已接入 | ✓ |
+| 回归报告产出检查 | `./scripts/editor-regression.sh` | 生成 `tmp/editor-regression-report.json` | 通过 | ✓ |
+| CI artifact 配置检查 | 审查 workflow `upload-artifact` 步骤 | 回归报告可在 CI 下载 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -391,11 +393,42 @@
   - `progress.md` (updated)
 
 ### Phase 23: Sprint 4 文档收口（minimal post-push）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 同步阶段状态到“minimal 增量已推送”
-  - 准备提交 docs-only 同步记录
+  - 创建 docs-only commit：`6f12297`（同步 minimal checkpoint 状态）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `progress.md` (updated)
+
+### Phase 24: Sprint 4 回归报告与 CI artifacts
+- **Status:** complete
+- Actions taken:
+  - `editor-regression.mjs` 增加结构化报告输出
+  - `editor-regression.sh` 支持 `EDITOR_REGRESSION_REPORT` 路径参数
+  - 新增 `.gitignore` 规则忽略本地报告文件
+  - `editor-regression.yml` 增加 `upload-artifact`（always）
+  - 本地执行回归并验证报告文件生成
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `scripts/editor-regression.mjs` (updated)
+  - `scripts/editor-regression.sh` (updated)
+  - `.github/workflows/editor-regression.yml` (updated)
+  - `.gitignore` (created)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 25: Sprint 4 checkpoint（CI artifacts 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 准备提交并推送本轮增量
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -406,8 +439,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 23 |
-| Where am I going? | Phase 23 -> 下一迭代开发 |
+| Where am I? | Phase 25 |
+| Where am I going? | Phase 25 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 subset minimal 模式并完成增量 checkpoint 推送 |
+| What have I done? | 已完成回归报告与 CI artifacts 能力并等待增量 checkpoint |

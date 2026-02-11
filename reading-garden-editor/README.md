@@ -52,6 +52,7 @@ python3 -m http.server 8080
 
 - 已接入 GitHub Actions：`.github/workflows/editor-regression.yml`
 - 当 `reading-garden-editor/**` 或回归脚本变更时，PR/Push 会自动执行回归检查
+- CI 会上传 `editor-regression-report` artifact（来源 `tmp/editor-regression-report.json`）
 
 ## 回滚策略（第一版）
 

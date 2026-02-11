@@ -1,10 +1,11 @@
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
+const REPORT_PATH = path.resolve(ROOT, process.env.EDITOR_REGRESSION_REPORT || "tmp/editor-regression-report.json");
 
 function assert(condition, message) {
   if (!condition) {
@@ -80,11 +81,55 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("subsetAssetMode"), "site pack should support subsetAssetMode");
 }
 
-async function main() {
-  await testPackUtils();
-  await testMergeService();
-  await testSitePackSourceMarkers();
-  console.log("editor-regression: ok");
+async function writeReport(report) {
+  await mkdir(path.dirname(REPORT_PATH), { recursive: true });
+  await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 }
 
-await main();
+async function runChecks() {
+  const checks = [
+    { name: "pack-utils", run: testPackUtils },
+    { name: "merge-service", run: testMergeService },
+    { name: "site-pack-markers", run: testSitePackSourceMarkers },
+  ];
+
+  const report = {
+    generatedAt: new Date().toISOString(),
+    reportPath: path.relative(ROOT, REPORT_PATH),
+    checks: [],
+    status: "pass",
+  };
+
+  for (const item of checks) {
+    const startedAt = Date.now();
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await item.run();
+      report.checks.push({
+        name: item.name,
+        status: "pass",
+        durationMs: Date.now() - startedAt,
+      });
+    } catch (err) {
+      report.status = "fail";
+      report.checks.push({
+        name: item.name,
+        status: "fail",
+        durationMs: Date.now() - startedAt,
+        error: String(err?.message || err),
+      });
+    }
+  }
+
+  await writeReport(report);
+
+  if (report.status !== "pass") {
+    const failed = report.checks.filter((c) => c.status === "fail").map((c) => c.name).join(", ");
+    throw new Error(`editor-regression: failed checks -> ${failed}`);
+  }
+
+  console.log("editor-regression: ok");
+  console.log(`editor-regression-report: ${path.relative(ROOT, REPORT_PATH)}`);
+}
+
+await runChecks();
