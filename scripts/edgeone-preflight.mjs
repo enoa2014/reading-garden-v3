@@ -1,4 +1,5 @@
 import { readFile, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 function usage() {
@@ -20,6 +21,24 @@ function readJsonSafe(rawText, label) {
   } catch (err) {
     throw new Error(`${label} parse failed: ${err?.message || String(err)}`);
   }
+}
+
+async function sha256File(filePath) {
+  const bytes = await readFile(filePath);
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+function resolveSafePathWithinRoot(rootDir, relPath) {
+  const normalizedRelPath = String(relPath || "").trim();
+  if (!normalizedRelPath || path.isAbsolute(normalizedRelPath) || normalizedRelPath.includes("\0")) {
+    return null;
+  }
+  const resolvedPath = path.resolve(rootDir, normalizedRelPath);
+  const relativeToRoot = path.relative(rootDir, resolvedPath);
+  if (relativeToRoot.startsWith("..") || path.isAbsolute(relativeToRoot)) {
+    return null;
+  }
+  return resolvedPath;
 }
 
 async function validateExtractedSiteRoot(siteRoot) {
@@ -99,6 +118,43 @@ async function validateExtractedSiteRoot(siteRoot) {
       && manifest.scope === "subset"
     ) {
       warnings.push("manifest.scope=subset but selectedBookIds is empty");
+    }
+
+    if (manifest.checksumMode === "sha256") {
+      const checksums = manifest.checksums && typeof manifest.checksums === "object"
+        ? manifest.checksums
+        : null;
+      if (!checksums) {
+        errors.push("manifest.checksumMode=sha256 but checksums is missing");
+      } else {
+        const checksumEntries = Object.entries(checksums);
+        for (const [relPath, expected] of checksumEntries) {
+          const normalizedRelPath = String(relPath || "").trim();
+          const expectedHash = String(expected || "").trim().toLowerCase();
+          if (!normalizedRelPath || !expectedHash) {
+            errors.push(`invalid checksum entry: ${String(relPath)}`);
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          const targetPath = resolveSafePathWithinRoot(siteRoot, normalizedRelPath);
+          if (!targetPath) {
+            errors.push(`invalid checksum target path: ${normalizedRelPath}`);
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          // eslint-disable-next-line no-await-in-loop
+          if (!(await exists(targetPath))) {
+            errors.push(`checksum target missing: ${normalizedRelPath}`);
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+          // eslint-disable-next-line no-await-in-loop
+          const actualHash = await sha256File(targetPath);
+          if (actualHash !== expectedHash) {
+            errors.push(`checksum mismatch: ${normalizedRelPath}`);
+          }
+        }
+      }
     }
   }
 

@@ -738,6 +738,9 @@ async function testDiagnosticSourceMarkers() {
   assert(edgeonePreflightSource.includes("edgeone-preflight: ok"), "edgeone preflight script should output success marker");
   assert(edgeonePreflightSource.includes("rgsite-manifest.json"), "edgeone preflight script should validate rgsite manifest");
   assert(edgeonePreflightSource.includes("MISSING-ASSETS.txt"), "edgeone preflight script should check missing-assets report");
+  assert(edgeonePreflightSource.includes("checksumMode"), "edgeone preflight script should validate manifest checksum mode");
+  assert(edgeonePreflightSource.includes("sha256"), "edgeone preflight script should support sha256 checksum verification");
+  assert(edgeonePreflightSource.includes("invalid checksum target path"), "edgeone preflight script should reject unsafe checksum target paths");
   assert(edgeonePreflightShellSource.includes("edgeone-preflight.mjs"), "edgeone preflight shell wrapper should call node script");
 }
 

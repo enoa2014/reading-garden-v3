@@ -2245,17 +2245,38 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 128: Sprint 4 EdgeOne 预检 checksum 校验落地
+- **Status:** complete
+- Actions taken:
+  - `scripts/edgeone-preflight.mjs` 新增 `sha256File` 与 `manifest.checksumMode=sha256` 分支校验
+  - 预检新增错误覆盖：`checksums` 缺失、unsafe 路径（`../`/绝对路径）、checksum 目标文件缺失、checksum mismatch
+  - `scripts/editor-regression.mjs` 新增预检源码标记断言（`checksumMode` / `sha256`）
+  - 运行 `node --check`（`scripts/edgeone-preflight.mjs`、`scripts/editor-regression.mjs`）通过
+  - 运行 `./scripts/editor-regression.sh` 回归通过
+  - 本地构造 checksum 样例目录验证：
+    - 正常样例：`edgeone-preflight: ok`
+    - 篡改样例：`edgeone-preflight: fail` + `checksum mismatch: index.html`
+    - 越界路径样例：`edgeone-preflight: fail` + `invalid checksum target path: ../outside.txt`
+  - 同步 `task_plan.md` / `findings.md` / `progress.md`
+- Files created/modified:
+  - `scripts/edgeone-preflight.mjs` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
 | 2026-02-11 | `apply_patch` 上下文不匹配（`progress.md` 片段更新失败） | 1 | 使用 `nl -ba progress.md` 定位准确行后重试补丁成功 |
 | 2026-02-11 | `git commit` 在并行执行中先于 `git add` 触发“no changes added” | 1 | 改为顺序执行 `git add && git commit` 并成功提交 |
+| 2026-02-11 | 首版 checksum 自测样例触发预检失败（缺少 `css/js`、manifest 必填字段不完整） | 1 | 按预检规则补齐目录与 manifest 字段后重测通过，并补充 checksum mismatch 反例验证 |
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 127 |
-| Where am I going? | Phase 127 -> checkpoint commit -> push |
+| Where am I? | Phase 128 |
+| Where am I going? | Phase 128 -> checkpoint commit -> push -> 下一轮真实导出包样例校验 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 预检脚本需要进入 CI 才能长期稳定，单靠本地执行难以防止后续回归 |
-| What have I done? | 已完成 CI 对 EdgeOne 预检脚本的自测接入，并同步文档与计划 |
+| What have I learned? | 仅做结构校验不足以覆盖传输/篡改风险，预检需补充 manifest checksum 校验 |
+| What have I done? | 已完成 checksum 预检落地、回归验证与文档同步，可进入提交推送阶段 |
