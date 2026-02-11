@@ -133,6 +133,7 @@
 | rgsite minimal 参数链路 | 审查 `dashboard -> app -> sitePackService` | subset 可选择 balanced/minimal | 已接入 | ✓ |
 | 回归报告产出检查 | `./scripts/editor-regression.sh` | 生成 `tmp/editor-regression-report.json` | 通过 | ✓ |
 | CI artifact 配置检查 | 审查 workflow `upload-artifact` 步骤 | 回归报告可在 CI 下载 | 已接入 | ✓ |
+| 自定义脱敏链路 | 审查 `dashboard(custom fields) -> app(custom redaction)` | 可按字段路径导出 custom 脱敏报告 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -483,11 +484,41 @@
   - `progress.md` (updated)
 
 ### Phase 29: Sprint 4 文档收口（missingAssets post-push）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 同步阶段状态到“missingAssets 增量已推送”
-  - 准备提交 docs-only 同步记录
+  - 创建 docs-only commit：`3a30827`（同步 missingAssets checkpoint 状态）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `progress.md` (updated)
+
+### Phase 30: Sprint 4 自定义脱敏字段
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 新增 custom 字段输入与 `Download Custom` 按钮
+  - `app.js` 新增按路径脱敏逻辑（如 `project.name,input.fileName`）
+  - 回归脚本增加 custom 诊断能力关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 31: Sprint 4 checkpoint（custom redaction 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 准备提交并推送本轮增量
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -498,8 +529,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 29 |
-| Where am I going? | Phase 29 -> 下一迭代开发 |
+| Where am I? | Phase 31 |
+| Where am I going? | Phase 31 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 minimal 缺失资源提示并完成增量 checkpoint 推送 |
+| What have I done? | 已完成自定义脱敏字段导出并等待增量 checkpoint |

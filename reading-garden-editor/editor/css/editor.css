@@ -285,6 +285,11 @@ body {
   margin-bottom: 4px;
 }
 
+.diag-input {
+  width: 100%;
+  margin-top: 6px;
+}
+
 code {
   background: #f2ede4;
   border-radius: 4px;

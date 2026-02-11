@@ -82,6 +82,19 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("missingAssets"), "site pack should report missingAssets in subset");
 }
 
+async function testDiagnosticSourceMarkers() {
+  const appSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/app.js"),
+    "utf8"
+  );
+  const dashboardSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/ui/dashboard.js"),
+    "utf8"
+  );
+  assert(appSource.includes("buildCustomRedactedDiagnostic"), "app should support custom redaction");
+  assert(dashboardSource.includes('data-mode="custom"'), "dashboard should expose custom report action");
+}
+
 async function writeReport(report) {
   await mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -92,6 +105,7 @@ async function runChecks() {
     { name: "pack-utils", run: testPackUtils },
     { name: "merge-service", run: testMergeService },
     { name: "site-pack-markers", run: testSitePackSourceMarkers },
+    { name: "diagnostic-markers", run: testDiagnosticSourceMarkers },
   ];
 
   const report = {

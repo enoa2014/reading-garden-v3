@@ -524,11 +524,54 @@ function buildRedactedDiagnostic(report) {
   };
 }
 
-function downloadDiagnosticReport(report, mode = "full") {
+function setDeepRedacted(target, path) {
+  const parts = String(path || "").split(".").map((item) => item.trim()).filter(Boolean);
+  if (!parts.length) return false;
+
+  let cursor = target;
+  for (let i = 0; i < parts.length; i += 1) {
+    const key = parts[i];
+    if (cursor == null || typeof cursor !== "object" || !(key in cursor)) {
+      return false;
+    }
+    if (i === parts.length - 1) {
+      cursor[key] = "***REDACTED***";
+      return true;
+    }
+    cursor = cursor[key];
+  }
+  return false;
+}
+
+function buildCustomRedactedDiagnostic(report, customFields = []) {
+  if (!report) return null;
+  const cloned = JSON.parse(JSON.stringify(report));
+  let matched = 0;
+  customFields.forEach((field) => {
+    if (setDeepRedacted(cloned, field)) matched += 1;
+  });
+
+  cloned.redaction = {
+    mode: "custom",
+    fields: customFields,
+    matched,
+  };
+
+  return cloned;
+}
+
+function downloadDiagnosticReport(report, mode = "full", customFields = []) {
   if (!report) return;
   const stamp = String(report.generatedAt || new Date().toISOString()).replace(/[:.]/g, "-");
-  const output = mode === "redacted" ? buildRedactedDiagnostic(report) : report;
-  const suffix = mode === "redacted" ? "redacted" : "full";
+  let output = report;
+  let suffix = "full";
+  if (mode === "redacted") {
+    output = buildRedactedDiagnostic(report);
+    suffix = "redacted";
+  } else if (mode === "custom") {
+    output = buildCustomRedactedDiagnostic(report, customFields);
+    suffix = "custom";
+  }
   const filename = `rgbook-import-diagnostic-${suffix}-${stamp}.json`;
   const text = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([text], { type: "application/json;charset=utf-8" });
@@ -540,7 +583,7 @@ function downloadDiagnosticReport(report, mode = "full") {
   URL.revokeObjectURL(url);
 }
 
-function downloadImportReportFlow(mode = "full") {
+function downloadImportReportFlow(mode = "full", customFields = []) {
   const state = getState();
   if (!state.packDiagnostic) {
     setState({
@@ -552,8 +595,10 @@ function downloadImportReportFlow(mode = "full") {
     return;
   }
 
-  downloadDiagnosticReport(state.packDiagnostic, mode);
-  const label = mode === "redacted" ? "脱敏诊断报告" : "完整诊断报告";
+  downloadDiagnosticReport(state.packDiagnostic, mode, customFields);
+  let label = "完整诊断报告";
+  if (mode === "redacted") label = "脱敏诊断报告";
+  if (mode === "custom") label = "自定义脱敏诊断报告";
   setState({
     packFeedback: {
       type: "ok",

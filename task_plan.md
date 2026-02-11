@@ -58,14 +58,14 @@ Phase 9
 - **Status:** complete
 
 ### Phase 9: 下一迭代规划（持续）
-- [ ] 诊断报告支持“自定义脱敏字段”配置
+- [x] 诊断报告支持“自定义脱敏字段”配置
 - [x] CI 门禁增加 artifacts（回归输出）上传
 - [x] `rgsite minimal` 增加缺失资源回退提示
 - **Status:** in_progress
 
 ## Key Questions
 1. `rgsite minimal` 的缺失资源是否要额外导出为独立文本文件？
-2. 诊断报告是否需要支持“自定义脱敏字段”而非固定策略？
+2. 自定义脱敏字段是否需要保存为“最近使用模板”供复用？
 3. 回归报告是否需要补充包体统计（full/subset/minimal 对比）？
 
 ## Decisions Made

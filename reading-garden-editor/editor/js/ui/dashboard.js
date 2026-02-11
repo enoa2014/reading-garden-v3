@@ -170,9 +170,21 @@ function renderPackPanel(state) {
       <div class="diag-box">
         <div class="diag-title">导入失败诊断可用</div>
         <p class="muted">包含错误码、文件信息与建议，可用于问题复现与排查。</p>
+        <label class="full">
+          自定义脱敏字段（逗号分隔）
+          <input
+            name="customRedactionFields"
+            class="diag-input"
+            type="text"
+            value="project.name,input.fileName"
+            placeholder="例如：project.name,input.fileName,error.stack"
+            ${busy}
+          />
+        </label>
         <div class="actions-row">
           <button class="btn btn-secondary download-report-btn" data-mode="full" type="button" ${busy}>Download Report</button>
           <button class="btn btn-secondary download-report-btn" data-mode="redacted" type="button" ${busy}>Download Redacted</button>
+          <button class="btn btn-secondary download-report-btn" data-mode="custom" type="button" ${busy}>Download Custom</button>
         </div>
       </div>
     `
@@ -341,9 +353,15 @@ export function renderDashboard(root, state, handlers = {}) {
 
   const reportButtons = root.querySelectorAll(".download-report-btn");
   if (reportButtons.length && handlers.onDownloadImportReport) {
+    const customInput = root.querySelector('input[name="customRedactionFields"]');
     reportButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        handlers.onDownloadImportReport(btn.dataset.mode || "full");
+        const rawFields = String(customInput?.value || "");
+        const customFields = rawFields
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+        handlers.onDownloadImportReport(btn.dataset.mode || "full", customFields);
       });
     });
   }
