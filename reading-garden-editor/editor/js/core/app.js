@@ -25,6 +25,7 @@ const AI_SETTINGS_PATH = "reading-garden-editor/config/ai-settings.json";
 const RECOVERY_SNAPSHOT_DEBOUNCE_MS = 500;
 const RECOVERY_SNAPSHOT_INTERVAL_MS = 30_000;
 const RECOVERY_HISTORY_POLICY_STORAGE_KEY = "rg.editor.recoveryHistoryPolicy";
+const PREVIEW_AUTO_REFRESH_STORAGE_KEY = "rg.editor.previewAutoRefresh";
 const DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS = 30;
 const RECOVERY_HISTORY_MAX_AGE_DAY_OPTIONS = [0, 7, 30, 90, 180];
 let recoverySnapshotDebounceTimer = null;
@@ -289,6 +290,27 @@ function writeRecoveryHistoryPolicyPayloadToStorage(payload) {
   }
 }
 
+function readPreviewAutoRefreshPreference() {
+  try {
+    const raw = window.localStorage.getItem(PREVIEW_AUTO_REFRESH_STORAGE_KEY);
+    if (raw == null) return true;
+    const value = String(raw || "").trim().toLowerCase();
+    return !["0", "false", "off", "no"].includes(value);
+  } catch {
+    return true;
+  }
+}
+
+function writePreviewAutoRefreshPreference(nextValue) {
+  const normalized = nextValue !== false;
+  try {
+    window.localStorage.setItem(PREVIEW_AUTO_REFRESH_STORAGE_KEY, normalized ? "1" : "0");
+  } catch {
+    // ignore storage errors in private mode or blocked storage contexts
+  }
+  return normalized;
+}
+
 function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = null) {
   const safeProjectName = String(projectName || "").trim();
   const policyPayload = payload
@@ -524,6 +546,7 @@ async function restoreRecoverySnapshotForProject(books = []) {
       patch.analysisSuggestion = snapshot.analysisSuggestion;
     }
     setState(patch);
+    writePreviewAutoRefreshPreference(patch.previewAutoRefresh);
   } catch {
     // recovery storage is best-effort only
   }
@@ -570,6 +593,7 @@ function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
     patch.analysisSuggestion = snapshot.analysisSuggestion;
   }
   setState(patch);
+  writePreviewAutoRefreshPreference(patch.previewAutoRefresh);
   setStatus("Recovery snapshot restored");
 }
 
@@ -903,7 +927,7 @@ function updatePreviewStateFlow({ bookId = "", device = "", autoRefresh } = {}) 
     previewDevice: String(device || state.previewDevice || "desktop"),
   });
   if (typeof autoRefresh === "boolean") {
-    patch.previewAutoRefresh = autoRefresh;
+    patch.previewAutoRefresh = writePreviewAutoRefreshPreference(autoRefresh);
   }
   setState(patch);
 }
@@ -2273,9 +2297,11 @@ function detectMode() {
 
 function boot() {
   const historyPolicy = applyRecoveryHistoryPolicyForProject("");
+  const previewAutoRefresh = readPreviewAutoRefreshPreference();
   setState({
     recoveryHistoryMaxAgeDays: historyPolicy.maxAgeDays,
     recoveryHistoryPolicyScope: historyPolicy.scope,
+    previewAutoRefresh,
   });
   bindNav();
   detectMode();

@@ -543,7 +543,10 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("onResetRecoveryHistoryPolicy"), "app should wire recovery history policy reset handler");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
+  assert(appSource.includes("PREVIEW_AUTO_REFRESH_STORAGE_KEY"), "app should persist preview auto-refresh preference key");
   assert(appSource.includes("applyRecoveryHistoryPolicy"), "app should apply recovery history policy");
+  assert(appSource.includes("readPreviewAutoRefreshPreference"), "app should read preview auto-refresh preference");
+  assert(appSource.includes("writePreviewAutoRefreshPreference"), "app should write preview auto-refresh preference");
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
   assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
   assert(appSource.includes("clearProjectRecoveryHistoryPolicyInStorage"), "app should support clearing project-scoped recovery policy");

@@ -2001,6 +2001,23 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 115: Sprint 4 Live Preview 自动刷新偏好持久化
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `PREVIEW_AUTO_REFRESH_STORAGE_KEY` 与读写函数
+  - 自动刷新开关变更时写入 localStorage，重启后保持用户偏好
+  - 会话快照恢复/历史恢复时同步写回自动刷新偏好，避免状态分裂
+  - 回归脚本新增自动刷新偏好持久化关键标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2010,8 +2027,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 114 |
-| Where am I going? | Phase 114 -> checkpoint commit -> push |
+| Where am I? | Phase 115 |
+| Where am I going? | Phase 115 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 模板预设能力必须包含导入/导出，才能覆盖教师/家长跨设备协作场景 |
-| What have I done? | 已完成新建书自定义模板预设管理，并补齐反馈链路、回归与文档同步 |
+| What have I learned? | 预览开关类偏好若不持久化，会导致重启后行为不一致并增加学习成本 |
+| What have I done? | 已完成 Live Preview 自动刷新偏好持久化，并确保恢复流程与本地偏好一致 |
