@@ -552,6 +552,10 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("writePreviewAutoRefreshPreference"), "app should write preview auto-refresh preference");
   assert(appSource.includes("applyPreviewAutoRefreshPreferenceForProject"), "app should support project-scoped preview auto-refresh preference");
   assert(appSource.includes("clearProjectPreviewAutoRefreshPreferenceInStorage"), "app should support clearing project-scoped preview auto-refresh policy");
+  assert(appSource.includes("normalizePreviewAutoRefreshImportMode"), "app should normalize preview auto-refresh policy import mode");
+  assert(appSource.includes("mergePreviewAutoRefreshPolicyPayload"), "app should support merging preview auto-refresh policy payloads");
+  assert(appSource.includes("exportPreviewAutoRefreshPolicyFlow"), "app should support exporting preview auto-refresh policy");
+  assert(appSource.includes("importPreviewAutoRefreshPolicyFlow"), "app should support importing preview auto-refresh policy");
   assert(appSource.includes("previewAutoRefreshPolicyScope"), "app should track preview auto-refresh policy scope");
   assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
   assert(appSource.includes("resolveRecoveryHistoryPolicyScopeForProject"), "app should resolve recovery policy scope");
@@ -564,6 +568,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("newBookPresetFeedbackFlow"), "app should support new-book preset feedback updates");
   assert(appSource.includes("onNewBookPresetFeedback"), "app should wire new-book preset feedback handler");
   assert(appSource.includes("onResetPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy reset handler");
+  assert(appSource.includes("onExportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy export handler");
+  assert(appSource.includes("onImportPreviewAutoRefreshPolicy"), "app should wire preview auto-refresh policy import handler");
   assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
   assert(appSource.includes("payload.projects"), "app should persist per-project recovery policy entries");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
@@ -600,6 +606,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("previewAutoRefresh"), "dashboard should expose preview auto refresh toggle");
   assert(dashboardSource.includes("自动刷新来源："), "dashboard should show preview auto-refresh policy source");
   assert(dashboardSource.includes("preview-reset-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy reset action");
+  assert(dashboardSource.includes("preview-export-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy export action");
+  assert(dashboardSource.includes("preview-import-auto-refresh-policy-btn"), "dashboard should expose preview auto-refresh policy import action");
   assert(dashboardSource.includes("preview-clear-recovery-btn"), "dashboard should expose recovery clear action");
   assert(dashboardSource.includes("preview-restore-recovery-btn"), "dashboard should expose recovery restore action");
   assert(dashboardSource.includes("preview-remove-recovery-btn"), "dashboard should expose recovery remove action");
@@ -625,6 +633,8 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("onRestoreRecoverySnapshot"), "dashboard should wire recovery restore handler");
   assert(dashboardSource.includes("onRemoveRecoverySnapshot"), "dashboard should wire recovery remove handler");
   assert(dashboardSource.includes("onResetPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy reset handler");
+  assert(dashboardSource.includes("onExportPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy export handler");
+  assert(dashboardSource.includes("onImportPreviewAutoRefreshPolicy"), "dashboard should wire preview auto-refresh policy import handler");
   assert(dashboardSource.includes("onResetRecoveryHistoryPolicy"), "dashboard should wire recovery policy reset handler");
   assert(dashboardSource.includes("onExportRecoveryHistoryPolicy"), "dashboard should wire recovery policy export handler");
   assert(dashboardSource.includes("onImportRecoveryHistoryPolicy"), "dashboard should wire recovery policy import handler");

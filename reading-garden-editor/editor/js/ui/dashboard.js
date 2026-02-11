@@ -733,6 +733,9 @@ function renderPreviewPanel(state) {
         </label>
         <div class="full actions-row">
           <button class="btn btn-secondary preview-reset-auto-refresh-policy-btn" type="button" ${busy}>Auto Refresh Global</button>
+          <button class="btn btn-secondary preview-export-auto-refresh-policy-btn" type="button" ${busy}>Export AutoRefresh</button>
+          <button class="btn btn-secondary preview-import-auto-refresh-policy-btn" type="button" ${busy}>Import AutoRefresh</button>
+          <input class="preview-import-auto-refresh-policy-input" type="file" accept=".json,application/json" hidden ${busy} />
           <button class="btn btn-secondary preview-reset-recovery-policy-btn" type="button" ${busy}>Use Global Default</button>
           <button class="btn btn-secondary preview-export-recovery-policy-btn" type="button" ${busy}>Export Policy</button>
           <button class="btn btn-secondary preview-import-recovery-policy-btn" type="button" ${busy}>Import Policy</button>
@@ -1351,6 +1354,9 @@ export function renderDashboard(root, state, handlers = {}) {
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
   const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");
   const previewResetAutoRefreshPolicyBtn = root.querySelector(".preview-reset-auto-refresh-policy-btn");
+  const previewExportAutoRefreshPolicyBtn = root.querySelector(".preview-export-auto-refresh-policy-btn");
+  const previewImportAutoRefreshPolicyBtn = root.querySelector(".preview-import-auto-refresh-policy-btn");
+  const previewImportAutoRefreshPolicyInput = root.querySelector(".preview-import-auto-refresh-policy-input");
   const previewResetRecoveryPolicyBtn = root.querySelector(".preview-reset-recovery-policy-btn");
   const previewExportRecoveryPolicyBtn = root.querySelector(".preview-export-recovery-policy-btn");
   const previewImportRecoveryPolicyBtn = root.querySelector(".preview-import-recovery-policy-btn");
@@ -1382,6 +1388,22 @@ export function renderDashboard(root, state, handlers = {}) {
   previewResetAutoRefreshPolicyBtn?.addEventListener("click", () => {
     if (handlers.onResetPreviewAutoRefreshPolicy) {
       handlers.onResetPreviewAutoRefreshPolicy();
+    }
+  });
+  previewExportAutoRefreshPolicyBtn?.addEventListener("click", () => {
+    if (handlers.onExportPreviewAutoRefreshPolicy) {
+      handlers.onExportPreviewAutoRefreshPolicy();
+    }
+  });
+  previewImportAutoRefreshPolicyBtn?.addEventListener("click", () => {
+    previewImportAutoRefreshPolicyInput?.click();
+  });
+  previewImportAutoRefreshPolicyInput?.addEventListener("change", () => {
+    const file = previewImportAutoRefreshPolicyInput.files?.[0];
+    const importRecoveryPolicyMode = String(recoveryPolicyImportModeEl?.value || "replace");
+    if (previewImportAutoRefreshPolicyInput) previewImportAutoRefreshPolicyInput.value = "";
+    if (handlers.onImportPreviewAutoRefreshPolicy) {
+      handlers.onImportPreviewAutoRefreshPolicy(file || null, importRecoveryPolicyMode);
     }
   });
   previewResetRecoveryPolicyBtn?.addEventListener("click", () => {

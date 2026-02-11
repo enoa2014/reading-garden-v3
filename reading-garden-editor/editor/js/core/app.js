@@ -428,6 +428,33 @@ function clearProjectPreviewAutoRefreshPreferenceInStorage(projectName = "") {
   };
 }
 
+function normalizePreviewAutoRefreshImportMode(rawMode = "replace") {
+  const mode = String(rawMode || "replace").trim().toLowerCase();
+  return mode === "merge" ? "merge" : "replace";
+}
+
+function mergePreviewAutoRefreshPolicyPayload(basePayload, importedPayload, mode = "replace") {
+  const normalizedMode = normalizePreviewAutoRefreshImportMode(mode);
+  const base = normalizePreviewAutoRefreshPolicyPayload(basePayload);
+  const incoming = normalizePreviewAutoRefreshPolicyPayload(importedPayload);
+  if (normalizedMode === "replace") {
+    return {
+      mode: normalizedMode,
+      payload: incoming,
+    };
+  }
+  return {
+    mode: normalizedMode,
+    payload: {
+      defaultEnabled: base.defaultEnabled,
+      projects: {
+        ...base.projects,
+        ...incoming.projects,
+      },
+    },
+  };
+}
+
 function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = null) {
   const safeProjectName = String(projectName || "").trim();
   const policyPayload = payload
@@ -1030,6 +1057,8 @@ function render() {
       onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
       onUpdatePreviewState: updatePreviewStateFlow,
       onResetPreviewAutoRefreshPolicy: resetPreviewAutoRefreshPreferenceFlow,
+      onExportPreviewAutoRefreshPolicy: exportPreviewAutoRefreshPolicyFlow,
+      onImportPreviewAutoRefreshPolicy: importPreviewAutoRefreshPolicyFlow,
       onRefreshPreview: refreshPreviewFlow,
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
@@ -1189,6 +1218,71 @@ function resetPreviewAutoRefreshPreferenceFlow() {
     },
   });
   setStatus("Preview auto-refresh policy reset");
+}
+
+function exportPreviewAutoRefreshPolicyFlow() {
+  const payload = readPreviewAutoRefreshPolicyPayloadFromStorage();
+  const filename = `preview-auto-refresh-policy-${buildTimestampToken()}.json`;
+  downloadJsonFile(filename, {
+    format: "rg-preview-auto-refresh-policy",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    policy: payload,
+  });
+  setState({
+    recoveryFeedback: {
+      type: "ok",
+      message: `预览自动刷新策略已导出：${filename}`,
+    },
+  });
+  setStatus("Preview auto-refresh policy exported");
+}
+
+async function importPreviewAutoRefreshPolicyFlow(file, mode = "replace") {
+  if (!file) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "未选择预览自动刷新策略文件。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, recoveryFeedback: null });
+  setStatus("Importing preview auto-refresh policy...");
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const current = readPreviewAutoRefreshPolicyPayloadFromStorage();
+    const incoming = normalizePreviewAutoRefreshPolicyPayload(parsed?.policy || parsed);
+    const merged = mergePreviewAutoRefreshPolicyPayload(current, incoming, mode);
+    writePreviewAutoRefreshPolicyPayloadToStorage(merged.payload);
+    const state = getState();
+    const projectName = String(state.projectName || "").trim();
+    const applied = applyPreviewAutoRefreshPreferenceForProject(projectName, merged.payload);
+    const importedProjects = Object.keys(incoming.projects || {}).length;
+    setState({
+      previewAutoRefresh: applied.enabled,
+      previewAutoRefreshPolicyScope: applied.scope,
+      recoveryFeedback: {
+        type: "ok",
+        message: projectName
+          ? `预览自动刷新策略已导入（mode=${merged.mode}, projects=${importedProjects}）并应用到项目：${projectName}`
+          : `预览自动刷新策略已导入（mode=${merged.mode}, projects=${importedProjects}）。`,
+      },
+    });
+    setStatus("Preview auto-refresh policy imported");
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `导入预览自动刷新策略失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Preview auto-refresh policy import failed");
+  }
+  setState({ busy: false });
 }
 
 function refreshPreviewFlow() {

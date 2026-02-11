@@ -98,6 +98,7 @@ Phase 9
 - [x] Live Preview 自动刷新偏好支持持久化
 - [x] Live Preview 自动刷新偏好支持按项目独立配置（项目覆盖 + 全局默认）
 - [x] Live Preview 自动刷新偏好支持当前项目一键恢复全局默认
+- [x] Live Preview 自动刷新策略支持导入/导出（`replace/merge`）
 - [x] 校验层支持路径级错误提示（books/registry）
 - [x] `rgbook` 导入支持 manual 预检查策略
 - [x] IndexedDB 会话快照与重开恢复
@@ -121,7 +122,7 @@ Phase 9
 
 ## Key Questions
 1. 新建书自定义模板预设是否需要支持按项目隔离，而不是全局 localStorage？
-2. Live Preview 自动刷新偏好是否需要支持导入/导出（跨设备迁移）？
+2. Live Preview 自动刷新策略是否需要与会话快照策略合并为单一策略文件？
 3. 会话快照策略 `merge` 模式是否需要支持覆盖 `defaultMaxAgeDays`（当前仅合并 projects）？
 
 ## Decisions Made
@@ -184,6 +185,7 @@ Phase 9
 | Live Preview 自动刷新偏好先落地全局 localStorage 持久化 | 优先满足重启后行为一致，再按反馈决定是否扩展项目级偏好 |
 | Live Preview 自动刷新偏好升级为“全局默认 + 项目覆盖”策略并兼容旧值 | 支持多项目独立操作习惯，同时保持旧用户配置平滑迁移 |
 | Live Preview 自动刷新偏好支持当前项目一键恢复全局默认 | 降低项目级覆盖残留风险，减少手动重新切换开关成本 |
+| Live Preview 自动刷新策略导入支持 `replace/merge`，`merge` 仅合并项目映射并保留本地默认 | 提供跨设备迁移能力，同时避免误改全局自动刷新默认值 |
 | 新建书模板扩展到 timeline/interactive 可选项 | 缩短常见教学模块的初始化步骤，减少手工补配置成本 |
 | manual 预检查增加“一键应用推荐策略” | 保留人工确认同时减少重复操作，提升导入效率 |
 | Validation Issues 增加报告下载能力 | 支持排障留档、跨角色协作与离线问题复现 |

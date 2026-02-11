@@ -2098,6 +2098,27 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 120: Sprint 4 Live Preview 自动刷新策略导入导出（replace/merge）
+- **Status:** complete
+- Actions taken:
+  - `app.js` 新增 `exportPreviewAutoRefreshPolicyFlow/importPreviewAutoRefreshPolicyFlow`
+  - 自动刷新策略支持单文件导入/导出，并兼容旧值解析
+  - 导入支持 `replace/merge` 模式，`merge` 保留本地 `defaultEnabled` 仅合并项目映射
+  - `dashboard.js` Preview 面板新增 `Export AutoRefresh` / `Import AutoRefresh` 操作与文件选择
+  - 自动刷新策略导入复用统一导入模式选择器，与会话快照策略保持一致交互
+  - 回归脚本补充自动刷新策略导入导出关键标记断言
+  - 运行 `node --check`（`app.js/dashboard.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2107,8 +2128,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 119 |
-| Where am I going? | Phase 119 -> checkpoint commit -> push |
+| Where am I? | Phase 120 |
+| Where am I going? | Phase 120 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 项目级偏好要可回退到全局默认，才能控制长期配置漂移并降低排查成本 |
-| What have I done? | 已完成 Live Preview 自动刷新偏好“项目覆盖 + 一键回退全局默认”闭环，并同步回归与文档 |
+| What have I learned? | 自动刷新策略跨设备迁移同样需要 replace/merge 两种导入路径，才能兼顾全量迁移与增量合并 |
+| What have I done? | 已完成 Live Preview 自动刷新策略导入导出闭环，并接入 UI、回归与文档同步 |
