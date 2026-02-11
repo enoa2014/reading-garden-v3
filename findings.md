@@ -95,6 +95,7 @@
     - 诊断支持自定义脱敏字段（按路径，如 `project.name,input.fileName`）
     - 自定义脱敏字段支持“最近模板”本地复用（localStorage，最多 5 条）
     - 支持一键清空最近模板并显示清空结果反馈
+    - 支持最近模板导入/导出（JSON）
     - `rgsite` 导出反馈增加缺失资源分组数量（groups）
   - 自动化回归：
     - 新增 `scripts/editor-regression.sh`

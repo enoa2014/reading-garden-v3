@@ -67,6 +67,70 @@ function clearCustomRedactionTemplates() {
   return existing.length;
 }
 
+function buildTemplatesDownloadName() {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return `redaction-templates-${stamp}.json`;
+}
+
+function downloadCustomRedactionTemplates() {
+  const templates = readCustomRedactionTemplates();
+  const payload = {
+    format: "rg-redaction-templates",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    templates,
+  };
+  const text = `${JSON.stringify(payload, null, 2)}\n`;
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = buildTemplatesDownloadName();
+  link.click();
+  URL.revokeObjectURL(url);
+  return templates.length;
+}
+
+function parseImportedTemplatePayload(parsed) {
+  if (!parsed || typeof parsed !== "object") return [];
+  const rawTemplates = Array.isArray(parsed.templates) ? parsed.templates : [];
+  const deduped = [];
+  const seen = new Set();
+  rawTemplates.forEach((item) => {
+    const normalized = normalizeCustomRedactionFields(item);
+    if (!normalized || seen.has(normalized)) return;
+    seen.add(normalized);
+    deduped.push(normalized);
+  });
+  return deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
+}
+
+async function importCustomRedactionTemplates(file) {
+  if (!file) {
+    return {
+      ok: false,
+      error: "未选择模板文件。",
+    };
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const templates = parseImportedTemplatePayload(parsed);
+    writeCustomRedactionTemplates(templates);
+    return {
+      ok: true,
+      count: templates.length,
+      templates,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: `导入模板失败：${err?.message || String(err)}`,
+    };
+  }
+}
+
 function renderStructurePanel(state) {
   const missing = state.structure?.missing || [];
   const ok = state.structure?.ok;
@@ -245,6 +309,9 @@ function renderPackPanel(state) {
       </label>
       <div class="actions-row">
         <button class="btn btn-secondary clear-redaction-templates-btn" type="button" ${busy}>Clear Recent Templates</button>
+        <button class="btn btn-secondary export-redaction-templates-btn" type="button" ${busy}>Export Templates</button>
+        <button class="btn btn-secondary import-redaction-templates-btn" type="button" ${busy}>Import Templates</button>
+        <input class="import-redaction-templates-input" type="file" accept=".json,application/json" hidden ${busy} />
       </div>
     `
     : "";
@@ -445,6 +512,9 @@ export function renderDashboard(root, state, handlers = {}) {
     const customInput = root.querySelector('input[name="customRedactionFields"]');
     const templateSelect = root.querySelector('select[name="recentRedactionTemplate"]');
     const clearTemplatesBtn = root.querySelector(".clear-redaction-templates-btn");
+    const exportTemplatesBtn = root.querySelector(".export-redaction-templates-btn");
+    const importTemplatesBtn = root.querySelector(".import-redaction-templates-btn");
+    const importTemplatesInput = root.querySelector(".import-redaction-templates-input");
 
     customInput?.addEventListener("blur", () => {
       const normalized = normalizeCustomRedactionFields(customInput.value);
@@ -468,6 +538,48 @@ export function renderDashboard(root, state, handlers = {}) {
       clearTemplatesBtn.disabled = true;
       if (handlers.onClearRedactionTemplates) {
         handlers.onClearRedactionTemplates(removedCount);
+      }
+    });
+
+    exportTemplatesBtn?.addEventListener("click", () => {
+      const count = downloadCustomRedactionTemplates();
+      if (handlers.onExportRedactionTemplates) {
+        handlers.onExportRedactionTemplates(count);
+      }
+    });
+
+    importTemplatesBtn?.addEventListener("click", () => {
+      importTemplatesInput?.click();
+    });
+
+    importTemplatesInput?.addEventListener("change", async () => {
+      const file = importTemplatesInput.files?.[0];
+      const result = await importCustomRedactionTemplates(file);
+      if (importTemplatesInput) {
+        importTemplatesInput.value = "";
+      }
+
+      if (result.ok) {
+        const nextTemplates = readCustomRedactionTemplates();
+        if (templateSelect) {
+          const nextOptions = nextTemplates
+            .map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`)
+            .join("");
+          templateSelect.innerHTML = `
+            <option value="">请选择历史模板</option>
+            ${nextOptions}
+          `;
+        }
+        if (customInput) {
+          customInput.value = nextTemplates[0] || DEFAULT_CUSTOM_REDACTION_FIELDS;
+        }
+        if (clearTemplatesBtn) {
+          clearTemplatesBtn.disabled = nextTemplates.length === 0;
+        }
+      }
+
+      if (handlers.onImportRedactionTemplates) {
+        handlers.onImportRedactionTemplates(result);
       }
     });
 

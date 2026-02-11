@@ -53,6 +53,8 @@ function render() {
       onExportSite: exportSiteFlow,
       onDownloadImportReport: downloadImportReportFlow,
       onClearRedactionTemplates: clearRedactionTemplatesFlow,
+      onExportRedactionTemplates: exportRedactionTemplatesFlow,
+      onImportRedactionTemplates: importRedactionTemplatesFlow,
     });
     return;
   }
@@ -614,6 +616,35 @@ function clearRedactionTemplatesFlow(removedCount = 0) {
     packFeedback: {
       type: "ok",
       message: count > 0 ? `最近模板已清空（${count} 条）。` : "最近模板已为空。",
+    },
+  });
+}
+
+function exportRedactionTemplatesFlow(count = 0) {
+  const total = Number(count || 0);
+  setState({
+    packFeedback: {
+      type: "ok",
+      message: total > 0 ? `模板文件已导出（${total} 条）。` : "模板文件已导出（当前为空列表）。",
+    },
+  });
+}
+
+function importRedactionTemplatesFlow(result) {
+  if (!result?.ok) {
+    setState({
+      packFeedback: {
+        type: "error",
+        message: result?.error || "导入模板失败。",
+      },
+    });
+    return;
+  }
+  const count = Number(result.count || 0);
+  setState({
+    packFeedback: {
+      type: "ok",
+      message: `模板导入完成（${count} 条）。`,
     },
   });
 }
