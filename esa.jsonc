@@ -1,6 +1,6 @@
 {
-  "assets": ".",
+  "assets": "dist",
   "index": "index.html",
   "error": "index.html",
-  "output": "."
+  "output": "dist"
 }
