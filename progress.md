@@ -374,13 +374,28 @@
   - `progress.md` (updated)
 
 ### Phase 22: Sprint 4 checkpoint（minimal 增量）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 完成功能、回归与文档同步
-  - 准备提交并推送本轮增量
+  - 创建 checkpoint commit：`0b9a87c`（subset minimal 资源模式）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 23: Sprint 4 文档收口（minimal post-push）
+- **Status:** in_progress
+- Actions taken:
+  - 同步阶段状态到“minimal 增量已推送”
+  - 准备提交 docs-only 同步记录
+- Files created/modified:
   - `progress.md` (updated)
 
 ## Error Log
@@ -391,8 +406,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 22 |
-| Where am I going? | Phase 22 -> checkpoint commit -> push |
+| Where am I? | Phase 23 |
+| Where am I going? | Phase 23 -> 下一迭代开发 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成 subset minimal 模式并等待增量 checkpoint |
+| What have I done? | 已完成 subset minimal 模式并完成增量 checkpoint 推送 |
