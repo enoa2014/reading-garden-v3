@@ -497,6 +497,10 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/validator.js"),
     "utf8"
   );
+  const recoveryStoreSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/recovery-store.js"),
+    "utf8"
+  );
   const analysisSource = await readFile(
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/analysis-assistant.js"),
     "utf8"
@@ -519,6 +523,9 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("manual 预检查"), "app should support manual merge preview feedback");
   assert(appSource.includes("Manual merge plan ready"), "app should set status for manual merge preview");
   assert(appSource.includes("validateRegistryData"), "app should validate registry with structured rules");
+  assert(appSource.includes("createRecoveryStore"), "app should initialize recovery store");
+  assert(appSource.includes("scheduleRecoverySnapshot"), "app should schedule recovery snapshots");
+  assert(appSource.includes("restoreRecoverySnapshotForProject"), "app should restore recovery snapshot");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
@@ -574,6 +581,9 @@ async function testDiagnosticSourceMarkers() {
   assert(validatorSource.includes("validateRegistryData"), "validator should expose registry validation");
   assert(validatorSource.includes("$.books"), "validator should emit path-based books errors");
   assert(validatorSource.includes("$.modules"), "validator should emit path-based registry errors");
+  assert(recoveryStoreSource.includes("indexedDB"), "recovery store should use indexedDB");
+  assert(recoveryStoreSource.includes("saveLatest"), "recovery store should support snapshot save");
+  assert(recoveryStoreSource.includes("loadLatest"), "recovery store should support snapshot load");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
   assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");

@@ -97,12 +97,13 @@ Phase 9
 - [x] Live Preview 支持写入后自动刷新开关
 - [x] 校验层支持路径级错误提示（books/registry）
 - [x] `rgbook` 导入支持 manual 预检查策略
+- [x] IndexedDB 会话快照与重开恢复
 - **Status:** in_progress
 
 ## Key Questions
 1. 自动创建草稿书时是否需要暴露“模板级别选择”（极简/教学型）？
 2. Live Preview 的自动刷新是否默认开启（当前为开启）？
-3. 阈值预设是否需要按导出范围（full/subset）自动切换默认值？
+3. 会话快照是否需要增加“手动清理历史恢复数据”入口？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -147,3 +148,4 @@ Phase 9
 | Live Preview 自动刷新先默认开启并提供关闭开关 | 兼顾实时反馈与性能控制，允许按设备能力降级 |
 | 校验增强先采用“路径级规则校验 + 建议”，暂不强依赖 Ajv | 先提升可诊断性与离线可维护性，再视需求引入完整 schema 引擎 |
 | `rgbook` manual 策略先做“预检查不写盘” | 先提供可解释冲突决策，再评估完整交互式手工合并 |
+| 会话恢复先聚焦同项目快照（IndexedDB latest） | 先满足断电恢复与低复杂度实现，后续再扩展多项目历史管理 |

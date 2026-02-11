@@ -163,6 +163,7 @@
 | Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
 | Live Preview 自动刷新检查 | 审查 `touchPreviewAfterWrite` 与开关链路 | 导入/建书/覆盖写入后按设置自动刷新 iframe | 已接入 | ✓ |
 | 路径级校验检查 | 审查 `validator(validateBooksData/validateRegistryData)` | 输出 JSON 路径 + 原因 + 修复建议 | 已接入 | ✓ |
+| 会话快照恢复检查 | 审查 `recovery-store(indexedDB) -> app(save/restore)` | 支持防抖+周期快照并在同项目重开恢复 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
@@ -1700,6 +1701,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 100: Sprint 4 IndexedDB 会话快照恢复
+- **Status:** complete
+- Actions taken:
+  - 新增 `core/recovery-store.js`（IndexedDB latest 快照存取）
+  - `app.js` 增加 500ms 防抖 + 30s 周期快照保存
+  - 项目打开成功后按 `projectName` 自动恢复会话快照
+  - 恢复内容包含预览偏好与最近分析建议
+  - 回归脚本增加 recovery-store 与 app 接入关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (created)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1709,8 +1729,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 99 |
-| Where am I going? | Phase 99 -> checkpoint commit -> push |
+| Where am I? | Phase 100 |
+| Where am I going? | Phase 100 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | `manual` 策略不能只抛异常，必须给出可执行的冲突决策信息 |
-| What have I done? | 已完成路径级校验增强，并继续补齐导入冲突手工决策能力 |
+| What have I learned? | 断电恢复能力需要“自动保存 + 自动恢复”同时存在才真正有价值 |
+| What have I done? | 已完成 manual 冲突预检查，并继续补齐会话快照恢复能力 |

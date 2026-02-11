@@ -1,5 +1,6 @@
 import { createFileSystemAdapter } from "./filesystem.js";
 import { getState, setState, subscribe } from "./state.js";
+import { createRecoveryStore } from "./recovery-store.js";
 import {
   validateBooksData,
   validateProjectStructure,
@@ -19,7 +20,13 @@ const fs = createFileSystemAdapter();
 const mergeService = new ImportMergeService();
 const bookPackService = new BookPackService({ fs, mergeService });
 const sitePackService = new SitePackService({ fs });
+const recoveryStore = createRecoveryStore();
 const AI_SETTINGS_PATH = "reading-garden-editor/config/ai-settings.json";
+const RECOVERY_SNAPSHOT_DEBOUNCE_MS = 500;
+const RECOVERY_SNAPSHOT_INTERVAL_MS = 30_000;
+let recoverySnapshotDebounceTimer = null;
+let recoverySnapshotIntervalId = null;
+let recoverySnapshotSaving = false;
 const MODULE_TEMPLATE_MAP = {
   reading: {
     id: "reading",
@@ -224,6 +231,85 @@ function downloadJsonFile(filename, payload) {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function buildRecoverySnapshotPayload(state) {
+  const safeState = state && typeof state === "object" ? state : {};
+  return {
+    format: "rg-editor-recovery-snapshot",
+    version: 1,
+    projectName: String(safeState.projectName || ""),
+    ui: {
+      previewBookId: String(safeState.previewBookId || ""),
+      previewDevice: String(safeState.previewDevice || "desktop"),
+      previewAutoRefresh: safeState.previewAutoRefresh !== false,
+    },
+    analysisSuggestion: safeState.analysisSuggestion && typeof safeState.analysisSuggestion === "object"
+      ? safeState.analysisSuggestion
+      : null,
+  };
+}
+
+async function saveRecoverySnapshotFlow() {
+  const state = getState();
+  if (!state.projectName || !state.structure?.ok) return;
+  if (recoverySnapshotSaving) return;
+  recoverySnapshotSaving = true;
+  try {
+    const payload = buildRecoverySnapshotPayload(state);
+    await recoveryStore.saveLatest(payload);
+  } catch {
+    // recovery storage is best-effort only
+  } finally {
+    recoverySnapshotSaving = false;
+  }
+}
+
+function scheduleRecoverySnapshot() {
+  if (recoverySnapshotDebounceTimer) {
+    clearTimeout(recoverySnapshotDebounceTimer);
+  }
+  recoverySnapshotDebounceTimer = setTimeout(() => {
+    saveRecoverySnapshotFlow();
+  }, RECOVERY_SNAPSHOT_DEBOUNCE_MS);
+}
+
+function startRecoverySnapshotTicker() {
+  if (recoverySnapshotIntervalId) {
+    clearInterval(recoverySnapshotIntervalId);
+  }
+  recoverySnapshotIntervalId = setInterval(() => {
+    saveRecoverySnapshotFlow();
+  }, RECOVERY_SNAPSHOT_INTERVAL_MS);
+}
+
+async function restoreRecoverySnapshotForProject(books = []) {
+  try {
+    const snapshot = await recoveryStore.loadLatest();
+    if (!snapshot || typeof snapshot !== "object") return;
+    const state = getState();
+    if (!state.projectName || snapshot.projectName !== state.projectName) return;
+
+    const ui = snapshot.ui && typeof snapshot.ui === "object" ? snapshot.ui : {};
+    const previewPatch = buildPreviewStatePatch(state, books, {
+      previewBookId: String(ui.previewBookId || ""),
+      previewDevice: String(ui.previewDevice || state.previewDevice || "desktop"),
+    });
+    const patch = {
+      ...previewPatch,
+      previewAutoRefresh: ui.previewAutoRefresh !== false,
+    };
+    if (snapshot.analysisSuggestion && typeof snapshot.analysisSuggestion === "object") {
+      patch.analysisSuggestion = snapshot.analysisSuggestion;
+      patch.analysisFeedback = {
+        type: "ok",
+        message: `已恢复会话快照：${String(snapshot.savedAt || "unknown")}`,
+      };
+    }
+    setState(patch);
+  } catch {
+    // recovery storage is best-effort only
+  }
 }
 
 function qs(sel) {
@@ -572,6 +658,7 @@ async function openProjectFlow() {
         ...previewPatch,
       });
       await loadAiSettingsFlow();
+      await restoreRecoverySnapshotForProject(booksResult.books);
     } else {
       setState({
         books: [],
@@ -1619,11 +1706,15 @@ function detectMode() {
 function boot() {
   bindNav();
   detectMode();
+  startRecoverySnapshotTicker();
 
   const openBtn = qs("#openProjectBtn");
   openBtn?.addEventListener("click", openProjectFlow);
 
-  subscribe("*", render);
+  subscribe("*", () => {
+    render();
+    scheduleRecoverySnapshot();
+  });
   setNavEnabled(false);
   render();
 }
