@@ -529,6 +529,7 @@ function renderPreviewPanel(state) {
         <div class="full actions-row">
           <button class="btn btn-secondary preview-refresh-btn" type="button" ${busy}>Refresh Preview</button>
           <button class="btn btn-secondary preview-restore-recovery-btn" type="button" ${busy} ${historyOptions ? "" : "disabled"}>Restore Selected Snapshot</button>
+          <button class="btn btn-secondary preview-remove-recovery-btn" type="button" ${busy} ${historyOptions ? "" : "disabled"}>Delete Selected Snapshot</button>
           <button class="btn btn-secondary preview-clear-recovery-btn" type="button" ${busy}>Clear Recovery Snapshot</button>
           ${openLink}
         </div>
@@ -1018,6 +1019,7 @@ export function renderDashboard(root, state, handlers = {}) {
   }
   const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
   const previewRestoreRecoveryBtn = root.querySelector(".preview-restore-recovery-btn");
+  const previewRemoveRecoveryBtn = root.querySelector(".preview-remove-recovery-btn");
   const previewClearRecoveryBtn = root.querySelector(".preview-clear-recovery-btn");
   previewRefreshBtn?.addEventListener("click", () => {
     if (handlers.onRefreshPreview) {
@@ -1033,6 +1035,12 @@ export function renderDashboard(root, state, handlers = {}) {
     if (handlers.onRestoreRecoverySnapshot) {
       const recoverySelect = root.querySelector('select[name="recoverySavedAt"]');
       handlers.onRestoreRecoverySnapshot(String(recoverySelect?.value || ""));
+    }
+  });
+  previewRemoveRecoveryBtn?.addEventListener("click", () => {
+    if (handlers.onRemoveRecoverySnapshot) {
+      const recoverySelect = root.querySelector('select[name="recoverySavedAt"]');
+      handlers.onRemoveRecoverySnapshot(String(recoverySelect?.value || ""));
     }
   });
 

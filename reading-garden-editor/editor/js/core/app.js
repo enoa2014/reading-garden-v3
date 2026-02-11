@@ -427,6 +427,67 @@ function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
   setStatus("Recovery snapshot restored");
 }
 
+async function removeRecoveryHistorySnapshotFlow(savedAt = "") {
+  const state = getState();
+  const stamp = String(savedAt || "").trim();
+  const projectName = String(state.projectName || "").trim();
+  if (!stamp) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "请选择要删除的历史快照。",
+      },
+    });
+    return;
+  }
+  if (!projectName) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: "当前项目无效，无法删除历史快照。",
+      },
+    });
+    return;
+  }
+
+  setState({ busy: true, recoveryFeedback: null });
+  setStatus("Removing recovery snapshot...");
+  try {
+    const result = await recoveryStore.removeProjectHistorySnapshot(projectName, stamp);
+    const history = Array.isArray(result?.history)
+      ? result.history
+      : await recoveryStore.loadProjectHistory(projectName);
+    if (!result?.removed) {
+      setState({
+        recoveryHistory: history,
+        recoveryFeedback: {
+          type: "error",
+          message: "未找到要删除的历史快照，可能已被其他操作清理。",
+        },
+      });
+      setStatus("Recovery snapshot missing");
+    } else {
+      setState({
+        recoveryHistory: history,
+        recoveryFeedback: {
+          type: "ok",
+          message: `已删除历史快照：${stamp}`,
+        },
+      });
+      setStatus("Recovery snapshot removed");
+    }
+  } catch (err) {
+    setState({
+      recoveryFeedback: {
+        type: "error",
+        message: `删除历史快照失败：${err?.message || String(err)}`,
+      },
+    });
+    setStatus("Recovery snapshot remove failed");
+  }
+  setState({ busy: false });
+}
+
 async function clearRecoverySnapshotFlow() {
   const state = getState();
   const projectName = String(state.projectName || "").trim();
@@ -500,6 +561,7 @@ function render() {
       onRefreshPreview: refreshPreviewFlow,
       onClearRecoverySnapshot: clearRecoverySnapshotFlow,
       onRestoreRecoverySnapshot: restoreRecoveryHistorySnapshotFlow,
+      onRemoveRecoverySnapshot: removeRecoveryHistorySnapshotFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onApplyManualMergeSuggestion: applyManualMergeSuggestionFlow,

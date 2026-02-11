@@ -93,6 +93,63 @@ export function createRecoveryStore({
       const history = await readValue(db, storeName, key);
       return Array.isArray(history) ? history : [];
     },
+    async removeProjectHistorySnapshot(projectName, savedAt) {
+      const safeProject = String(projectName || "").trim();
+      const stamp = String(savedAt || "").trim();
+      const projectScopedKey = projectKey(safeProject);
+      const historyKey = projectHistoryKey(safeProject);
+      if (!historyKey || !stamp) {
+        return {
+          removed: false,
+          history: [],
+        };
+      }
+
+      const db = await getDb();
+      const history = await readValue(db, storeName, historyKey);
+      const safeHistory = Array.isArray(history) ? history : [];
+      const nextHistory = safeHistory.filter((item) => String(item?.savedAt || "") !== stamp);
+      if (nextHistory.length === safeHistory.length) {
+        return {
+          removed: false,
+          history: safeHistory,
+        };
+      }
+
+      if (nextHistory.length) {
+        await writeValue(db, storeName, historyKey, nextHistory);
+      } else {
+        await deleteValue(db, storeName, historyKey);
+      }
+
+      if (projectScopedKey) {
+        const scopedSnapshot = await readValue(db, storeName, projectScopedKey);
+        if (String(scopedSnapshot?.savedAt || "") === stamp) {
+          if (nextHistory.length) {
+            await writeValue(db, storeName, projectScopedKey, nextHistory[0]);
+          } else {
+            await deleteValue(db, storeName, projectScopedKey);
+          }
+        }
+      }
+
+      const latestSnapshot = await readValue(db, storeName, LATEST_KEY);
+      if (
+        String(latestSnapshot?.savedAt || "") === stamp
+        && String(latestSnapshot?.projectName || "").trim() === safeProject
+      ) {
+        if (nextHistory.length) {
+          await writeValue(db, storeName, LATEST_KEY, nextHistory[0]);
+        } else {
+          await deleteValue(db, storeName, LATEST_KEY);
+        }
+      }
+
+      return {
+        removed: true,
+        history: nextHistory,
+      };
+    },
     async saveLatest(snapshot) {
       const db = await getDb();
       const payload = {

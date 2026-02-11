@@ -1867,6 +1867,26 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 108: Sprint 4 会话快照删除选中历史
+- **Status:** complete
+- Actions taken:
+  - `recovery-store.js` 新增 `removeProjectHistorySnapshot`（删除指定 `savedAt`）
+  - 删除时同步维护 `project:<name>` 与 `latest` 指针，避免历史游离快照
+  - `app.js` 新增 `removeRecoveryHistorySnapshotFlow` 并接入渲染 handlers
+  - `dashboard.js` Preview 面板新增 `Delete Selected Snapshot` 操作按钮
+  - 回归脚本增加“删除历史快照”相关标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1876,8 +1896,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 107 |
-| Where am I going? | Phase 107 -> checkpoint commit -> push |
+| Where am I? | Phase 108 |
+| Where am I going? | Phase 108 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 建书场景需要“预设效率 + 手动自由”并存，才能兼顾新手与进阶用户 |
-| What have I done? | 已完成模板级别一键套用与 custom 回退机制，并补齐校验、回归与文档同步 |
+| What have I learned? | 快照治理需要“清空全部 + 删除单条”双通道，才能兼顾便捷与精细化控制 |
+| What have I done? | 已完成删除选中历史快照能力，并补齐存储一致性处理、回归与文档同步 |
