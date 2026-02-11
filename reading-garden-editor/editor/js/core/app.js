@@ -702,7 +702,11 @@ function buildSuggestedRegistry(registry, suggestion) {
   };
 }
 
-async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } = {}) {
+async function applyAnalysisSuggestionFlow({
+  bookId = "",
+  applyMode = "safe",
+  confirmOverwrite = false,
+} = {}) {
   const state = getState();
   const suggestion = state.analysisSuggestion;
   if (!suggestion) {
@@ -747,6 +751,15 @@ async function applyAnalysisSuggestionFlow({ bookId = "", applyMode = "safe" } =
   }
 
   const mode = normalizeAnalysisApplyMode(applyMode);
+  if (mode === "overwrite" && !confirmOverwrite) {
+    setState({
+      analysisFeedback: {
+        type: "error",
+        message: "overwrite 模式需要先勾选确认项，再执行 Apply Suggestion。",
+      },
+    });
+    return;
+  }
   setState({ busy: true, analysisFeedback: null });
   setStatus(mode === "overwrite"
     ? "Applying analysis suggestion (overwrite)..."

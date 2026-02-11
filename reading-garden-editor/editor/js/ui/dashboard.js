@@ -443,6 +443,10 @@ function renderAnalysisPanel(state) {
             <option value="overwrite">overwrite（覆盖 registry.json + 自动备份）</option>
           </select>
         </label>
+        <label class="checkbox-inline">
+          <input name="confirmOverwriteAnalysis" type="checkbox" ${busy} />
+          我已确认 overwrite 会修改 `registry.json`
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Analyze Text</button>
           <button class="btn btn-secondary download-analysis-btn" type="button" ${busy}>Download Suggestion</button>
@@ -763,6 +767,7 @@ export function renderDashboard(root, state, handlers = {}) {
         handlers.onApplyAnalysisSuggestion({
           bookId: String(fd.get("targetBookId") || ""),
           applyMode: String(fd.get("analysisApplyMode") || "safe"),
+          confirmOverwrite: fd.get("confirmOverwriteAnalysis") === "on",
         });
       }
     });

@@ -503,6 +503,8 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
+  assert(appSource.includes("confirmOverwrite"), "app should support overwrite confirmation flag");
+  assert(appSource.includes("overwrite 模式需要先勾选确认项"), "app should block overwrite when confirmation is missing");
   assert(appSource.includes("ensureSuggestedModuleDataFiles"), "app should support seeding suggested module data");
   assert(appSource.includes("buildSuggestedModuleDataSeed"), "app should define default data seeds for suggested modules");
   assert(appSource.includes("registry.suggested.json"), "app should write safe suggested registry file");
@@ -522,6 +524,7 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("import-ai-settings-btn"), "dashboard should expose ai settings import action");
   assert(dashboardSource.includes("analysisForm"), "dashboard should expose text analysis form");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
+  assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
   assert(dashboardSource.includes("Analyze Text"), "dashboard should expose text analysis action");
   assert(dashboardSource.includes("download-analysis-btn"), "dashboard should expose analysis download action");
   assert(dashboardSource.includes("apply-analysis-btn"), "dashboard should expose analysis apply action");
