@@ -77,6 +77,7 @@ async function testSitePackSourceMarkers() {
   assert(source.includes("selectedBookIds"), "site pack should support selectedBookIds");
   assert(source.includes("scope: subset"), "site pack should expose subset scope");
   assert(source.includes("data/books.json"), "site pack should handle books.json rewrite in subset");
+  assert(source.includes("subsetAssetMode"), "site pack should support subsetAssetMode");
 }
 
 async function main() {

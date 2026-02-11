@@ -565,6 +565,7 @@ function downloadImportReportFlow(mode = "full") {
 async function exportSiteFlow(options = {}) {
   const scope = String(options.scope || "all");
   const selectedBookIds = Array.isArray(options.selectedBookIds) ? options.selectedBookIds : [];
+  const subsetAssetMode = String(options.subsetAssetMode || "balanced");
   if (scope === "selected" && !selectedBookIds.length) {
     setState({
       packFeedback: {
@@ -582,10 +583,11 @@ async function exportSiteFlow(options = {}) {
     const result = await sitePackService.exportSitePack({
       includeEditor: Boolean(options.includeEditor),
       selectedBookIds: scope === "selected" ? selectedBookIds : [],
+      subsetAssetMode: scope === "selected" ? subsetAssetMode : "balanced",
     });
 
     const scopeText = result.scope === "subset"
-      ? `subset(${result.selectedBookIds.length}本)`
+      ? `subset(${result.selectedBookIds.length}本/${result.subsetAssetMode})`
       : "full";
     setState({
       packFeedback: {

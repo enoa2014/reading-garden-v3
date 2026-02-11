@@ -81,6 +81,7 @@
     - 导出前校验结构、书架、registry/module 关键引用
     - 校验模块 `entry/data` 空配置并阻断导出
     - 按运行时白名单收集站点文件并打包为 `*.rgsite.zip`
+    - subset 增加资源策略：`balanced` / `minimal`（最小资源集）
     - 生成 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
     - 对 JSON 中潜在敏感键做导出时脱敏
   - Dashboard 与应用流程：
@@ -105,6 +106,7 @@
 - `rgbook` 安全校验加入后需注意性能：大包 checksum 可能导致导入等待变长。
 - `rgsite` 首版白名单若漏文件会造成线上 404，需要补充分层校验与提示。
 - `rgsite subset` 仍可能包含未使用共享资源，后续可增加“最小资源集”模式降低包体。
+- `rgsite minimal` 依赖文本引用扫描，遇到动态拼接路径时可能漏收资源。
 
 ## Sprint 4 后续建议
 - 目标 1：补充 `rgsite` 引用扫描深度（静态资源跨文件依赖、死链清单）。

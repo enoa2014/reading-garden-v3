@@ -130,6 +130,7 @@
 | rgbook 诊断下载链路 | 审查 `import catch -> state -> download` | 失败后可导出 JSON 报告 | 已接入 | ✓ |
 | CI 工作流配置检查 | 审查 `.github/workflows/editor-regression.yml` | push/PR 可自动执行回归脚本 | 已接入 | ✓ |
 | 诊断脱敏导出链路 | 审查 `dashboard -> app(redacted) -> download` | 可导出隐藏项目名和文件名的报告 | 已接入 | ✓ |
+| rgsite minimal 参数链路 | 审查 `dashboard -> app -> sitePackService` | subset 可选择 balanced/minimal | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -342,11 +343,44 @@
   - `progress.md` (updated)
 
 ### Phase 20: Sprint 4 文档收口（脱敏 post-push）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 同步阶段状态到“脱敏导出增量已推送”
-  - 准备提交 docs-only 同步记录
+  - 创建 docs-only commit：`c3a6453`（同步脱敏导出 checkpoint 状态）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `progress.md` (updated)
+
+### Phase 21: Sprint 4 subset 最小资源集
+- **Status:** complete
+- Actions taken:
+  - `site-pack-service.js` 增加 `subsetAssetMode`（`balanced`/`minimal`）
+  - minimal 模式增加文本资产引用扫描（`assets/...`）并仅打包可解析引用资源
+  - 导出 manifest 增加 `subsetAssetMode` 字段
+  - `dashboard.js` 增加 subset 资源策略选择器
+  - `app.js` 透传 `subsetAssetMode` 并在反馈文案展示
+  - 回归脚本增加 `subsetAssetMode` 关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 22: Sprint 4 checkpoint（minimal 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 准备提交并推送本轮增量
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -357,8 +391,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 20 |
-| Where am I going? | Phase 20 -> 下一迭代开发 |
+| Where am I? | Phase 22 |
+| Where am I going? | Phase 22 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成诊断脱敏导出并完成增量 checkpoint 推送 |
+| What have I done? | 已完成 subset minimal 模式并等待增量 checkpoint |

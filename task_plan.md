@@ -4,7 +4,7 @@
 补齐 `rgbook` 安全校验与 `rgsite` 发布包导出能力，形成可直接上传腾讯云 EdgeOne 的稳定打包链路，并保持断点恢复文档持续同步。
 
 ## Current Phase
-Phase 8
+Phase 9
 
 ## Phases
 ### Phase 1: Sprint 3 收尾同步
@@ -52,13 +52,19 @@ Phase 8
 - **Status:** complete
 
 ### Phase 8: 下一迭代规划
-- [ ] 为 subset 导出增加“最小资源集”模式
+- [x] 为 subset 导出增加“最小资源集”模式
 - [x] 为诊断报告增加脱敏导出选项
 - [x] 规划并接入 CI 门禁（回归脚本接入）
+- **Status:** complete
+
+### Phase 9: 下一迭代规划（持续）
+- [ ] 诊断报告支持“自定义脱敏字段”配置
+- [ ] CI 门禁增加 artifacts（回归输出）上传
+- [ ] `rgsite minimal` 增加缺失资源回退提示
 - **Status:** in_progress
 
 ## Key Questions
-1. `rgsite subset` 是否需要进一步按资源引用最小化打包体积？
+1. `rgsite minimal` 是否需要增加“缺失资源清单”输出？
 2. 诊断报告是否需要支持“自定义脱敏字段”而非固定策略？
 3. CI 门禁是否需要增加 artifacts（回归报告 JSON）上传？
 

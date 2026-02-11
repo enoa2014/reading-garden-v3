@@ -229,6 +229,13 @@ function renderPackPanel(state) {
             ${options}
           </select>
         </label>
+        <label>
+          subset 资源策略
+          <select name="subsetAssetMode" ${busy}>
+            <option value="balanced">balanced（默认，兼顾兼容）</option>
+            <option value="minimal">minimal（最小资源集）</option>
+          </select>
+        </label>
         <div class="full actions-row">
           <button class="btn btn-primary" type="submit" ${busy}>Export rgsite</button>
         </div>
@@ -327,6 +334,7 @@ export function renderDashboard(root, state, handlers = {}) {
         includeEditor: fd.get("includeEditor") === "on",
         scope: String(fd.get("siteScope") || "all"),
         selectedBookIds,
+        subsetAssetMode: String(fd.get("subsetAssetMode") || "balanced"),
       });
     });
   }
