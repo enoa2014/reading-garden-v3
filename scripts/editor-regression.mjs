@@ -485,6 +485,14 @@ async function testDiagnosticSourceMarkers() {
     path.resolve(ROOT, "reading-garden-editor/editor/js/ui/dashboard.js"),
     "utf8"
   );
+  const stateSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/js/core/state.js"),
+    "utf8"
+  );
+  const cssSource = await readFile(
+    path.resolve(ROOT, "reading-garden-editor/editor/css/editor.css"),
+    "utf8"
+  );
   const analysisSource = await readFile(
     path.resolve(ROOT, "reading-garden-editor/editor/js/core/analysis-assistant.js"),
     "utf8"
@@ -500,6 +508,9 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("analyzeBookTextFlow"), "app should support text analysis flow");
   assert(appSource.includes("downloadAnalysisSuggestionFlow"), "app should support analysis suggestion download");
   assert(appSource.includes("applyAnalysisSuggestionFlow"), "app should support applying analysis suggestion");
+  assert(appSource.includes("updatePreviewStateFlow"), "app should support updating preview state");
+  assert(appSource.includes("refreshPreviewFlow"), "app should support refreshing preview");
+  assert(appSource.includes("buildPreviewUrl"), "app should build preview urls");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("buildAutoCreateBookInputFromSuggestion"), "app should support auto-creating target book from suggestion");
   assert(appSource.includes("await createBookFlow(draftInput)"), "app should auto-create book when target is missing");
@@ -523,6 +534,10 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("export-ai-settings-btn"), "dashboard should expose ai settings export action");
   assert(dashboardSource.includes("import-ai-settings-btn"), "dashboard should expose ai settings import action");
   assert(dashboardSource.includes("analysisForm"), "dashboard should expose text analysis form");
+  assert(dashboardSource.includes("renderPreviewPanel"), "dashboard should render preview panel");
+  assert(dashboardSource.includes("previewForm"), "dashboard should expose preview form");
+  assert(dashboardSource.includes("preview-refresh-btn"), "dashboard should expose preview refresh action");
+  assert(dashboardSource.includes("Live Preview"), "dashboard should expose live preview title");
   assert(dashboardSource.includes("auto create from suggestion"), "dashboard should expose auto-create target option");
   assert(dashboardSource.includes("confirmOverwriteAnalysis"), "dashboard should expose overwrite confirmation checkbox");
   assert(dashboardSource.includes("Analyze Text"), "dashboard should expose text analysis action");
@@ -540,6 +555,11 @@ async function testDiagnosticSourceMarkers() {
   assert(dashboardSource.includes("missingAssetFallbackMode"), "dashboard should expose missing-asset fallback mode");
   assert(appSource.includes("mode ${mode}"), "app should surface template import mode in feedback");
   assert(appSource.includes("fallback ${result.missingAssetFallbackMode}"), "app should surface fallback mode in export feedback");
+  assert(stateSource.includes("previewBookId"), "state should track preview book");
+  assert(stateSource.includes("previewDevice"), "state should track preview device");
+  assert(stateSource.includes("previewUrl"), "state should track preview url");
+  assert(cssSource.includes(".preview-stage"), "css should style preview stage");
+  assert(cssSource.includes(".preview-mobile"), "css should style mobile preview mode");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");
   assert(analysisSource.includes("requestLlmModuleSuggestions"), "analysis assistant should support llm request");

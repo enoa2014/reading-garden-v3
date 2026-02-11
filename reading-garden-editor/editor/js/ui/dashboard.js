@@ -387,6 +387,73 @@ function renderBooksPanel(state) {
   `;
 }
 
+function renderPreviewPanel(state) {
+  if (!state.structure?.ok) return "";
+  const books = Array.isArray(state.books) ? state.books : [];
+  if (!books.length) {
+    return `
+      <section class="panel">
+        <h3>Live Preview</h3>
+        <p class="empty">当前没有可预览书籍，请先创建或导入书籍。</p>
+      </section>
+    `;
+  }
+
+  const busy = state.busy ? "disabled" : "";
+  const previewBookId = books.some((book) => String(book?.id || "") === String(state.previewBookId || ""))
+    ? String(state.previewBookId || "")
+    : String(books[0]?.id || "");
+  const previewDevice = ["desktop", "tablet", "mobile"].includes(String(state.previewDevice || ""))
+    ? String(state.previewDevice || "desktop")
+    : "desktop";
+  const previewUrl = String(state.previewUrl || "");
+  const options = books
+    .map((book) => {
+      const id = String(book?.id || "");
+      return `<option value="${escapeHtml(id)}" ${id === previewBookId ? "selected" : ""}>${escapeHtml(book.title || id)} (${escapeHtml(id)})</option>`;
+    })
+    .join("");
+  const deviceOptions = [
+    { value: "desktop", label: "desktop（宽屏）" },
+    { value: "tablet", label: "tablet（平板）" },
+    { value: "mobile", label: "mobile（手机）" },
+  ]
+    .map((item) => `<option value="${item.value}" ${item.value === previewDevice ? "selected" : ""}>${item.label}</option>`)
+    .join("");
+
+  const openLink = previewUrl
+    ? `<a class="btn btn-secondary preview-open-link" href="${escapeHtml(previewUrl)}" target="_blank" rel="noreferrer">Open in New Tab</a>`
+    : '<span class="muted">请选择书籍以启用预览链接。</span>';
+
+  return `
+    <section class="panel">
+      <h3>Live Preview</h3>
+      <p class="muted">在编辑器内实时预览书籍页面，支持桌面/平板/手机视口切换。</p>
+      <form id="previewForm" class="form-grid">
+        <label>
+          预览书籍
+          <select name="previewBookId" ${busy}>
+            ${options}
+          </select>
+        </label>
+        <label>
+          设备视口
+          <select name="previewDevice" ${busy}>
+            ${deviceOptions}
+          </select>
+        </label>
+        <div class="full actions-row">
+          <button class="btn btn-secondary preview-refresh-btn" type="button" ${busy}>Refresh Preview</button>
+          ${openLink}
+        </div>
+      </form>
+      <div class="preview-stage preview-${previewDevice}">
+        <iframe class="preview-frame" src="${escapeHtml(previewUrl)}" title="Reading Garden Live Preview" loading="lazy"></iframe>
+      </div>
+    </section>
+  `;
+}
+
 function renderAnalysisPanel(state) {
   if (!state.structure?.ok) return "";
   const busy = state.busy ? "disabled" : "";
@@ -703,6 +770,7 @@ export function renderDashboard(root, state, handlers = {}) {
     ${renderAiSettingsPanel(state)}
     ${renderAnalysisPanel(state)}
     ${renderNewBookPanel(state)}
+    ${renderPreviewPanel(state)}
     ${renderPackPanel(state)}
     ${renderBookHealthPanel(state)}
     ${renderErrorsPanel(state)}
@@ -772,6 +840,23 @@ export function renderDashboard(root, state, handlers = {}) {
       }
     });
   }
+
+  const previewForm = root.querySelector("#previewForm");
+  if (previewForm && handlers.onUpdatePreviewState) {
+    previewForm.addEventListener("change", () => {
+      const fd = new FormData(previewForm);
+      handlers.onUpdatePreviewState({
+        bookId: String(fd.get("previewBookId") || ""),
+        device: String(fd.get("previewDevice") || "desktop"),
+      });
+    });
+  }
+  const previewRefreshBtn = root.querySelector(".preview-refresh-btn");
+  previewRefreshBtn?.addEventListener("click", () => {
+    if (handlers.onRefreshPreview) {
+      handlers.onRefreshPreview();
+    }
+  });
 
   const aiSettingsForm = root.querySelector("#aiSettingsForm");
   if (aiSettingsForm && handlers.onSaveAiSettings) {

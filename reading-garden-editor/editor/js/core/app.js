@@ -261,6 +261,8 @@ function render() {
       onAnalyzeBookText: analyzeBookTextFlow,
       onDownloadAnalysisSuggestion: downloadAnalysisSuggestionFlow,
       onApplyAnalysisSuggestion: applyAnalysisSuggestionFlow,
+      onUpdatePreviewState: updatePreviewStateFlow,
+      onRefreshPreview: refreshPreviewFlow,
       onExportPack: exportPackFlow,
       onImportPack: importPackFlow,
       onExportSite: exportSiteFlow,
@@ -301,6 +303,92 @@ function setNavEnabled(enabled) {
     if (view === "dashboard") return;
     btn.disabled = !enabled;
   });
+}
+
+function normalizePreviewDevice(rawDevice = "desktop") {
+  const device = String(rawDevice || "").trim().toLowerCase();
+  if (["desktop", "tablet", "mobile"].includes(device)) return device;
+  return "desktop";
+}
+
+function resolveSiteBasePath() {
+  const pathname = String(window.location.pathname || "/");
+  const marker = "/reading-garden-editor/";
+  const markerIndex = pathname.indexOf(marker);
+  if (markerIndex >= 0) {
+    return pathname.slice(0, markerIndex + 1);
+  }
+  const slashIndex = pathname.lastIndexOf("/");
+  if (slashIndex >= 0) return pathname.slice(0, slashIndex + 1);
+  return "/";
+}
+
+function buildPreviewUrl(bookId, refreshToken = 0) {
+  const safeBookId = String(bookId || "").trim();
+  if (!safeBookId) return "";
+  const basePath = resolveSiteBasePath();
+  const params = new URLSearchParams();
+  params.set("book", safeBookId);
+  if (Number.isFinite(refreshToken) && refreshToken > 0) {
+    params.set("rg_preview_ts", String(Math.trunc(refreshToken)));
+  }
+  return `${basePath}book.html?${params.toString()}`;
+}
+
+function resolvePreviewBookId(books, preferredBookId = "") {
+  const list = Array.isArray(books) ? books : [];
+  const preferred = String(preferredBookId || "").trim();
+  if (!list.length) return "";
+  if (preferred && list.some((book) => String(book?.id || "").trim() === preferred)) {
+    return preferred;
+  }
+  return String(list[0]?.id || "").trim();
+}
+
+function buildPreviewStatePatch(state, books, overrides = {}) {
+  const currentState = state && typeof state === "object" ? state : {};
+  const refreshRaw = Object.prototype.hasOwnProperty.call(overrides, "previewRefreshToken")
+    ? overrides.previewRefreshToken
+    : currentState.previewRefreshToken;
+  const refreshToken = Number.isFinite(Number(refreshRaw))
+    ? Math.max(0, Math.trunc(Number(refreshRaw)))
+    : 0;
+  const previewDeviceRaw = Object.prototype.hasOwnProperty.call(overrides, "previewDevice")
+    ? overrides.previewDevice
+    : currentState.previewDevice;
+  const previewBookRaw = Object.prototype.hasOwnProperty.call(overrides, "previewBookId")
+    ? overrides.previewBookId
+    : currentState.previewBookId;
+  const previewDevice = normalizePreviewDevice(previewDeviceRaw);
+  const previewBookId = resolvePreviewBookId(books, previewBookRaw);
+  return {
+    previewBookId,
+    previewDevice,
+    previewRefreshToken: refreshToken,
+    previewUrl: buildPreviewUrl(previewBookId, refreshToken),
+  };
+}
+
+function updatePreviewStateFlow({ bookId = "", device = "" } = {}) {
+  const state = getState();
+  const patch = buildPreviewStatePatch(state, state.books, {
+    previewBookId: String(bookId || "").trim(),
+    previewDevice: String(device || state.previewDevice || "desktop"),
+  });
+  setState(patch);
+}
+
+function refreshPreviewFlow() {
+  const state = getState();
+  if (!state.previewBookId) {
+    setStatus("Preview unavailable");
+    return;
+  }
+  const patch = buildPreviewStatePatch(state, state.books, {
+    previewRefreshToken: Date.now(),
+  });
+  setState(patch);
+  setStatus("Preview refreshed");
 }
 
 function resolveFromBookDir(bookId, relativePath) {
@@ -428,10 +516,13 @@ async function loadAiSettingsFlow() {
 
 async function refreshProjectData() {
   const booksResult = await loadBooksAndHealth();
+  const state = getState();
+  const previewPatch = buildPreviewStatePatch(state, booksResult.books);
   setState({
     books: booksResult.books,
     bookHealth: booksResult.bookHealth,
     errors: validateErrorList(booksResult.errors),
+    ...previewPatch,
   });
 }
 
@@ -464,14 +555,24 @@ async function openProjectFlow() {
     if (structureCheck.valid) {
       setStatus("Loading bookshelf...");
       const booksResult = await loadBooksAndHealth();
+      const previewPatch = buildPreviewStatePatch(getState(), booksResult.books);
       allErrors.push(...booksResult.errors);
       setState({
         books: booksResult.books,
         bookHealth: booksResult.bookHealth,
+        ...previewPatch,
       });
       await loadAiSettingsFlow();
     } else {
-      setState({ books: [], bookHealth: [], aiSettings: buildDefaultAiSettings() });
+      setState({
+        books: [],
+        bookHealth: [],
+        aiSettings: buildDefaultAiSettings(),
+        previewBookId: "",
+        previewDevice: "desktop",
+        previewRefreshToken: 0,
+        previewUrl: "",
+      });
     }
 
     setState({
@@ -496,6 +597,10 @@ async function openProjectFlow() {
       aiFeedback: null,
       analysisFeedback: null,
       analysisSuggestion: null,
+      previewBookId: "",
+      previewDevice: "desktop",
+      previewRefreshToken: 0,
+      previewUrl: "",
     });
 
     setNavEnabled(false);
@@ -996,6 +1101,10 @@ async function createBookFlow(rawInput) {
     booksWriteResult = await fs.writeJson("data/books.json", { books: nextBooks });
 
     await refreshProjectData();
+    const previewPatch = buildPreviewStatePatch(getState(), getState().books, {
+      previewBookId: artifacts.bookId,
+    });
+    setState(previewPatch);
     const promptText = artifacts.promptTemplateText ? "，已生成 prompts/image-prompts.md" : "";
 
     setState({

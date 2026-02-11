@@ -160,6 +160,7 @@
 | AI 配置链路检查 | 审查 `dashboard(ai form) -> app(save/load) -> filesystem` | 支持本地保存/加载 LLM 与图片接口配置 | 已接入 | ✓ |
 | AI 配置迁移检查 | 审查 `dashboard(ai import/export) -> app handlers` | 支持 AI 配置 JSON 导入/导出 | 已接入 | ✓ |
 | 新建书图片策略检查 | 审查 `createBookFlow -> buildNewBookArtifacts(imageMode)` | 支持 emoji/none 封面与 prompt 文件模板 | 已接入 | ✓ |
+| Live Preview 检查 | 审查 `dashboard(preview form) -> app(preview state/url)` | 支持预览书籍切换、设备视口切换与手动刷新 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
@@ -1618,6 +1619,28 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 96: Sprint 4 Live Preview 设备切换与刷新
+- **Status:** complete
+- Actions taken:
+  - `state.js` 增加 preview 状态字段（book/device/url/refreshToken）
+  - `app.js` 新增预览 URL 生成、预览状态切换与手动刷新流程
+  - 项目加载/刷新书架时自动同步预览默认书籍
+  - `dashboard.js` 新增 Live Preview 面板（预览书籍、设备视口、刷新、新标签打开）
+  - `editor.css` 新增 desktop/tablet/mobile 预览样式
+  - 回归脚本增加 preview 关键标记断言（app/dashboard/state/css）
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/state.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1627,8 +1650,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 95 |
-| Where am I going? | Phase 95 -> checkpoint commit -> push |
+| Where am I? | Phase 96 |
+| Where am I going? | Phase 96 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 自动化能力必须有清晰的“安全闸门”，否则会放大误操作成本 |
-| What have I done? | 已完成建议自动建书闭环，并继续补齐覆盖应用确认机制 |
+| What have I learned? | 预览能力必须和书架状态联动，避免切书后 iframe 仍指向旧对象 |
+| What have I done? | 已完成建议应用安全闸门，并继续补齐 Live Preview 闭环 |

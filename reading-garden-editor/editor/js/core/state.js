@@ -20,6 +20,10 @@ const state = {
   aiFeedback: null,
   analysisFeedback: null,
   analysisSuggestion: null,
+  previewBookId: "",
+  previewDevice: "desktop",
+  previewRefreshToken: 0,
+  previewUrl: "",
 };
 
 function emit(key) {
