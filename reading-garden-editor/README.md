@@ -74,6 +74,7 @@ EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true ./scripts/editor-regression.sh
 - `workflow_dispatch` 支持输入 `pack_stats_max_missing_book_cover` 设置封面缺失阈值（默认禁用）
 - `workflow_dispatch` 支持输入 `pack_stats_max_missing_file_ref` 设置文件引用缺失阈值（默认禁用）
 - `workflow_dispatch` 支持输入 `pack_stats_max_missing_unclassified` 设置未分类缺失阈值（默认禁用）
+- `workflow_dispatch` 支持输入 `pack_stats_category_threshold_preset` 使用分类阈值预设（custom/balanced/strict）
 - CI Job Summary 会输出 `packStats` 摘要（含 missing/invalid IDs、missing-assets 告警、分类统计）
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 - 严格模式下会校验抽样 ID 格式（仅允许 `a-z0-9-`）

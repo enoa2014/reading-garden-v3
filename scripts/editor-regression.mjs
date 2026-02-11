@@ -30,6 +30,18 @@ const PACK_STATS_CATEGORY_THRESHOLD_ENVS = {
   "file-ref": "EDITOR_PACK_STATS_MAX_MISSING_FILE_REF",
   unclassified: "EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED",
 };
+const PACK_STATS_CATEGORY_THRESHOLD_PRESETS = {
+  custom: {},
+  balanced: {
+    "book-module": 0,
+  },
+  strict: {
+    "book-module": 0,
+    "book-cover": 0,
+    "file-ref": 0,
+    unclassified: 0,
+  },
+};
 
 function assert(condition, message) {
   if (!condition) {
@@ -49,6 +61,17 @@ function parseMaxMissingAssetsThreshold(rawValue, envName = "EDITOR_PACK_STATS_M
     throw new Error(`ASSERT_FAILED: ${envName} must be a non-negative integer`);
   }
   return Number(raw);
+}
+
+function normalizeCategoryThresholdPreset(rawValue) {
+  const preset = String(rawValue || "custom").trim().toLowerCase();
+  if (!preset) return "custom";
+  if (!Object.prototype.hasOwnProperty.call(PACK_STATS_CATEGORY_THRESHOLD_PRESETS, preset)) {
+    throw new Error(
+      "ASSERT_FAILED: EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET must be one of custom/balanced/strict"
+    );
+  }
+  return preset;
 }
 
 function enforceMissingAssetsThreshold(missingAssetsCount, maxMissingAssets) {
@@ -72,15 +95,27 @@ function enforceCategoryMissingAssetsThreshold(category, missingAssetsCount, max
 }
 
 function readCategoryMissingAssetsThresholdsFromEnv() {
+  const preset = normalizeCategoryThresholdPreset(process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET);
+  const presetValues = PACK_STATS_CATEGORY_THRESHOLD_PRESETS[preset] || {};
   const out = {};
   Object.entries(PACK_STATS_CATEGORY_THRESHOLD_ENVS).forEach(([category, envName]) => {
-    const parsed = parseMaxMissingAssetsThreshold(process.env[envName], envName);
+    const parsedFromEnv = parseMaxMissingAssetsThreshold(process.env[envName], envName);
+    let parsed = parsedFromEnv;
+    if (parsed == null && Object.prototype.hasOwnProperty.call(presetValues, category)) {
+      parsed = Number(presetValues[category]);
+    }
     out[category] = {
       enabled: parsed != null,
       maxMissingAssets: parsed == null ? null : parsed,
+      source: parsedFromEnv != null
+        ? "env"
+        : (Object.prototype.hasOwnProperty.call(presetValues, category) ? `preset:${preset}` : "disabled"),
     };
   });
-  return out;
+  return {
+    preset,
+    thresholds: out,
+  };
 }
 
 function normalizePathValue(input) {
@@ -618,7 +653,8 @@ async function estimateSitePackStats() {
 
   const requireValidSelection = isTruthyEnv(process.env.EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION);
   const maxMissingAssets = parseMaxMissingAssetsThreshold(process.env.EDITOR_PACK_STATS_MAX_MISSING_ASSETS);
-  const categoryMissingAssetsThresholds = readCategoryMissingAssetsThresholdsFromEnv();
+  const categoryThresholdConfig = readCategoryMissingAssetsThresholdsFromEnv();
+  const categoryMissingAssetsThresholds = categoryThresholdConfig.thresholds;
   if (requireValidSelection && selectionMeta.invalidFormatBookIds.length) {
     throw new Error(
       `ASSERT_FAILED: invalid pack stats selected book id format -> ${selectionMeta.invalidFormatBookIds.join(", ")}`
@@ -723,6 +759,7 @@ async function estimateSitePackStats() {
       maxMissingAssets: maxMissingAssets == null ? null : maxMissingAssets,
     },
     missingAssetsCategoryThresholds: categoryMissingAssetsThresholds,
+    missingAssetsCategoryThresholdPreset: categoryThresholdConfig.preset,
     full: fullStats,
     subsetBalanced: subsetBalancedStats,
     subsetMinimal: subsetMinimalStats,
@@ -841,17 +878,37 @@ function testPackStatsCategoryThresholdConfig() {
     cover: process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER,
     fileRef: process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF,
     unclassified: process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED,
+    preset: process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET,
   };
   try {
+    process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET = "custom";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE = "0";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER = "2";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF = "";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED = "1";
-    const categoryThresholds = readCategoryMissingAssetsThresholdsFromEnv();
+    const categoryThresholdConfig = readCategoryMissingAssetsThresholdsFromEnv();
+    const categoryThresholds = categoryThresholdConfig.thresholds;
+    assert(categoryThresholdConfig.preset === "custom", "custom preset should be reported");
     assert(categoryThresholds["book-module"]?.maxMissingAssets === 0, "module threshold should be parsed");
     assert(categoryThresholds["book-cover"]?.maxMissingAssets === 2, "cover threshold should be parsed");
     assert(categoryThresholds["file-ref"]?.enabled === false, "file-ref threshold should be disabled by default");
     assert(categoryThresholds.unclassified?.maxMissingAssets === 1, "unclassified threshold should be parsed");
+
+    delete process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE;
+    delete process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER;
+    delete process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF;
+    delete process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED;
+    process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET = "balanced";
+    const balanced = readCategoryMissingAssetsThresholdsFromEnv();
+    assert(balanced.preset === "balanced", "balanced preset should be reported");
+    assert(balanced.thresholds["book-module"]?.maxMissingAssets === 0, "balanced preset should enforce module");
+    assert(balanced.thresholds["book-cover"]?.enabled === false, "balanced preset should not enforce cover");
+
+    process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET = "strict";
+    const strict = readCategoryMissingAssetsThresholdsFromEnv();
+    assert(strict.preset === "strict", "strict preset should be reported");
+    assert(strict.thresholds["book-cover"]?.maxMissingAssets === 0, "strict preset should enforce cover");
+    assert(strict.thresholds["file-ref"]?.maxMissingAssets === 0, "strict preset should enforce file-ref");
 
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER = "bad";
     let invalidFailed = false;
@@ -861,6 +918,16 @@ function testPackStatsCategoryThresholdConfig() {
       invalidFailed = String(err?.message || "").includes("EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER");
     }
     assert(invalidFailed, "category threshold parser should report env name");
+
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER = "";
+    process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET = "invalid";
+    let invalidPresetFailed = false;
+    try {
+      readCategoryMissingAssetsThresholdsFromEnv();
+    } catch (err) {
+      invalidPresetFailed = String(err?.message || "").includes("EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET");
+    }
+    assert(invalidPresetFailed, "category threshold parser should reject invalid preset");
   } finally {
     if (typeof backup.module === "undefined") {
       delete process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE;
@@ -881,6 +948,11 @@ function testPackStatsCategoryThresholdConfig() {
       delete process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED;
     } else {
       process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED = backup.unclassified;
+    }
+    if (typeof backup.preset === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET;
+    } else {
+      process.env.EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET = backup.preset;
     }
   }
 }

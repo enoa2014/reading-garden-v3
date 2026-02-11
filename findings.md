@@ -114,6 +114,7 @@
     - 支持 `EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE`（模块缺失分类超阈值失败）
     - 支持 `EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER` / `EDITOR_PACK_STATS_MAX_MISSING_FILE_REF`（分类阈值可配置，默认关闭）
     - 支持 `EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED`（未分类缺失阈值可配置，默认关闭）
+    - 支持 `EDITOR_PACK_STATS_CATEGORY_THRESHOLD_PRESET`（`custom/balanced/strict`）
     - CI 默认固定 `EDITOR_PACK_STATS_SELECTED_BOOKS=totto-chan,wave`
     - `workflow_dispatch` 可通过输入覆盖 packStats 抽样书籍
     - `workflow_dispatch` 可通过输入覆盖严格校验开关（默认开启）
