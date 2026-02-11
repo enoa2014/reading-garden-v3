@@ -542,6 +542,9 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("RECOVERY_HISTORY_POLICY_STORAGE_KEY"), "app should persist recovery history policy key");
   assert(appSource.includes("applyRecoveryHistoryPolicy"), "app should apply recovery history policy");
+  assert(appSource.includes("applyRecoveryHistoryPolicyForProject"), "app should support project-scoped recovery history policy");
+  assert(appSource.includes("defaultMaxAgeDays"), "app should store default recovery max-age policy");
+  assert(appSource.includes("payload.projects"), "app should persist per-project recovery policy entries");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
   assert(appSource.includes("resolveCreateBookModuleIncludes"), "app should normalize create-book module includes");
   assert(appSource.includes("formatTemplatePresetForFeedback"), "app should format template preset feedback");

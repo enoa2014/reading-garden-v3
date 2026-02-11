@@ -1927,6 +1927,24 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 111: Sprint 4 会话快照阈值按项目独立配置
+- **Status:** complete
+- Actions taken:
+  - `app.js` 将阈值存储升级为 `defaultMaxAgeDays + projects` 结构（兼容旧 `maxAgeDays`）
+  - 项目打开时按 `projectName` 读取并应用项目级阈值，未命中则回退全局默认
+  - 阈值更新流程改为“当前项目优先写入项目配置”，并保留全局默认路径
+  - `boot` 阶段加载全局默认策略，确保未打开项目时行为稳定
+  - 回归脚本增加项目级策略关键标记断言，并通过 `./scripts/editor-regression.sh`
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1936,8 +1954,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 110 |
-| Where am I going? | Phase 110 -> checkpoint commit -> push |
+| Where am I? | Phase 111 |
+| Where am I going? | Phase 111 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 清理策略需要“可调参数 + 即时生效 + 本地持久化”三者结合，才便于真实线下使用 |
-| What have I done? | 已完成会话快照清理阈值可配置与持久化，并接入 UI、状态管理与回归校验 |
+| What have I learned? | 同机多项目场景需要“全局默认 + 项目覆盖”双层策略，才能贴合真实教学使用 |
+| What have I done? | 已完成会话快照阈值项目级配置，并保持向后兼容、回归通过与文档同步 |

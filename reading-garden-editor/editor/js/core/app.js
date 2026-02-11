@@ -241,30 +241,96 @@ function applyRecoveryHistoryPolicy(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AG
   return normalizedDays;
 }
 
-function readRecoveryHistoryPolicyFromStorage() {
+function buildDefaultRecoveryHistoryPolicyPayload() {
+  return {
+    defaultMaxAgeDays: DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS,
+    projects: {},
+  };
+}
+
+function normalizeRecoveryHistoryPolicyPayload(rawPayload) {
+  const safe = rawPayload && typeof rawPayload === "object" ? rawPayload : {};
+  const projectsRaw = safe.projects && typeof safe.projects === "object" ? safe.projects : {};
+  const projects = {};
+  Object.entries(projectsRaw).forEach(([key, value]) => {
+    const projectName = String(key || "").trim();
+    if (!projectName) return;
+    projects[projectName] = normalizeRecoveryHistoryMaxAgeDays(value);
+  });
+  return {
+    defaultMaxAgeDays: normalizeRecoveryHistoryMaxAgeDays(
+      Object.prototype.hasOwnProperty.call(safe, "defaultMaxAgeDays")
+        ? safe.defaultMaxAgeDays
+        : safe.maxAgeDays
+    ),
+    projects,
+  };
+}
+
+function readRecoveryHistoryPolicyPayloadFromStorage() {
   try {
     const raw = window.localStorage.getItem(RECOVERY_HISTORY_POLICY_STORAGE_KEY);
-    if (!raw) return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+    if (!raw) return buildDefaultRecoveryHistoryPolicyPayload();
     const parsed = JSON.parse(raw);
-    return normalizeRecoveryHistoryMaxAgeDays(parsed?.maxAgeDays);
+    return normalizeRecoveryHistoryPolicyPayload(parsed);
   } catch {
-    return DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS;
+    return buildDefaultRecoveryHistoryPolicyPayload();
   }
 }
 
-function writeRecoveryHistoryPolicyToStorage(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
-  const normalized = normalizeRecoveryHistoryMaxAgeDays(maxAgeDays);
+function writeRecoveryHistoryPolicyPayloadToStorage(payload) {
   try {
     window.localStorage.setItem(
       RECOVERY_HISTORY_POLICY_STORAGE_KEY,
-      JSON.stringify({
-        maxAgeDays: normalized,
-      })
+      JSON.stringify(normalizeRecoveryHistoryPolicyPayload(payload))
     );
   } catch {
     // ignore storage errors in private mode or blocked storage contexts
   }
-  return normalized;
+}
+
+function resolveRecoveryHistoryMaxAgeDaysForProject(projectName = "", payload = null) {
+  const safeProjectName = String(projectName || "").trim();
+  const policyPayload = payload
+    ? normalizeRecoveryHistoryPolicyPayload(payload)
+    : readRecoveryHistoryPolicyPayloadFromStorage();
+  if (
+    safeProjectName
+    && Object.prototype.hasOwnProperty.call(policyPayload.projects, safeProjectName)
+  ) {
+    return normalizeRecoveryHistoryMaxAgeDays(policyPayload.projects[safeProjectName]);
+  }
+  return normalizeRecoveryHistoryMaxAgeDays(policyPayload.defaultMaxAgeDays);
+}
+
+function applyRecoveryHistoryPolicyForProject(projectName = "", payload = null) {
+  const policyPayload = payload
+    ? normalizeRecoveryHistoryPolicyPayload(payload)
+    : readRecoveryHistoryPolicyPayloadFromStorage();
+  const maxAgeDays = resolveRecoveryHistoryMaxAgeDaysForProject(projectName, policyPayload);
+  return {
+    maxAgeDays: applyRecoveryHistoryPolicy(maxAgeDays),
+    policyPayload,
+  };
+}
+
+function writeRecoveryHistoryPolicyToStorage(
+  maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS,
+  projectName = ""
+) {
+  const normalized = normalizeRecoveryHistoryMaxAgeDays(maxAgeDays);
+  const safeProjectName = String(projectName || "").trim();
+  const payload = readRecoveryHistoryPolicyPayloadFromStorage();
+  if (safeProjectName) {
+    payload.projects[safeProjectName] = normalized;
+  } else {
+    payload.defaultMaxAgeDays = normalized;
+  }
+  writeRecoveryHistoryPolicyPayloadToStorage(payload);
+  return {
+    maxAgeDays: normalized,
+    policyPayload: payload,
+  };
 }
 
 function normalizeTemplatePreset(rawPreset = "") {
@@ -480,20 +546,25 @@ function restoreRecoveryHistorySnapshotFlow(savedAt = "") {
 
 async function updateRecoveryHistoryPolicyFlow(maxAgeDays = DEFAULT_RECOVERY_HISTORY_MAX_AGE_DAYS) {
   try {
-    const normalizedDays = applyRecoveryHistoryPolicy(maxAgeDays);
-    writeRecoveryHistoryPolicyToStorage(normalizedDays);
     const state = getState();
+    const projectName = String(state.projectName || "").trim();
+    const normalizedDays = applyRecoveryHistoryPolicy(maxAgeDays);
+    writeRecoveryHistoryPolicyToStorage(normalizedDays, projectName);
     const patch = {
       recoveryHistoryMaxAgeDays: normalizedDays,
       recoveryFeedback: {
         type: "ok",
         message: normalizedDays > 0
-          ? `会话快照自动清理阈值已更新为 ${normalizedDays} 天。`
-          : "会话快照自动清理已关闭。",
+          ? (projectName
+              ? `项目快照自动清理阈值已更新为 ${normalizedDays} 天：${projectName}`
+              : `会话快照自动清理阈值已更新为 ${normalizedDays} 天。`)
+          : (projectName
+              ? `项目快照自动清理已关闭：${projectName}`
+              : "会话快照自动清理已关闭。"),
       },
     };
-    if (state.projectName) {
-      const history = await recoveryStore.loadProjectHistory(state.projectName);
+    if (projectName) {
+      const history = await recoveryStore.loadProjectHistory(projectName);
       patch.recoveryHistory = Array.isArray(history) ? history : [];
     }
     setState(patch);
@@ -936,9 +1007,12 @@ async function openProjectFlow() {
 
   try {
     const handle = await fs.openProject();
+    const projectName = String(handle?.name || "").trim();
+    const recoveryPolicy = applyRecoveryHistoryPolicyForProject(projectName);
     setState({
       projectHandle: handle,
       projectName: handle?.name || "",
+      recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
     });
 
     setStatus("Verifying project structure...");
@@ -982,6 +1056,7 @@ async function openProjectFlow() {
     setNavEnabled(structureCheck.valid);
     setStatus(structureCheck.valid ? "Project loaded" : "Project loaded with issues");
   } catch (err) {
+    const recoveryPolicy = applyRecoveryHistoryPolicyForProject("");
     const msg = err?.message === "BROWSER_UNSUPPORTED"
       ? "当前浏览器不支持 File System Access API"
       : `打开项目失败：${err?.message || String(err)}`;
@@ -998,6 +1073,7 @@ async function openProjectFlow() {
       aiFeedback: null,
       recoveryFeedback: null,
       recoveryHistory: [],
+      recoveryHistoryMaxAgeDays: recoveryPolicy.maxAgeDays,
       analysisFeedback: null,
       analysisSuggestion: null,
       packManualPlan: null,
@@ -2110,9 +2186,9 @@ function detectMode() {
 }
 
 function boot() {
-  const historyMaxAgeDays = applyRecoveryHistoryPolicy(readRecoveryHistoryPolicyFromStorage());
+  const historyPolicy = applyRecoveryHistoryPolicyForProject("");
   setState({
-    recoveryHistoryMaxAgeDays: historyMaxAgeDays,
+    recoveryHistoryMaxAgeDays: historyPolicy.maxAgeDays,
   });
   bindNav();
   detectMode();
