@@ -897,14 +897,15 @@ async function importRecoveryHistoryPolicyFlow(file, mode = "replace") {
     const projectName = String(state.projectName || "").trim();
     const applied = applyRecoveryHistoryPolicyForProject(projectName, merged.payload);
     const importedProjects = Object.keys(incoming.projects || {}).length;
+    const defaultBehaviorText = merged.mode === "merge" ? "default=local" : "default=imported";
     const patch = {
       recoveryHistoryMaxAgeDays: applied.maxAgeDays,
       recoveryHistoryPolicyScope: applied.scope,
       recoveryFeedback: {
         type: "ok",
         message: projectName
-          ? `会话快照策略已导入（mode=${merged.mode}, projects=${importedProjects}）并应用到项目：${projectName}`
-          : `会话快照策略已导入（mode=${merged.mode}, projects=${importedProjects}）。`,
+          ? `会话快照策略已导入（mode=${merged.mode}, ${defaultBehaviorText}, projects=${importedProjects}）并应用到项目：${projectName}`
+          : `会话快照策略已导入（mode=${merged.mode}, ${defaultBehaviorText}, projects=${importedProjects}）。`,
       },
     };
     if (projectName) {
@@ -1044,6 +1045,7 @@ async function importEditorPolicyBundleFlow(file, mode = "replace") {
       ? Object.keys(incomingPreview.projects || {}).length
       : 0;
     const normalizedMode = normalizeRecoveryPolicyImportMode(mode);
+    const defaultBehaviorText = normalizedMode === "merge" ? "defaults=local" : "defaults=imported";
 
     const patch = {
       recoveryHistoryMaxAgeDays: appliedRecovery.maxAgeDays,
@@ -1053,8 +1055,8 @@ async function importEditorPolicyBundleFlow(file, mode = "replace") {
       recoveryFeedback: {
         type: "ok",
         message: projectName
-          ? `组合策略包已导入（mode=${normalizedMode}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）并应用到项目：${projectName}`
-          : `组合策略包已导入（mode=${normalizedMode}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）。`,
+          ? `组合策略包已导入（mode=${normalizedMode}, ${defaultBehaviorText}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）并应用到项目：${projectName}`
+          : `组合策略包已导入（mode=${normalizedMode}, ${defaultBehaviorText}, recoveryProjects=${importedRecoveryProjects}, previewProjects=${importedPreviewProjects}）。`,
       },
     };
     if (projectName) {
@@ -1414,14 +1416,15 @@ async function importPreviewAutoRefreshPolicyFlow(file, mode = "replace") {
     const projectName = String(state.projectName || "").trim();
     const applied = applyPreviewAutoRefreshPreferenceForProject(projectName, merged.payload);
     const importedProjects = Object.keys(incoming.projects || {}).length;
+    const defaultBehaviorText = merged.mode === "merge" ? "default=local" : "default=imported";
     setState({
       previewAutoRefresh: applied.enabled,
       previewAutoRefreshPolicyScope: applied.scope,
       recoveryFeedback: {
         type: "ok",
         message: projectName
-          ? `预览自动刷新策略已导入（mode=${merged.mode}, projects=${importedProjects}）并应用到项目：${projectName}`
-          : `预览自动刷新策略已导入（mode=${merged.mode}, projects=${importedProjects}）。`,
+          ? `预览自动刷新策略已导入（mode=${merged.mode}, ${defaultBehaviorText}, projects=${importedProjects}）并应用到项目：${projectName}`
+          : `预览自动刷新策略已导入（mode=${merged.mode}, ${defaultBehaviorText}, projects=${importedProjects}）。`,
       },
     });
     setStatus("Preview auto-refresh policy imported");

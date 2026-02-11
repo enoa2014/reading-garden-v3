@@ -2157,6 +2157,21 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 123: Sprint 4 需求决策同步与导入反馈澄清
+- **Status:** complete
+- Actions taken:
+  - 根据用户确认更新规划：新建书模板预设按项目隔离暂不做；组合策略包加密/脱敏暂不做
+  - `app.js` 导入反馈文案增强：在 `replace/merge` 结果中显式标注默认策略来源（`default(s)=local/imported`）
+  - 回归脚本新增导入反馈关键标记断言
+  - 运行 `node --check`（`app.js/editor-regression.mjs`）与 `./scripts/editor-regression.sh`，均通过
+  - 同步 task_plan / findings / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -2166,8 +2181,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 122 |
-| Where am I going? | Phase 122 -> checkpoint commit -> push |
+| Where am I? | Phase 123 |
+| Where am I going? | Phase 123 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 迁移入口需要兼容旧文件格式，否则用户在升级期会频繁因入口误选而失败 |
-| What have I done? | 已完成组合策略包入口对旧单策略文件的兼容导入，并同步回归与文档 |
+| What have I learned? | 导入反馈必须明确默认值保留/覆盖行为，才能减少 `merge` 模式使用误解 |
+| What have I done? | 已同步用户决策并完成导入反馈澄清增强，回归通过且文档已写盘 |

@@ -565,6 +565,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("normalizeRecoveryPolicyImportMode"), "app should normalize recovery policy import mode");
   assert(appSource.includes("mergeRecoveryHistoryPolicyPayload"), "app should support merging recovery policy payloads");
   assert(appSource.includes("mode=${merged.mode}"), "app should surface recovery policy import mode in feedback");
+  assert(appSource.includes("defaultBehaviorText"), "app should surface import default behavior in policy feedback");
   assert(appSource.includes("exportEditorPolicyBundleFlow"), "app should support exporting editor policy bundle");
   assert(appSource.includes("importEditorPolicyBundleFlow"), "app should support importing editor policy bundle");
   assert(appSource.includes("readEditorPolicyBundleSections"), "app should parse editor policy bundle sections");
