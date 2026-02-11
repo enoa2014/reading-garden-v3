@@ -47,6 +47,12 @@
   --shadow-1: 0 2px 8px rgba(26, 26, 26, 0.04), 0 12px 40px rgba(26, 26, 26, 0.06);
   --shadow-2: 0 4px 16px rgba(26, 26, 26, 0.06), 0 24px 64px rgba(26, 26, 26, 0.1);
 
+  /* Shared border/surface alphas (used in modules.css) */
+  --border-alpha: rgba(107, 97, 86, 0.22);
+  --border-alpha-light: rgba(107, 97, 86, 0.12);
+  --surface-alpha: rgba(250, 247, 242, 0.6);
+  --touch-target: 44px;
+
   /* Motion */
   --duration-fast: 120ms;
   --duration-med: 280ms;
@@ -72,6 +78,10 @@ html[data-theme="dark"] {
 
   --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.15), 0 12px 40px rgba(0, 0, 0, 0.2);
   --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.2), 0 24px 64px rgba(0, 0, 0, 0.35);
+
+  --border-alpha: rgba(232, 224, 212, 0.12);
+  --border-alpha-light: rgba(232, 224, 212, 0.08);
+  --surface-alpha: rgba(232, 224, 212, 0.06);
 }
 
 /* Per-book theme colors */

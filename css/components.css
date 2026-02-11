@@ -109,6 +109,28 @@ html[data-theme="dark"] .rg-loading {
   border-color: rgba(232, 224, 212, 0.12);
 }
 
+/* Empty state */
+.rg-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.rg-empty svg {
+  opacity: 0.35;
+}
+
+.rg-empty p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .rg-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);

@@ -117,6 +117,15 @@ export class BookRuntime {
 
     this.activeModuleId = normalizedId;
     this.#updateActiveUI(normalizedId);
+
+    // Move focus to the active panel for accessibility
+    if (!isSame) {
+      const activePanel = document.getElementById(`panel-${normalizedId}`);
+      if (activePanel) {
+        activePanel.setAttribute("tabindex", "-1");
+        activePanel.focus({ preventScroll: true });
+      }
+    }
   }
 
   async #loadRegistry() {
@@ -292,6 +301,7 @@ export class BookRuntime {
       section.id = `panel-${mod.id}`;
       section.setAttribute("role", "tabpanel");
       section.setAttribute("aria-labelledby", `tab-${mod.id}`);
+      section.setAttribute("aria-live", "polite");
       section.innerHTML = '<div class="rg-loading">加载中...</div>';
       mainHost.appendChild(section);
     });
@@ -419,8 +429,10 @@ export class BookRuntime {
 
         // Assets are stored at project root `assets/` while registries live under `data/<bookId>/`.
         // Normalize any `../assets/...` / `./assets/...` / `assets/...` to `${projectBase}/assets/...`
-        const assetIndex = s.indexOf("assets/");
-        if (assetIndex >= 0) {
+        // Use regex to ensure "assets/" is a proper path segment (preceded by start, `/`, or `./`)
+        const assetMatch = s.match(/(^|[./])assets\//);
+        if (assetMatch) {
+          const assetIndex = s.indexOf("assets/", assetMatch.index);
           return new URL(s.slice(assetIndex), projectBase).href;
         }
 
