@@ -56,6 +56,7 @@ CI 门禁：
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_book_module` 配置模块缺失阈值（默认 0）
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_book_cover` 配置封面缺失阈值（默认禁用）
 - `workflow_dispatch` 可通过 `pack_stats_max_missing_file_ref` 配置文件引用缺失阈值（默认禁用）
+- `workflow_dispatch` 可通过 `pack_stats_max_missing_unclassified` 配置未分类缺失阈值（默认禁用）
 - CI Job Summary 会输出 `packStats` 摘要（含 missing/invalid IDs、missing-assets 告警、分类统计）
 - CI 默认开启 `EDITOR_PACK_STATS_REQUIRE_VALID_SELECTION=true`（无效抽样 ID 直接失败）
 - 严格模式下会额外校验抽样 ID 格式（仅允许 `a-z0-9-`）

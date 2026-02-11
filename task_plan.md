@@ -79,12 +79,13 @@ Phase 9
 - [x] 支持 missing-assets 可配置失败阈值
 - [x] 支持 `book-module` 分类阈值
 - [x] 支持 `book-cover` / `file-ref` 分类阈值
+- [x] 支持 `unclassified` 分类阈值
 - **Status:** in_progress
 
 ## Key Questions
 1. missing-assets 阈值是否需要按导出模式（full/subset）分别配置？
 2. 预览差异是否需要支持“具体字段明细列表”而非仅统计信息？
-3. 分类级阈值是否需要扩展到 `unclassified`？
+3. 分类级阈值是否需要按“重要性等级”提供预设组合（strict/balanced/custom）？
 
 ## Decisions Made
 | Decision | Rationale |
@@ -111,3 +112,4 @@ Phase 9
 | CI summary 增加 missing-assets 分类统计输出 | 便于定位问题来源并支持后续分类阈值策略 |
 | `book-module` 分类阈值默认值设为 0 | 优先阻断关键模块资源缺失，避免线上功能断裂 |
 | `book-cover`/`file-ref` 分类阈值默认关闭 | 兼顾可配置能力与当前样本兼容性，避免引入非预期阻断 |
+| `unclassified` 分类阈值默认关闭 | 未分类来源噪声较大，先提供可选治理能力而非默认阻断 |

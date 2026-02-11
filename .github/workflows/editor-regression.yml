@@ -41,6 +41,10 @@ on:
         description: "Max allowed missing file-ref assets (non-negative integer, empty to disable)"
         required: false
         default: ""
+      pack_stats_max_missing_unclassified:
+        description: "Max allowed missing unclassified assets (non-negative integer, empty to disable)"
+        required: false
+        default: ""
 
 jobs:
   editor-regression:
@@ -64,6 +68,7 @@ jobs:
           EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_book_module || '0' }}
           EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_book_cover || '' }}
           EDITOR_PACK_STATS_MAX_MISSING_FILE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_file_ref || '' }}
+          EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED: ${{ github.event_name == 'workflow_dispatch' && inputs.pack_stats_max_missing_unclassified || '' }}
         run: ./scripts/editor-regression.sh
 
       - name: Summarize packStats
@@ -96,15 +101,19 @@ jobs:
           const moduleThreshold = categoryThresholds["book-module"] || {};
           const coverThreshold = categoryThresholds["book-cover"] || {};
           const fileRefThreshold = categoryThresholds["file-ref"] || {};
+          const unclassifiedThreshold = categoryThresholds.unclassified || {};
           const moduleThresholdText = moduleThreshold.enabled ? String(moduleThreshold.maxMissingAssets) : "disabled";
           const coverThresholdText = coverThreshold.enabled ? String(coverThreshold.maxMissingAssets) : "disabled";
           const fileRefThresholdText = fileRefThreshold.enabled ? String(fileRefThreshold.maxMissingAssets) : "disabled";
+          const unclassifiedThresholdText = unclassifiedThreshold.enabled ? String(unclassifiedThreshold.maxMissingAssets) : "disabled";
           const missingBookModule = Number(missingByCategory["book-module"] || 0);
           const missingBookCover = Number(missingByCategory["book-cover"] || 0);
           const missingFileRef = Number(missingByCategory["file-ref"] || 0);
+          const missingUnclassified = Number(missingByCategory.unclassified || 0);
           const missingBookModuleAlert = missingBookModule > 0 ? "warning" : "ok";
           const missingBookCoverAlert = missingBookCover > 0 ? "warning" : "ok";
           const missingFileRefAlert = missingFileRef > 0 ? "warning" : "ok";
+          const missingUnclassifiedAlert = missingUnclassified > 0 ? "warning" : "ok";
           const lines = [
             "### packStats Summary",
             "",
@@ -114,6 +123,7 @@ jobs:
             `- max book-module threshold: \`${moduleThresholdText}\``,
             `- max book-cover threshold: \`${coverThresholdText}\``,
             `- max file-ref threshold: \`${fileRefThresholdText}\``,
+            `- max unclassified threshold: \`${unclassifiedThresholdText}\``,
             `- selected: \`${selected.join(", ") || "(none)"}\``,
             `- missing requested: \`${missing.join(", ") || "(none)"}\``,
             `- invalid format IDs: \`${invalidFormat.join(", ") || "(none)"}\``,
@@ -121,6 +131,7 @@ jobs:
             `- missing book-module assets: ${missingBookModule} (${missingBookModuleAlert})`,
             `- missing book-cover assets: ${missingBookCover} (${missingBookCoverAlert})`,
             `- missing file-ref assets: ${missingFileRef} (${missingFileRefAlert})`,
+            `- missing unclassified assets: ${missingUnclassified} (${missingUnclassifiedAlert})`,
             `- missing assets by category: ${categorySummary}`,
             `- full bytes: ${stats.full?.totalBytes ?? 0}`,
             `- subset-balanced bytes: ${stats.subsetBalanced?.totalBytes ?? 0}`,

@@ -28,6 +28,7 @@ const PACK_STATS_CATEGORY_THRESHOLD_ENVS = {
   "book-module": "EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE",
   "book-cover": "EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER",
   "file-ref": "EDITOR_PACK_STATS_MAX_MISSING_FILE_REF",
+  unclassified: "EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED",
 };
 
 function assert(condition, message) {
@@ -832,15 +833,18 @@ function testPackStatsCategoryThresholdConfig() {
     module: process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE,
     cover: process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER,
     fileRef: process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF,
+    unclassified: process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED,
   };
   try {
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_MODULE = "0";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER = "2";
     process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF = "";
+    process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED = "1";
     const categoryThresholds = readCategoryMissingAssetsThresholdsFromEnv();
     assert(categoryThresholds["book-module"]?.maxMissingAssets === 0, "module threshold should be parsed");
     assert(categoryThresholds["book-cover"]?.maxMissingAssets === 2, "cover threshold should be parsed");
     assert(categoryThresholds["file-ref"]?.enabled === false, "file-ref threshold should be disabled by default");
+    assert(categoryThresholds.unclassified?.maxMissingAssets === 1, "unclassified threshold should be parsed");
 
     process.env.EDITOR_PACK_STATS_MAX_MISSING_BOOK_COVER = "bad";
     let invalidFailed = false;
@@ -865,6 +869,11 @@ function testPackStatsCategoryThresholdConfig() {
       delete process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF;
     } else {
       process.env.EDITOR_PACK_STATS_MAX_MISSING_FILE_REF = backup.fileRef;
+    }
+    if (typeof backup.unclassified === "undefined") {
+      delete process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED;
+    } else {
+      process.env.EDITOR_PACK_STATS_MAX_MISSING_UNCLASSIFIED = backup.unclassified;
     }
   }
 }
