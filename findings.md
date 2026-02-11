@@ -82,6 +82,7 @@
     - 校验模块 `entry/data` 空配置并阻断导出
     - 按运行时白名单收集站点文件并打包为 `*.rgsite.zip`
     - subset 增加资源策略：`balanced` / `minimal`（最小资源集）
+    - subset minimal 增加 `missingAssets` 清单输出（manifest + UI 计数提示）
     - 生成 `rgsite-manifest.json` 与 `DEPLOY-EDGEONE.md`
     - 对 JSON 中潜在敏感键做导出时脱敏
   - Dashboard 与应用流程：

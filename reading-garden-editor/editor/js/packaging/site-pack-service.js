@@ -244,11 +244,17 @@ export class SitePackService {
   }
 
   async addExistingAssetsToFileSet(assetSet, fileSet) {
+    const missingAssets = [];
     for (const assetPath of assetSet) {
       // eslint-disable-next-line no-await-in-loop
       const exists = await this.fs.exists(assetPath);
-      if (exists) fileSet.add(assetPath);
+      if (exists) {
+        fileSet.add(assetPath);
+      } else {
+        missingAssets.push(assetPath);
+      }
     }
+    return missingAssets;
   }
 
   async validateForExport({ selectedBookIds = [] } = {}) {
@@ -378,6 +384,7 @@ export class SitePackService {
     includeEditor,
     selectedBookIds,
     subsetAssetMode,
+    missingAssets,
     checks,
     filesCount,
     totalBytes,
@@ -394,6 +401,7 @@ export class SitePackService {
       includeEditor: Boolean(includeEditor),
       selectedBookIds: Array.isArray(selectedBookIds) ? selectedBookIds : [],
       subsetAssetMode: String(subsetAssetMode || "balanced"),
+      missingAssets: Array.isArray(missingAssets) ? missingAssets : [],
       checks: {
         schema: Boolean(checks?.schema),
         assets: Boolean(checks?.assets),
@@ -445,9 +453,10 @@ export class SitePackService {
       await this.collectReferencedAssets(book, assetSet);
     }
 
+    let missingAssets = [];
     if (subsetAssetMode === "minimal") {
       await this.collectAssetRefsFromFileSet(fileSet, assetSet);
-      await this.addExistingAssetsToFileSet(assetSet, fileSet);
+      missingAssets = await this.addExistingAssetsToFileSet(assetSet, fileSet);
     } else {
       const allAssets = new Set();
       await collectRuntimeFiles(this.fs, "assets", allAssets);
@@ -456,7 +465,7 @@ export class SitePackService {
         if (ownerId && !selectedIdsSet.has(ownerId)) return;
         fileSet.add(assetPath);
       });
-      await this.addExistingAssetsToFileSet(assetSet, fileSet);
+      missingAssets = await this.addExistingAssetsToFileSet(assetSet, fileSet);
     }
 
     return {
@@ -466,6 +475,7 @@ export class SitePackService {
       },
       selectedIds,
       subsetAssetMode,
+      missingAssets,
     };
   }
 
@@ -494,6 +504,7 @@ export class SitePackService {
     let filteredBooksJsonText = "";
     let effectiveSelectedIds = [];
     let effectiveSubsetAssetMode = "balanced";
+    let missingAssets = [];
 
     if (subsetMode) {
       const subsetFiles = await this.collectSubsetFiles({
@@ -506,6 +517,7 @@ export class SitePackService {
       filteredBooksJsonText = `${JSON.stringify(subsetFiles.filteredBooksJson, null, 2)}\n`;
       effectiveSelectedIds = subsetFiles.selectedIds;
       effectiveSubsetAssetMode = subsetFiles.subsetAssetMode;
+      missingAssets = subsetFiles.missingAssets || [];
     } else {
       const includeRoots = includeEditor
         ? [...DEFAULT_INCLUDE_ROOTS, "reading-garden-editor"]
@@ -575,6 +587,7 @@ export class SitePackService {
       includeEditor,
       selectedBookIds: effectiveSelectedIds,
       subsetAssetMode: effectiveSubsetAssetMode,
+      missingAssets,
       checks: readiness.checks,
       filesCount: orderedFiles.length + 2 + (subsetMode ? 1 : 0),
       totalBytes,
@@ -599,6 +612,7 @@ export class SitePackService {
       scope: subsetMode ? "subset" : "full",
       selectedBookIds: effectiveSelectedIds,
       subsetAssetMode: effectiveSubsetAssetMode,
+      missingAssets,
     };
   }
 }

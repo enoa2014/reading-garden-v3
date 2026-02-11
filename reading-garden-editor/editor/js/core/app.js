@@ -589,10 +589,13 @@ async function exportSiteFlow(options = {}) {
     const scopeText = result.scope === "subset"
       ? `subset(${result.selectedBookIds.length}本/${result.subsetAssetMode})`
       : "full";
+    const missingText = Array.isArray(result.missingAssets) && result.missingAssets.length
+      ? `，missingAssets ${result.missingAssets.length}`
+      : "";
     setState({
       packFeedback: {
         type: "ok",
-        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}）`,
+        message: `发布包导出成功：${result.filename}（scope ${scopeText}，files ${result.files}，books ${result.books}${missingText}）`,
       },
     });
     setStatus("rgsite exported");

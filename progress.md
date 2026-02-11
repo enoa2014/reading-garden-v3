@@ -439,11 +439,41 @@
   - `progress.md` (updated)
 
 ### Phase 26: Sprint 4 文档收口（CI artifacts post-push）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 同步阶段状态到“CI artifacts 增量已推送”
-  - 准备提交 docs-only 同步记录
+  - 创建 docs-only commit：`52af4f8`（同步 CI artifacts checkpoint 状态）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `progress.md` (updated)
+
+### Phase 27: Sprint 4 minimal 缺失资源提示
+- **Status:** complete
+- Actions taken:
+  - `site-pack-service.js` 在 subset 导出中增加 `missingAssets` 收集
+  - manifest 增加 `missingAssets` 字段
+  - `app.js` 导出成功提示增加 `missingAssets` 计数
+  - 回归脚本增加 `missingAssets` 关键标记断言
+  - 本地回归脚本复跑通过
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 28: Sprint 4 checkpoint（missingAssets 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 完成功能、回归与文档同步
+  - 准备提交并推送本轮增量
+- Files created/modified:
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
   - `progress.md` (updated)
 
 ## Error Log
@@ -454,8 +484,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 26 |
-| Where am I going? | Phase 26 -> 下一迭代开发 |
+| Where am I? | Phase 28 |
+| Where am I going? | Phase 28 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成回归报告与 CI artifacts 能力并完成增量 checkpoint 推送 |
+| What have I done? | 已完成 minimal 缺失资源提示并等待增量 checkpoint |
