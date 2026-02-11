@@ -326,13 +326,27 @@
   - `progress.md` (updated)
 
 ### Phase 19: Sprint 4 checkpoint（脱敏导出增量）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
   - 完成功能与文档同步
-  - 准备提交并推送本轮增量
+  - 创建 checkpoint commit：`c85e610`（诊断脱敏导出）
+  - 推送到远端 `origin/master`
 - Files created/modified:
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/css/editor.css` (updated)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 20: Sprint 4 文档收口（脱敏 post-push）
+- **Status:** in_progress
+- Actions taken:
+  - 同步阶段状态到“脱敏导出增量已推送”
+  - 准备提交 docs-only 同步记录
+- Files created/modified:
   - `progress.md` (updated)
 
 ## Error Log
@@ -343,8 +357,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 19 |
-| Where am I going? | Phase 19 -> checkpoint commit -> push |
+| Where am I? | Phase 20 |
+| Where am I going? | Phase 20 -> 下一迭代开发 |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成诊断脱敏导出并等待增量 checkpoint |
+| What have I done? | 已完成诊断脱敏导出并完成增量 checkpoint 推送 |
