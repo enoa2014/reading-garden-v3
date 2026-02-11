@@ -423,6 +423,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("importRedactionTemplatesFlow"), "app should support importing redaction templates");
   assert(appSource.includes("exportRedactionTemplatesFlow"), "app should support exporting redaction templates");
   assert(appSource.includes("模板导入预览"), "app should surface template preview feedback");
+  assert(appSource.includes("新增示例"), "app should surface template preview detail examples");
   assert(dashboardSource.includes('data-mode="custom"'), "dashboard should expose custom report action");
   assert(dashboardSource.includes("recentRedactionTemplate"), "dashboard should support recent redaction templates");
   assert(dashboardSource.includes("customRedactionTemplates"), "dashboard should persist redaction templates");

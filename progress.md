@@ -158,6 +158,7 @@
 | 模板导入导出链路检查 | 审查 `dashboard(import/export handlers) -> app feedback` | 最近模板可导入/导出并反馈结果 | 已接入 | ✓ |
 | 模板导入模式检查 | 审查 `importTemplateMode`（replace/merge）链路 | 模板导入支持模式切换并反馈 mode | 已接入 | ✓ |
 | 模板导入预览检查 | 审查 `dashboard(preview handlers) -> app feedback` | 模板导入支持差异统计预览 | 已接入 | ✓ |
+| 模板预览明细检查 | 审查 `preview/import feedback` 文案拼接 | 预览与导入反馈可展示新增/移除示例 | 已接入 | ✓ |
 
 ### Phase 8: Sprint 3 rgbook 导入导出落地
 - **Status:** complete
@@ -1294,10 +1295,11 @@
   - `progress.md` (updated)
 
 ### Phase 78: Sprint 4 checkpoint（svg-fallback 增量）
-- **Status:** in_progress
+- **Status:** complete
 - Actions taken:
-  - 已完成功能实现与回归验证
-  - 待创建 checkpoint commit 并推送
+  - 完成功能、回归与文档同步
+  - 创建 checkpoint commit：`11c5d57`（svg placeholder fallback）
+  - 推送到远端 `origin/master`
 - Files created/modified:
   - `reading-garden-editor/editor/js/packaging/site-pack-service.js` (updated)
   - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
@@ -1305,6 +1307,34 @@
   - `scripts/editor-regression.mjs` (updated)
   - `README.md` (updated)
   - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 79: Sprint 4 预览示例明细
+- **Status:** complete
+- Actions taken:
+  - `dashboard.js` 模板预览结果增加 `addedTemplates/removedTemplates`
+  - `app.js` 预览与导入反馈增加示例明细（最多 2 条）
+  - 回归脚本增加预览明细关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
+### Phase 80: Sprint 4 checkpoint（preview-detail 增量）
+- **Status:** in_progress
+- Actions taken:
+  - 已完成功能实现与回归验证
+  - 待创建 checkpoint commit 并推送
+- Files created/modified:
+  - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
   - `progress.md` (updated)
@@ -1318,8 +1348,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 78 |
-| Where am I going? | Phase 78 -> checkpoint commit -> push |
+| Where am I? | Phase 80 |
+| Where am I going? | Phase 80 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
 | What have I learned? | 先补导入安全门禁可以降低后续发布风险 |
-| What have I done? | 已完成缺失资源回退（svg-placeholder）并等待增量 checkpoint |
+| What have I done? | 已完成预览示例明细并等待增量 checkpoint |

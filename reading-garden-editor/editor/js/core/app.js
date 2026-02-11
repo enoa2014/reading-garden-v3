@@ -631,6 +631,19 @@ function exportRedactionTemplatesFlow(count = 0) {
   });
 }
 
+function summarizeTemplateExamples(list = [], max = 2) {
+  const normalized = (Array.isArray(list) ? list : [])
+    .map((item) => String(item || "").trim())
+    .filter(Boolean);
+  if (!normalized.length) return "";
+  const picked = normalized.slice(0, max);
+  const text = picked.map((item) => `"${item}"`).join("、");
+  if (normalized.length > max) {
+    return `${text} 等 ${normalized.length} 条`;
+  }
+  return text;
+}
+
 function previewRedactionTemplatesFlow(result) {
   if (!result?.ok) {
     setState({
@@ -649,12 +662,18 @@ function previewRedactionTemplatesFlow(result) {
   const addedCount = Number(result.addedCount || 0);
   const removedCount = Number(result.removedCount || 0);
   const unchangedCount = Number(result.unchangedCount || 0);
+  const addedExamples = summarizeTemplateExamples(result.addedTemplates);
+  const removedExamples = summarizeTemplateExamples(result.removedTemplates);
+  const detailParts = [];
+  if (addedExamples) detailParts.push(`新增示例：${addedExamples}`);
+  if (removedExamples) detailParts.push(`移除示例：${removedExamples}`);
+  const detailText = detailParts.length ? `（${detailParts.join("；")}）` : "";
   const truncated = result.truncated ? "，超出上限部分将被截断" : "";
 
   setState({
     packFeedback: {
       type: "ok",
-      message: `模板导入预览（mode ${mode}）：当前 ${currentCount} 条，导入 ${importedCount} 条，结果 ${nextCount} 条（新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}）${truncated}。`,
+      message: `模板导入预览（mode ${mode}）：当前 ${currentCount} 条，导入 ${importedCount} 条，结果 ${nextCount} 条（新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}）${detailText}${truncated}。`,
     },
   });
 }
@@ -674,11 +693,17 @@ function importRedactionTemplatesFlow(result) {
   const addedCount = Number(result.addedCount || 0);
   const removedCount = Number(result.removedCount || 0);
   const unchangedCount = Number(result.unchangedCount || 0);
+  const addedExamples = summarizeTemplateExamples(result.addedTemplates);
+  const removedExamples = summarizeTemplateExamples(result.removedTemplates);
+  const detailParts = [];
+  if (addedExamples) detailParts.push(`新增示例：${addedExamples}`);
+  if (removedExamples) detailParts.push(`移除示例：${removedExamples}`);
+  const detailText = detailParts.length ? `，${detailParts.join("；")}` : "";
   const truncated = result.truncated ? "，超出上限部分已截断" : "";
   setState({
     packFeedback: {
       type: "ok",
-      message: `模板导入完成（${count} 条，mode ${mode}，新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}${truncated}）。`,
+      message: `模板导入完成（${count} 条，mode ${mode}，新增 ${addedCount}，移除 ${removedCount}，保留 ${unchangedCount}${detailText}${truncated}）。`,
     },
   });
 }

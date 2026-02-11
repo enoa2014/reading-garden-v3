@@ -122,16 +122,19 @@ function buildTemplateImportPlan(importedTemplates, mode = "replace") {
   const templates = deduped.slice(0, MAX_CUSTOM_REDACTION_TEMPLATES);
   const currentSet = new Set(current);
   const nextSet = new Set(templates);
-  const addedCount = templates.filter((item) => !currentSet.has(item)).length;
-  const removedCount = current.filter((item) => !nextSet.has(item)).length;
-  const unchangedCount = templates.filter((item) => currentSet.has(item)).length;
+  const addedTemplates = templates.filter((item) => !currentSet.has(item));
+  const removedTemplates = current.filter((item) => !nextSet.has(item));
+  const unchangedTemplates = templates.filter((item) => currentSet.has(item));
   return {
     mode: normalizedMode,
     current,
     templates,
-    addedCount,
-    removedCount,
-    unchangedCount,
+    addedTemplates,
+    removedTemplates,
+    unchangedTemplates,
+    addedCount: addedTemplates.length,
+    removedCount: removedTemplates.length,
+    unchangedCount: unchangedTemplates.length,
     truncated: deduped.length > MAX_CUSTOM_REDACTION_TEMPLATES,
   };
 }
@@ -158,6 +161,8 @@ async function previewCustomRedactionTemplates(file, mode = "replace") {
       addedCount: plan.addedCount,
       removedCount: plan.removedCount,
       unchangedCount: plan.unchangedCount,
+      addedTemplates: plan.addedTemplates,
+      removedTemplates: plan.removedTemplates,
       truncated: plan.truncated,
     };
   } catch (err) {
@@ -192,6 +197,8 @@ async function importCustomRedactionTemplates(file, mode = "replace") {
       addedCount: plan.addedCount,
       removedCount: plan.removedCount,
       unchangedCount: plan.unchangedCount,
+      addedTemplates: plan.addedTemplates,
+      removedTemplates: plan.removedTemplates,
       truncated: plan.truncated,
     };
   } catch (err) {
