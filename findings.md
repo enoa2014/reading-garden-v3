@@ -44,6 +44,9 @@
 - 项目入口文档已同步：
   - `README.md` 新增“编辑器开发（WIP）”章节
   - 包含编辑器入口、关联文档与回滚策略说明
+- 站点入口已同步：
+  - `index.html` 导航新增 `Editor` 链接，指向 `reading-garden-editor/index.html`
+  - `reading-garden-editor/README.md` 新增独立运行与回滚说明
 
 ## Risks & Watchpoints
 - 浏览器不支持 File System Access API 时需要明确降级提示。

@@ -1,0 +1,37 @@
+# Reading Garden Editor (WIP)
+
+本目录是 `reading-garden-v3` 的本地可视化编辑器子应用，目标是给教师/家长提供离线优先的建书、编辑、导入导出能力。
+
+## 当前状态
+- Sprint 1 基础骨架已完成：
+  - 打开项目目录
+  - 结构校验（`index.html`、`data`、`js`、`css`）
+  - 读取并展示 `data/books.json`
+  - 显示校验错误
+
+## 运行方式
+
+1. 在项目根目录启动本地静态服务：
+
+```bash
+cd /path/to/reading-garden-v3
+python3 -m http.server 8080
+```
+
+2. 打开编辑器：
+
+- `http://127.0.0.1:8080/reading-garden-editor/index.html`
+
+## 回滚策略（第一版）
+
+1. 关键开发节点采用小步提交（checkpoint commit）。
+2. 编辑器写文件时默认写前备份到：
+   - `.rg-editor-backups/<timestamp>/<original-path>`
+3. 若写入出现问题，可根据备份路径手动恢复。
+
+## 下个迭代目标（Sprint 2）
+
+- 新建书向导（最小模板）
+- 更完整的规则校验（交叉引用、资源路径）
+- 降级模式（ZIP 导入导出）入口占位
+- 交换包（`rgbook`）的数据结构与导入事务骨架

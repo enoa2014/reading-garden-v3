@@ -52,6 +52,8 @@
 - Files created/modified:
   - `reading-garden-editor/editor/js/ui/dashboard.js` (updated)
   - `README.md` (updated)
+  - `index.html` (updated)
+  - `reading-garden-editor/README.md` (created)
   - `task_plan.md` (updated)
   - `findings.md` (updated)
   - `progress.md` (updated)
