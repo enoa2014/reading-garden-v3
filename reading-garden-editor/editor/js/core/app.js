@@ -287,10 +287,12 @@ function startRecoverySnapshotTicker() {
 
 async function restoreRecoverySnapshotForProject(books = []) {
   try {
-    const snapshot = await recoveryStore.loadLatest();
-    if (!snapshot || typeof snapshot !== "object") return;
     const state = getState();
-    if (!state.projectName || snapshot.projectName !== state.projectName) return;
+    if (!state.projectName) return;
+    const snapshot = await recoveryStore.loadByProject(state.projectName)
+      || await recoveryStore.loadLatest();
+    if (!snapshot || typeof snapshot !== "object") return;
+    if (snapshot.projectName && snapshot.projectName !== state.projectName) return;
 
     const ui = snapshot.ui && typeof snapshot.ui === "object" ? snapshot.ui : {};
     const previewPatch = buildPreviewStatePatch(state, books, {
@@ -315,15 +317,22 @@ async function restoreRecoverySnapshotForProject(books = []) {
 }
 
 async function clearRecoverySnapshotFlow() {
+  const state = getState();
+  const projectName = String(state.projectName || "").trim();
   setState({ busy: true, recoveryFeedback: null });
   setStatus("Clearing recovery snapshot...");
   try {
+    if (projectName) {
+      await recoveryStore.clearByProject(projectName);
+    }
     await recoveryStore.clearLatest();
     suppressRecoverySnapshotBeforeTs = Date.now() + 1500;
     setState({
       recoveryFeedback: {
         type: "ok",
-        message: "会话快照已清理。",
+        message: projectName
+          ? `项目会话快照已清理：${projectName}`
+          : "会话快照已清理。",
       },
     });
     setStatus("Recovery snapshot cleared");

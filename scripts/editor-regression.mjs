@@ -526,6 +526,7 @@ async function testDiagnosticSourceMarkers() {
   assert(appSource.includes("createRecoveryStore"), "app should initialize recovery store");
   assert(appSource.includes("scheduleRecoverySnapshot"), "app should schedule recovery snapshots");
   assert(appSource.includes("restoreRecoverySnapshotForProject"), "app should restore recovery snapshot");
+  assert(appSource.includes("loadByProject"), "app should prefer project-scoped recovery snapshot");
   assert(appSource.includes("clearRecoverySnapshotFlow"), "app should support clearing recovery snapshot");
   assert(appSource.includes("suppressRecoverySnapshotBeforeTs"), "app should support suppressing immediate resave after clear");
   assert(appSource.includes("normalizeAnalysisApplyMode"), "app should normalize analysis apply mode");
@@ -589,6 +590,8 @@ async function testDiagnosticSourceMarkers() {
   assert(recoveryStoreSource.includes("indexedDB"), "recovery store should use indexedDB");
   assert(recoveryStoreSource.includes("saveLatest"), "recovery store should support snapshot save");
   assert(recoveryStoreSource.includes("loadLatest"), "recovery store should support snapshot load");
+  assert(recoveryStoreSource.includes("loadByProject"), "recovery store should support loading project snapshot");
+  assert(recoveryStoreSource.includes("clearByProject"), "recovery store should support clearing project snapshot");
   assert(recoveryStoreSource.includes("clearLatest"), "recovery store should support snapshot clear");
   assert(analysisSource.includes("analyzeBookText"), "analysis assistant should expose analyze function");
   assert(analysisSource.includes("llm-fallback"), "analysis assistant should support llm fallback mode");

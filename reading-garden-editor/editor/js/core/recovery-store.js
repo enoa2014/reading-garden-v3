@@ -2,6 +2,12 @@ const DEFAULT_DB_NAME = "rg-editor-recovery";
 const DEFAULT_STORE_NAME = "snapshots";
 const LATEST_KEY = "latest";
 
+function projectKey(projectName = "") {
+  const safe = String(projectName || "").trim();
+  if (!safe) return "";
+  return `project:${safe}`;
+}
+
 function openDatabase(dbName, storeName) {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(dbName, 1);
@@ -67,6 +73,12 @@ export function createRecoveryStore({
       const db = await getDb();
       return readValue(db, storeName, LATEST_KEY);
     },
+    async loadByProject(projectName) {
+      const key = projectKey(projectName);
+      if (!key) return null;
+      const db = await getDb();
+      return readValue(db, storeName, key);
+    },
     async saveLatest(snapshot) {
       const db = await getDb();
       const payload = {
@@ -74,11 +86,22 @@ export function createRecoveryStore({
         savedAt: new Date().toISOString(),
       };
       await writeValue(db, storeName, LATEST_KEY, payload);
+      const key = projectKey(payload.projectName);
+      if (key) {
+        await writeValue(db, storeName, key, payload);
+      }
       return payload;
     },
     async clearLatest() {
       const db = await getDb();
       await deleteValue(db, storeName, LATEST_KEY);
+      return true;
+    },
+    async clearByProject(projectName) {
+      const key = projectKey(projectName);
+      if (!key) return false;
+      const db = await getDb();
+      await deleteValue(db, storeName, key);
       return true;
     },
   };

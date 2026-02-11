@@ -165,6 +165,7 @@
 | 路径级校验检查 | 审查 `validator(validateBooksData/validateRegistryData)` | 输出 JSON 路径 + 原因 + 修复建议 | 已接入 | ✓ |
 | 会话快照恢复检查 | 审查 `recovery-store(indexedDB) -> app(save/restore)` | 支持防抖+周期快照并在同项目重开恢复 | 已接入 | ✓ |
 | 会话快照清理检查 | 审查 `clearRecoverySnapshotFlow -> recoveryStore.clearLatest` | 支持手动清理 latest 快照且避免立即回写 | 已接入 | ✓ |
+| 项目快照匹配检查 | 审查 `loadByProject -> loadLatest(fallback)` | 会话恢复优先匹配当前项目，避免跨项目干扰 | 已接入 | ✓ |
 | 原文分析链路检查 | 审查 `dashboard(analysis form) -> app -> analysis assistant` | 支持原文分析与建议导出（LLM 可选 + 本地回退） | 已接入 | ✓ |
 | 分析建议落盘检查 | 审查 `app(applyAnalysisSuggestionFlow)` | 支持安全写入 `registry.suggested.json` | 已接入 | ✓ |
 | 分析建议自动建书检查 | 审查 `applyAnalysisSuggestionFlow -> createBookFlow(draftInput)` | 未选目标书籍时可自动创建草稿并应用建议 | 已接入 | ✓ |
@@ -1742,6 +1743,25 @@
   - `findings.md` (updated)
   - `progress.md` (updated)
 
+### Phase 102: Sprint 4 会话快照按项目优先恢复
+- **Status:** complete
+- Actions taken:
+  - `recovery-store.js` 新增 `loadByProject/clearByProject`
+  - `saveLatest` 同步写入 `project:<name>` 快照键
+  - `app.js` 恢复逻辑改为“先按项目恢复，再 fallback latest”
+  - 清理逻辑改为优先清理当前项目键并兼容清理 latest
+  - 回归脚本增加 project-scoped recovery 关键标记断言
+  - 同步 README / findings / task_plan / progress
+- Files created/modified:
+  - `reading-garden-editor/editor/js/core/recovery-store.js` (updated)
+  - `reading-garden-editor/editor/js/core/app.js` (updated)
+  - `scripts/editor-regression.mjs` (updated)
+  - `README.md` (updated)
+  - `reading-garden-editor/README.md` (updated)
+  - `task_plan.md` (updated)
+  - `findings.md` (updated)
+  - `progress.md` (updated)
+
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
 |-----------|-------|---------|------------|
@@ -1751,8 +1771,8 @@
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 101 |
-| Where am I going? | Phase 101 -> checkpoint commit -> push |
+| Where am I? | Phase 102 |
+| Where am I going? | Phase 102 -> checkpoint commit -> push |
 | What's the goal? | 形成可上传 EdgeOne 的发布打包链路 |
-| What have I learned? | 会话恢复需要提供“可退出/可重置”能力，避免快照反复干扰 |
-| What have I done? | 已完成 IndexedDB 快照恢复，并继续补齐手动清理入口 |
+| What have I learned? | 快照恢复若不按项目隔离，容易产生跨项目污染 |
+| What have I done? | 已完成会话快照清理入口，并继续补齐项目级恢复隔离 |
